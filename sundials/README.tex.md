@@ -15,7 +15,7 @@ $$
    w_t &= dw \cdot w_{xx} + (b-w)/ep - wu,
 \end{aligned}
 $$
-for *t* in [0, 80], *x* in [0, 1], with initial conditions
+for $t \in [0, 80]$, $x \in [0, 1]$, with initial conditions
 $$
 \begin{aligned}
    u(0,x) &=  a  + 0.1\sin(\pi x), \\
@@ -41,8 +41,8 @@ to an ODE system of the form
 $$
      M y_t = L y + R(y),
 $$
-where *M* is the block mass matrix for each component, *L* is
-the block Laplace operator for each component, and *R(y)* is
+where $M$ is the block mass matrix for each component, $L$ is
+the block Laplace operator for each component, and $R(y)$ is
 a 3x3 block comprised of the nonlinear reaction terms for
 each component.  Since it it highly inefficient to rewrite
 this system as
@@ -58,7 +58,7 @@ its Jacobian
 $$
    J(t,y) = L + \frac{dR}{dy},
 $$
-and the mass matrix, *M*.
+and the mass matrix, $M$.
 This program solves the problem with the DIRK method, using a
 Newton iteration with the SuperLU_DIST SUNLinearSolver.
 100 outputs are printed at equal time intervals, and run
@@ -75,7 +75,7 @@ in (e.g., LAPACK, KLU, SuperLU_MT, PETSc, or *hypre*), be sure to review the
 respective license of the package as that license may have more restrictive
 terms than the SUNDIALS license.
 
-```
+```text
 SPDX-License-Identifier: BSD-3-Clause
 
 LLNL-CODE-667205  (ARKODE)

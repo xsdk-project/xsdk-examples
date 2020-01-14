@@ -9,7 +9,7 @@ The `ark_brusselator1D_FEM_sludist.cpp` example simulates a brusselator
 problem from chemical kinetics.
 This is a PDE system with 3 components, <img src="svgs/959bb0ca5827460670264d2b3fa169d4.svg" align=middle width=88.7766pt height=24.56552999999997pt/>, satisfying the equations,
 <p align="center"><img src="svgs/4e3a4548d84ce8f1402d4960eb2b2da8.svg" align=middle width=255.41174999999996pt height=69.622905pt/></p>
-for *t* in [0, 80], *x* in [0, 1], with initial conditions
+for <img src="svgs/738a9094e7816e91b64dfe50cef848ee.svg" align=middle width=66.916905pt height=24.56552999999997pt/>, <img src="svgs/2510e5860f95e80cadf9cf45baa50227.svg" align=middle width=62.174310000000006pt height=24.56552999999997pt/>, with initial conditions
 <p align="center"><img src="svgs/b456576c21632aaaa540d7b365d201bb.svg" align=middle width=196.12394999999998pt height=65.69194499999999pt/></p>
 and with stationary boundary conditions, i.e.
 <p align="center"><img src="svgs/7145dfb04640484f0e3ddfd91571774b.svg" align=middle width=159.92129999999997pt height=65.69194499999999pt/></p>
@@ -21,8 +21,8 @@ equations, including the test function).  The time derivative
 terms for this system will include a mass matrix, giving rise
 to an ODE system of the form
 <p align="center"><img src="svgs/feb6dcc9921528ee025c6b144635b061.svg" align=middle width=131.642775pt height=16.376943pt/></p>
-where *M* is the block mass matrix for each component, *L* is
-the block Laplace operator for each component, and *R(y)* is
+where <img src="svgs/fb97d38bcc19230b0acd442e17db879c.svg" align=middle width=17.67348pt height=22.381919999999983pt/> is the block mass matrix for each component, <img src="svgs/ddcb483302ed36a59286424aa5e0be17.svg" align=middle width=11.145420000000001pt height=22.381919999999983pt/> is
+the block Laplace operator for each component, and <img src="svgs/4051c5cf4a2c287d8c463da35cb695a5.svg" align=middle width=33.91872pt height=24.56552999999997pt/> is
 a 3x3 block comprised of the nonlinear reaction terms for
 each component.  Since it it highly inefficient to rewrite
 this system as
@@ -32,7 +32,7 @@ matrix.  We therefore provide functions to evaluate the ODE RHS
 <p align="center"><img src="svgs/48173febf3555b003e1f02241d2be7e0.svg" align=middle width=144.49248pt height=16.376943pt/></p>
 its Jacobian
 <p align="center"><img src="svgs/2ab039b6508ad5aa0e3a4083cb6f3b58.svg" align=middle width=127.93934999999999pt height=36.953894999999996pt/></p>
-and the mass matrix, *M*.
+and the mass matrix, <img src="svgs/fb97d38bcc19230b0acd442e17db879c.svg" align=middle width=17.67348pt height=22.381919999999983pt/>.
 This program solves the problem with the DIRK method, using a
 Newton iteration with the SuperLU_DIST SUNLinearSolver.
 100 outputs are printed at equal time intervals, and run
@@ -49,7 +49,7 @@ in (e.g., LAPACK, KLU, SuperLU_MT, PETSc, or *hypre*), be sure to review the
 respective license of the package as that license may have more restrictive
 terms than the SUNDIALS license.
 
-```
+```text
 SPDX-License-Identifier: BSD-3-Clause
 
 LLNL-CODE-667205  (ARKODE)
