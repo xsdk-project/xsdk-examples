@@ -1,6 +1,6 @@
 # SUNDIALS examples
 
-Example codes demonstrating the use of SUNDIALS using other XSDK packages.
+Example codes demonstrating the use of [SUNDIALS](https://computing.llnl.gov/projects/sundials) using other XSDK packages.
 
 
 ## SUNDIALS + SuperLU
