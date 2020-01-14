@@ -15,7 +15,7 @@ $$
    w_t &= dw \cdot w_{xx} + (b-w)/ep - wu,
 \end{aligned}
 $$
-for $t \in [0, 80]$, $x \in [0, 1]$, with initial conditions
+for *t* in [0, 80], *x* in [0, 1], with initial conditions
 $$
 \begin{aligned}
    u(0,x) &=  a  + 0.1\sin(\pi x), \\
