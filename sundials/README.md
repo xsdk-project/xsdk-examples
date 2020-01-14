@@ -38,6 +38,10 @@ Newton iteration with the SuperLU_DIST SUNLinearSolver.
 100 outputs are printed at equal time intervals, and run
 statistics are printed at the end.
 
+## SUNDIALS + PETSc
+
+``cv_petsc_ex7.c``
+
 ## License
 
 SUNDIALS is released under the BSD 3-clause license. See the [LICENSE](./LICENSE)
