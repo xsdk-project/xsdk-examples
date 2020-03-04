@@ -3,8 +3,8 @@ project( hypre-superludist
          DESCRIPTION "HYPRE + SuperLU_DIST Example"
          LANGUAGES C)
 
-set(HYPRE_DIR "/path/to/hypre@2.18.2+superlu-dist+shared")
-set(DSUPERLU_DIR "/path/to/superlu-dist@6.1.1")
+option(HYPRE_DIR "absolute/path/to/hypre@2.18.2+superlu-dist+shared/install" [.])
+option(DSUPERLU_DIR "absolute/path/to/superlu-dist@6.1.1/install" [.])
 
 find_package(MPI REQUIRED)
 
