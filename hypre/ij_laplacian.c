@@ -10,7 +10,7 @@
 
    Compile with: make ij_laplacian
 
-   Sample run:   mpirun -np 4 ij_laplacian -solver 0 -dslu_th 50 
+   Sample run:   mpirun -np 4 ij_laplacian -solver 0 -dslu_th 50
 
    To see options: ij_laplacian -help
 
@@ -21,8 +21,8 @@
                  interior nodes only.
 
                  Available solvers are AMG, PCG, and PCG with AMG or Parasails
-                 preconditioners, flexible GMRES with AMG with the option
-                 to use SuperLU_DIST as a coarse-grid solver within the AMG V-cycle.
+                 preconditioners, flexible GMRES with AMG. Within the AMG V-cycle,
+                 optionally SuperLU_DIST can be used as a coarse level solver.
 
                  By specifying the command line parameter `dslu_th' to be
                  the maximum coarse level number of degrees of freedom, the
@@ -31,9 +31,9 @@
                  triangular solution from SuperLU_DIST.*/
 
 #include <math.h>
-#include "_hypre_utilities.h"
-#include "HYPRE_krylov.h"
 #include "HYPRE.h"
+#include "HYPRE_utilities.h"
+#include "HYPRE_krylov.h"
 #include "HYPRE_parcsr_ls.h"
 
 #ifdef HYPRE_USING_DSUPERLU
@@ -144,7 +144,7 @@ int main (int argc, char *argv[])
          printf("                           8  - ParaSails-PCG\n");
          printf("                           50 - PCG\n");
          printf("                           61 - AMG-FlexGMRES\n");
-         printf("  -dslu_th <coarse_size> : Use SuperLU_DIST for coarse level solver in AMG\n")
+         printf("  -dslu_th <coarse_size> : Use SuperLU_DIST for coarse level solver in AMG\n");
          printf("                           <coarse_size> - Desired size of coarse level\n");
          printf("  -vis                   : save the solution for GLVis visualization\n");
          printf("  -print_system          : print the matrix and rhs\n");
@@ -349,7 +349,7 @@ int main (int argc, char *argv[])
       HYPRE_BoomerAMGSetMaxLevels(solver, 20);  /* maximum number of levels */
       HYPRE_BoomerAMGSetTol(solver, 1e-7);      /* conv. tolerance */
 #ifdef HYPRE_USING_DSUPERLU
-      HYPRE_BoomerAMGSetDSLUThreshold(amg_solver, dslu_threshold);
+      HYPRE_BoomerAMGSetDSLUThreshold(solver, dslu_threshold);
 #endif
 
       /* Now setup and solve! */
@@ -424,13 +424,13 @@ int main (int argc, char *argv[])
       HYPRE_BoomerAMGCreate(&precond);
       HYPRE_BoomerAMGSetPrintLevel(precond, 1); /* print amg solution info */
       HYPRE_BoomerAMGSetCoarsenType(precond, 6);
-      HYPRE_BoomerAMGSetOldDefault(precond); 
+      HYPRE_BoomerAMGSetOldDefault(precond);
       HYPRE_BoomerAMGSetRelaxType(precond, 6); /* Sym G.S./Jacobi hybrid */
       HYPRE_BoomerAMGSetNumSweeps(precond, 1);
       HYPRE_BoomerAMGSetTol(precond, 0.0); /* conv. tolerance zero */
       HYPRE_BoomerAMGSetMaxIter(precond, 1); /* do only one iteration! */
 #ifdef HYPRE_USING_DSUPERLU
-      HYPRE_BoomerAMGSetDSLUThreshold(pcg_precond, dslu_threshold);
+      HYPRE_BoomerAMGSetDSLUThreshold(precond, dslu_threshold);
 #endif
 
       /* Set the PCG preconditioner */
@@ -540,7 +540,7 @@ int main (int argc, char *argv[])
       HYPRE_BoomerAMGSetTol(precond, 0.0); /* conv. tolerance zero */
       HYPRE_BoomerAMGSetMaxIter(precond, 1); /* do only one iteration! */
 #ifdef HYPRE_USING_DSUPERLU
-      HYPRE_BoomerAMGSetDSLUThreshold(pcg_precond, dslu_threshold);
+      HYPRE_BoomerAMGSetDSLUThreshold(precond, dslu_threshold);
 #endif
       /* Set the FlexGMRES preconditioner */
       HYPRE_FlexGMRESSetPrecond(solver, (HYPRE_PtrToSolverFcn) HYPRE_BoomerAMGSolve,
@@ -580,7 +580,7 @@ int main (int argc, char *argv[])
       if (myid ==0) printf("Invalid solver id specified.\n");
    }
 
-   /* Save the solution for GLVis visualization, see vis/glvis-ex5.sh */
+   /* Save the solution for GLVis visualization, see vis/glvis-ij-laplacian.sh */
    if (vis)
    {
       FILE *file;
@@ -596,7 +596,7 @@ int main (int argc, char *argv[])
       /* get the local solution */
       HYPRE_IJVectorGetValues(x, nvalues, rows, values);
 
-      sprintf(filename, "%s.%06d", "vis/ex5.sol", myid);
+      sprintf(filename, "%s.%06d", "vis/ij_laplacian.sol", myid);
       if ((file = fopen(filename, "w")) == NULL)
       {
          printf("Error: can't open output file %s\n", filename);
@@ -616,7 +616,7 @@ int main (int argc, char *argv[])
 
       /* save global finite element mesh */
       if (myid == 0)
-         GLVis_PrintGlobalSquareMesh("vis/ex5.mesh", n-1);
+         GLVis_PrintGlobalSquareMesh("vis/ij_laplacian.mesh", n-1);
    }
 
    /* Clean up */
