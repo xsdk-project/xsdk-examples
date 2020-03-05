@@ -12,9 +12,9 @@ implicit Runge--Kutta method from the SUNDIALS ARKode time integrator package.
 It uses the SUNDIALS OpenMP vector for the solution data, the SUNDIALS Newton
 nonlinear solver to solve a nonlinear system at every time step, and the
 [SuperLU_DIST](https://github.com/xiaoyeli/superlu_dist) parallel sparse-direct
-linear solver to solve the resulting linear system. 100 outputs are printed to
-an output file at equal time intervals, and run statistics are printed to stdout
-at the end.
+linear solver to solve the resulting linear system. Jacobian data is stored in
+a SuperLU_DIST SuperMatrix. 100 outputs are printed to an output file at equal time
+intervals, and run statistics are printed to stdout at the end.
 
 ## SUNDIALS + PETSc
 
