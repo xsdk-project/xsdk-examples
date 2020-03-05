@@ -11,8 +11,10 @@ from chemical kinetics. This program solves the problem with the diagonally
 implicit Runge--Kutta method from the SUNDIALS ARKode time integrator package.
 It uses the SUNDIALS OpenMP vector for the solution data, the SUNDIALS Newton
 nonlinear solver to solve a nonlinear system at every time step, and the
-[SuperLU_DIST](https://github.com/xiaoyeli/superlu_dist)
-parallel sparse-direct linear solver to solve the resulting linear system.
+[SuperLU_DIST](https://github.com/xiaoyeli/superlu_dist) parallel sparse-direct
+linear solver to solve the resulting linear system. 100 outputs are printed to
+an output file at equal time intervals, and run statistics are printed to stdout
+at the end.
 
 ## SUNDIALS + PETSc
 
@@ -21,7 +23,8 @@ example is based on the [PETSc](https://www.mcs.anl.gov/petsc/) TS ex7.c, but
 uses the BDF method from the SUNDIALS CVODE time integrator package. It
 interfaces with the PETSc Vec for the solution data, the PETSc SNES nonlinear
 solvers to solve a nonlinear system at every time step, an the PETSc KSP linear
-solvers to solve the resulting linear systems.
+solvers to solve the resulting linear systems. Output, nonlinear/lnear solver
+and vector options can be controlled using the typical PETSc runtime arguments.
 
 ## License
 
