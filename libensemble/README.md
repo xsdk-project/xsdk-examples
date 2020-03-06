@@ -23,3 +23,5 @@ Using MPI (mpi4py):
 Using multiprocessing:
 
     python3 test_persistent_aposmm_tao.py --nworkers 3 --comms local
+
+A exit code of zero indicates the test has passed.
