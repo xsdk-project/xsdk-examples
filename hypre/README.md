@@ -17,7 +17,7 @@ The standard 5-point stencil is used, and we solve for the interior nodes only.
 
 Available solvers are AMG (default), PCG, PCG with AMG or Parasails
 preconditioners, flexible GMRES with AMG. 
-Within the HYPRE's AMG V-cycle there is an option to use a 
+Within HYPRE's AMG V-cycle there is an option to use a 
 distributed LU factorization from
 SuperLU_DIST as the coarse level solver.
 
@@ -27,13 +27,13 @@ SuperLU_DIST as the coarse level solver.
 
  - This run solves a system corresponding to a discretization 
     of the Laplace equation -Delta u = 1 with zero boundary
-    conditions on an 33 x 33 grid, using HYPRE's BoomerAMG with SuperLU_DIST's
+    conditions on a 33 x 33 grid, using HYPRE's BoomerAMG with SuperLU_DIST's
     distributed LU factorization for the coarse level solver where `50` 
     is a maximum number of coarse level degrees of freedom using 4 MPI tasks. 
  - The output of the example is various information regarding the  
     solver and solver performance. 
 
-By specifying the command line parameter `dslu_th` to be
+By specifying the command line parameter `-dslu_th` to be
 the maximum coarse level number of degrees of freedom, the
 coarse level solver within BoomerAMG will be changed from the
 default Gaussian Elimination, to a sparse LU decomposition and
