@@ -5,31 +5,6 @@
  * SPDX-License-Identifier: (Apache-2.0 OR MIT)
  ******************************************************************************/
 
-/*
-   Interface:    Linear-Algebraic (IJ)
-
-   Compile with: make ij_laplacian
-
-   Sample run:   mpirun -np 4 ij_laplacian -solver 0 -dslu_th 50
-
-   To see options: ij_laplacian -help
-
-   Description:  This example solves a system corresponding to a discretization
-                 of the Laplace equation -Delta u = 1 with zero boundary
-                 conditions on an n x n grid. The number of unknowns is N=n^2.
-                 The standard 5-point stencil is used, and we solve for the
-                 interior nodes only.
-
-                 Available solvers are AMG, PCG, and PCG with AMG or Parasails
-                 preconditioners, flexible GMRES with AMG. Within the AMG V-cycle,
-                 optionally SuperLU_DIST can be used as a coarse level solver.
-
-                 By specifying the command line parameter `dslu_th' to be
-                 the maximum coarse level number of degrees of freedom, the
-                 coarse level solver within BoomerAMG will be changed from the
-                 default Gaussian Elimination, to a sparse LU decomposition and
-                 triangular solution from SuperLU_DIST.*/
-
 #include <math.h>
 #include "HYPRE.h"
 #include "HYPRE_utilities.h"
