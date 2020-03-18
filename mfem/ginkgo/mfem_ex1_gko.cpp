@@ -136,7 +136,7 @@ private:
 int main(int argc, char *argv[])
 {
     // 1. Parse command-line options.
-    const char *mesh_file = "beam-hex.mesh";
+    const char *mesh_file = "../data/beam-hex.mesh";
     int order = 2;
     bool static_cond = false;
     bool pa = true;

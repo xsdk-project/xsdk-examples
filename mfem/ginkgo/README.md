@@ -1,7 +1,7 @@
-# MFEM example 1, modified
+# MFEM-Ginkgo Example
 
-This example takes MFEM's standard `ex1.cpp` and replaces the linear system solve with 
-the CG solver from the [Ginkgo](https://ginkgo-project.github.io/) library.  To do 
+This example discretizes a Poisson problem with the MFEM library and uses the 
+the CG solver from the Ginkgo library to solve the linear system.  To do 
 this, it uses two special wrapper classes, for MFEM Operators and Vectors.  The 
 MFEMOperatorWrapper class allows the use of MFEM Operators that are not built into
 sparse matrices (e.g., MFEM partial assembly mode) with Ginkgo, provided the vectors
