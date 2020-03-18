@@ -64,7 +64,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include <arkode/arkode_arkstep.h>            /* prototypes for ARKStep fcts., consts     */
-#include <nvector/nvector_openmp.h>           /* serial N_Vector types, fcts., macros     */
+#include <nvector/nvector_serial.h>           /* serial N_Vector types, fcts., macros     */
 #include <sunmatrix/sunmatrix_slunrloc.h>     /* access to SuperLU SLU_NR_loc SUNMatrix   */
 #include <sunlinsol/sunlinsol_superludist.h>  /* access to SuperLU_DIST SUNLinearSolver   */
 #include <sundials/sundials_types.h>          /* defs. of realtype, sunindextype, etc     */
@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
   realtype reltol = RCONST(1.0e-6);     /* tolerances */
   realtype abstol = RCONST(1.0e-10);
   sunindextype i, NEQ, NNZ;
-  int num_threads, npes, my_pe;
+  int npes, my_pe;
 
   /* general problem variables */
   int retval;                 /* reusable error-checking retval */
@@ -193,8 +193,6 @@ int main(int argc, char *argv[]) {
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &npes);
   MPI_Comm_rank(MPI_COMM_WORLD, &my_pe);
-
-  num_threads = omp_get_num_threads();
 
   /* this example only allows 1 MPI rank because we are demonstrating
    * SuperLU_DIST on one node with OpenMP parallelism */
@@ -239,23 +237,23 @@ int main(int argc, char *argv[]) {
   printf("    reltol = %.1" ESYM ",  abstol = %.1" ESYM "\n\n", reltol, abstol);
 
   /* Initialize data structures */
-  y = N_VNew_OpenMP(NEQ, num_threads);           /* Create serial vector for solution */
-  if (check_retval((void *)y, "N_VNew_OpenMP", 0)) MPI_Abort(grid.comm, 1);
+  y = N_VNew_Serial(NEQ);           /* Create serial vector for solution */
+  if (check_retval((void *)y, "N_VNew_Serial", 0)) MPI_Abort(grid.comm, 1);
 
   data = N_VGetArrayPointer(y);     /* Access data array for new NVector y */
   if (check_retval((void *)data, "N_VGetArrayPointer", 0)) MPI_Abort(grid.comm, 1);
 
-  umask = N_VNew_OpenMP(NEQ, num_threads);       /* Create serial vector masks */
-  if (check_retval((void *)umask, "N_VNew_OpenMP", 0)) MPI_Abort(grid.comm, 1);
+  umask = N_VNew_Serial(NEQ);       /* Create serial vector masks */
+  if (check_retval((void *)umask, "N_VNew_Serial", 0)) MPI_Abort(grid.comm, 1);
 
-  vmask = N_VNew_OpenMP(NEQ, num_threads);
-  if (check_retval((void *)vmask, "N_VNew_OpenMP", 0)) MPI_Abort(grid.comm, 1);
+  vmask = N_VNew_Serial(NEQ);
+  if (check_retval((void *)vmask, "N_VNew_Serial", 0)) MPI_Abort(grid.comm, 1);
 
-  wmask = N_VNew_OpenMP(NEQ, num_threads);
-  if (check_retval((void *)wmask, "N_VNew_OpenMP", 0)) MPI_Abort(grid.comm, 1);
+  wmask = N_VNew_Serial(NEQ);
+  if (check_retval((void *)wmask, "N_VNew_Serial", 0)) MPI_Abort(grid.comm, 1);
 
-  udata->tmp = N_VNew_OpenMP(NEQ, num_threads);  /* temporary N_Vector inside udata */
-  if (check_retval((void *) udata->tmp, "N_VNew_OpenMP", 0)) MPI_Abort(grid.comm, 1);
+  udata->tmp = N_VNew_Serial(NEQ);  /* temporary N_Vector inside udata */
+  if (check_retval((void *) udata->tmp, "N_VNew_Serial", 0)) MPI_Abort(grid.comm, 1);
 
   /* allocate and set up spatial mesh; this [arbitrarily] clusters
      more intervals near the end points of the interval */

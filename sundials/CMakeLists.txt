@@ -58,7 +58,7 @@ if(ENABLE_PETSC)
   target_link_libraries(cv_petsc_ex7 SUNDIALS::cvode SUNDIALS::nvecpetsc SUNDIALS::sunnonlinsolpetsc)
 endif()
 if(ENABLE_SUPERLU)
-  add_executable(ark_brusselator1D_FEM_sludist ark_brusselator1D_FEM_sludist.c)
-  target_link_libraries(ark_brusselator1D_FEM_sludist SUNDIALS::arkode SUNDIALS::nvecopenmp
+  add_executable(ark_brusselator1D_FEM_sludist ark_brusselator1D_FEM_sludist.cpp)
+  target_link_libraries(ark_brusselator1D_FEM_sludist SUNDIALS::arkode SUNDIALS::nvecserial
       SUNDIALS::sunmatslunrloc SUNDIALS::sunlinsolsludist)
 endif()

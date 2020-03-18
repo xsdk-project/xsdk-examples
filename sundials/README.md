@@ -9,7 +9,7 @@ packages.
 The `ark_brusselator1D_FEM_sludist.cpp` example simulates a brusselator problem
 from chemical kinetics. This program solves the problem with the diagonally
 implicit Runge--Kutta method from the SUNDIALS ARKode time integrator package.
-It uses the SUNDIALS OpenMP vector for the solution data, the SUNDIALS Newton
+It uses the SUNDIALS serial vector for the solution data, the SUNDIALS Newton
 nonlinear solver to solve a nonlinear system at every time step, and the
 [SuperLU_DIST](https://github.com/xiaoyeli/superlu_dist) parallel sparse-direct
 linear solver to solve the resulting linear system. Jacobian data is stored in
