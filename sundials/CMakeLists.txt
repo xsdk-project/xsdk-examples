@@ -20,7 +20,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 endif()
 
 # set the project name and default languages
-project(SUNDIALS-XSDK-EXAMPLES C)
+project(SUNDIALS-XSDK-EXAMPLES CXX C)
 
 # location of additional CMake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
