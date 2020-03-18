@@ -14,7 +14,9 @@ required.  For these high velocities selecting the SuperLU solver will allow the
 be solved.
 
 This example is built to run in parallel, so launch it with mpirun with your desired options:
+```
 mpirun -np 4 convdiff --velocity 100.0 --no-superlu
+```
 
 Useful non-default options:
 |   Flag                | Meaning                                               |

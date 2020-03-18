@@ -149,9 +149,9 @@ int main(int argc, char *argv[])
    args.AddOption(&order, "-o", "--order",
                   "Finite element order (polynomial degree) or -1 for"
                   " isoparametric space.");
-   args.AddOption(&visualization, "-vis", "--visualization", "-no-vis",
-                  "--no-visualization",
-                  "Enable or disable GLVis visualization.");
+   args.AddOption(&visualization, "-vis", "--visit", "-no-vis",
+                  "--no-visit",
+                  "Enable or disable VisIt visualization.");
    args.Parse();
    if (!args.Good())
    {
