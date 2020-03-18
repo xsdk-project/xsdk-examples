@@ -20,7 +20,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 endif()
 
 # set the project name and default languages
-project(SUNDIALS-XSDK-EXAMPLES C)
+project(SUNDIALS-XSDK-EXAMPLES CXX C)
 
 # location of additional CMake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
@@ -58,7 +58,7 @@ if(ENABLE_PETSC)
   target_link_libraries(cv_petsc_ex7 SUNDIALS::cvode SUNDIALS::nvecpetsc SUNDIALS::sunnonlinsolpetsc)
 endif()
 if(ENABLE_SUPERLU)
-  add_executable(ark_brusselator1D_FEM_sludist ark_brusselator1D_FEM_sludist.c)
-  target_link_libraries(ark_brusselator1D_FEM_sludist SUNDIALS::arkode SUNDIALS::nvecopenmp
+  add_executable(ark_brusselator1D_FEM_sludist ark_brusselator1D_FEM_sludist.cpp)
+  target_link_libraries(ark_brusselator1D_FEM_sludist SUNDIALS::arkode SUNDIALS::nvecserial
       SUNDIALS::sunmatslunrloc SUNDIALS::sunlinsolsludist)
 endif()
