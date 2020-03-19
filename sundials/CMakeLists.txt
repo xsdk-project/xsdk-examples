@@ -40,7 +40,6 @@ set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
 
 # check for SuperLU_DIST
 if(ENABLE_SUPERLU)
-  find_package(OpenMP REQUIRED)
   find_package(SUPERLUDIST REQUIRED)
 endif()
 
@@ -55,10 +54,14 @@ find_package(SUNDIALS REQUIRED)
 # add the executables
 if(ENABLE_PETSC)
   add_executable(cv_petsc_ex7 cv_petsc_ex7.c)
-  target_link_libraries(cv_petsc_ex7 SUNDIALS::cvode SUNDIALS::nvecpetsc SUNDIALS::sunnonlinsolpetsc)
+  target_link_libraries(cv_petsc_ex7 SUNDIALS::cvode SUNDIALS::nvecpetsc
+                                     SUNDIALS::sunnonlinsolpetscsnes
+                                     PETSC::ALL)
 endif()
 if(ENABLE_SUPERLU)
   add_executable(ark_brusselator1D_FEM_sludist ark_brusselator1D_FEM_sludist.cpp)
   target_link_libraries(ark_brusselator1D_FEM_sludist SUNDIALS::arkode SUNDIALS::nvecserial
-      SUNDIALS::sunmatslunrloc SUNDIALS::sunlinsolsludist)
+                                                      SUNDIALS::sunmatrixslunrloc
+                                                      SUNDIALS::sunlinsolsuperludist
+                                                      SuperLU_DIST::SuperLU_DIST)
 endif()

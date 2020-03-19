@@ -28,13 +28,12 @@ if(NOT SUNDIALS_FIND_COMPONENTS)
 endif()
 
 if(ENABLE_SUPERLU)
-  list(APPEND SUNDIALS_FIND_COMPONENTS "nvecopenmp")
-  list(APPEND SUNDIALS_FIND_COMPONENTS "sunmatslunrloc")
-  list(APPEND SUNDIALS_FIND_COMPONENTS "sunlinsolsludist")
+  list(APPEND SUNDIALS_FIND_COMPONENTS "sunmatrixslunrloc")
+  list(APPEND SUNDIALS_FIND_COMPONENTS "sunlinsolsuperludist")
 endif()
 if(ENABLE_PETSC)
   list(APPEND SUNDIALS_FIND_COMPONENTS "nvecpetsc")
-  list(APPEND SUNDIALS_FIND_COMPONENTS "sunnonlinsolpetsc")
+  list(APPEND SUNDIALS_FIND_COMPONENTS "sunnonlinsolpetscsnes")
 endif()
 
 # find the library for each component
