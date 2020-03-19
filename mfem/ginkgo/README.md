@@ -13,6 +13,11 @@ Ginkgo's use.
 Currently, MFEM's CUDA backend can also be used, except for the full assembly + preconditioning
 combination.
 
+This example is built to run in serial, so launch it with your desired options:
+```
+./mfem-gko --no-partial-assembly
+```
+
 Useful non-default options:
 |   Flag                | Meaning                                           |
 |:----------------------| :-------------------------------------------------|

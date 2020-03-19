@@ -5,9 +5,9 @@ used for the ODE time integration.  This problem demonstrates the MFEM
 integrations with the sundials CVODE and ARKODE solvers which give MFEM
 access to an array of advance ODE solvers.
 
-This example is built to run in parallel, so launch it with your desired options:
+This example is built to run in parallel, so launch it with mpirun and your desired options:
 ```
-mpirun -np 4 transient-heat --kappa 0.5 --alpha 0.01 --ode-solver 8
+mpirun -np 4 ./transient-heat --kappa 0.5 --alpha 0.01 --ode-solver 8
 ```
 
 Useful non-default options:

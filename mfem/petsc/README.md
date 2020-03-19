@@ -7,7 +7,7 @@ the data from vectors of each type.
 
 This example is built to run in serial, so launch it wth your desired options:
 ```
-obstacle --order 2
+./obstacle --order 2
 ```
 
 Useful non-default options:

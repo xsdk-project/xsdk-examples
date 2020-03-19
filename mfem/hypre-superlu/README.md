@@ -13,9 +13,9 @@ is no longer able to handle the increasingly ill-conditioned system and a direct
 required.  For these high velocities selecting the SuperLU solver will allow the system to 
 be solved.
 
-This example is built to run in parallel, so launch it with mpirun with your desired options:
+This example is built to run in parallel, so launch it with mpirun and your desired options:
 ```
-mpirun -np 4 convdiff --velocity 100.0 --no-superlu
+mpirun -np 4 ./convdiff --velocity 100.0 --no-superlu
 ```
 
 Useful non-default options:
