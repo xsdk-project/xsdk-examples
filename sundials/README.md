@@ -16,6 +16,12 @@ linear solver to solve the resulting linear system. Jacobian data is stored in
 a SuperLU_DIST SuperMatrix. 100 outputs are printed to an output file at equal time
 intervals, and run statistics are printed to stdout at the end.
 
+**Usage**
+
+```
+mpirun -np 1 ./ark_brusselator1D_FEM_sludist
+```
+
 ## SUNDIALS + PETSc
 
 The ``cv_petsc_ex7.c`` example solves a nonlinear, time-dependent PDE in 2d. The
@@ -25,6 +31,14 @@ interfaces with the PETSc Vec for the solution data, the PETSc SNES nonlinear
 solvers to solve a nonlinear system at every time step, an the PETSc KSP linear
 solvers to solve the resulting linear systems. Output, nonlinear/lnear solver
 and vector options can be controlled using the typical PETSc runtime arguments.
+
+**Usage**
+
+To run with the default options:
+
+```
+./cv_petsc_ex7
+```
 
 ## License
 
