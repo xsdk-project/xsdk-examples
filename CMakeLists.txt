@@ -4,4 +4,6 @@ project( xsdk-examples
          LANGUAGES CXX C)
 
 add_subdirectory(hypre)
+add_subdirectory(petsc)
 add_subdirectory(sundials)
+add_subdirectory(trilinos)

@@ -13,7 +13,7 @@ class XsdkExamples(CMakePackage):
 
     maintainers = ['balos1', 'luszczek']
 
-    version('0.5.0', '4eb96b7c42a0ca1abb33ca6edd463499')
+    version('0.5.0', 'dc52478566b5f066c221fa34130d5d41')
 
     variant('cuda', default=False, description='Enable CUDA dependent packages')
 
@@ -25,13 +25,16 @@ class XsdkExamples(CMakePackage):
         spec = self.spec
         args = [
             '-DCMAKE_C_COMPILER=%s' % spec['mpi'].mpicc,
+            '-DMPI_DIR=%s' % spec['mpi'].prefix,
             '-DSUNDIALS_DIR=%s'     % spec['sundials'].prefix,
-            '-DPETSC_ENABLE=ON',
             '-DPETSC_DIR=%s'         % spec['petsc'].prefix,
             '-DPETSC_INCLUDE_DIR=%s' % spec['petsc'].prefix.include,
             '-DPETSC_LIBRARY_DIR=%s' % spec['petsc'].prefix.lib,
-            '-DSUPERLUDIST_ENABLE=ON',
             '-DSUPERLUDIST_INCLUDE_DIR=%s' % spec['superlu-dist'].prefix.include,
             '-DSUPERLUDIST_LIBRARY_DIR=%s' % spec['superlu-dist'].prefix.lib,
         ]
+        if 'trilinos' in spec:
+            args.extend([
+                '-DTRILINOS_DIR:PATH=%s' % spec['trilinos'].prefix,
+            ])
         return args
