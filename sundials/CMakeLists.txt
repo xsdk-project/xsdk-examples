@@ -23,7 +23,7 @@ endif()
 project(SUNDIALS-XSDK-EXAMPLES CXX C)
 
 # location of additional CMake modules
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake)
 
 # build options
 set(SUNDIALS_DIR "${SUNDIALS_DIR}" CACHE PATH "Path to SUNDIALS installation directory")
