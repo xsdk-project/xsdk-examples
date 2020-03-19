@@ -29,7 +29,7 @@ example is based on the [PETSc](https://www.mcs.anl.gov/petsc/) TS ex7.c, but
 uses the BDF method from the SUNDIALS CVODE time integrator package. It
 interfaces with the PETSc Vec for the solution data, the PETSc SNES nonlinear
 solvers to solve a nonlinear system at every time step, an the PETSc KSP linear
-solvers to solve the resulting linear systems. Output, nonlinear/lnear solver
+solvers to solve the resulting linear systems. Output, nonlinear/linear solver
 and vector options can be controlled using the typical PETSc runtime arguments.
 
 **Usage**
@@ -38,6 +38,24 @@ To run with the default options:
 
 ```
 ./cv_petsc_ex7
+```
+
+To monitor the KSP linear solver progress:
+
+```
+./cv_petsc_ex7 -ksp_monitor
+```
+
+To use the Anderson method from SNES instead of the default Newton line search: 
+
+```
+./cv_petsc_ex7 -snes_type anderson
+```
+
+To view all the options available:
+
+```
+./cv_petsc_ex7 -h
 ```
 
 ## License
