@@ -5,7 +5,7 @@ interest.  Each of the library folders has one or more examples codes that are b
 and utilize code integrations with other xSDK libraries.  Running these example codes and
 examining the output is a good way to better understand how these libraries can work together. The
 code samples are a good place to start for new projects.  More details about the examples can be found 
-in the README.md files in the library subfolders.
+in the README.md files in the library subfolders.  For more information on the xSDK see <https://xsdk.info/>.
 
 ## Code Example Summary
 
