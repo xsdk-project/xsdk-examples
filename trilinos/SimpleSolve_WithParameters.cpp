@@ -68,7 +68,6 @@
 int main(int argc, char *argv[]) {
   Tpetra::ScopeGuard tpetraScope(&argc,&argv);
   typedef double Scalar;
-  typedef Teuchos::ScalarTraits<Scalar>::magnitudeType Magnitude;
 
   typedef double Scalar;
   typedef Tpetra::Map<>::local_ordinal_type LO;
