@@ -4,7 +4,7 @@ This example code utilizes MFEM to discretize a Convection-Diffusion equation.  
 models the steady-state concentration of a material as it diffuses and is carried through a flowing 
 medium.  From the command line the user can vary the velocity of the flow field.  The linear system 
 that arises from this discretization can optionally be solved utilizing HYPRE's
-BoomerAMG solver or the SuperLU solver.
+BoomerAMG solver or the SuperLU_Dist solver.
 
 This example can be used to show the advantages and disadvantages of HYPRE's iterative solvers,
 and SuperLU's direct solvers.  At lower velocities the HYPRE solver/preconditioner is 
@@ -24,6 +24,6 @@ Useful non-default options:
 | --refine n            | Number of times to uniformly refine the initial mesh. |
 | --order n             | Set the polynomial order of the discretization.       |
 | --velocity n          | Velocity of the flow field.                           |
-| --superlu             | Use the SuperLU direct solver.                        |
+| --superlu             | Use the SuperLU_Disy direct solver.                   |
 | --no-superlu          | Use the interative HYPRE BoomerAMG solver.            |
 | --visit               | Output VisIt files for visualation of the solution.   |

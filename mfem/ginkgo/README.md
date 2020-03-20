@@ -10,9 +10,6 @@ given to the solver are of MFEMVectorWrapper type.
 The example also uses an MFEMOperatorWrapper to wrap a basic MFEM preconditioner for 
 Ginkgo's use.
 
-Currently, MFEM's CUDA backend can also be used, except for the full assembly + preconditioning
-combination.
-
 This example is built to run in serial, so launch it with your desired options:
 ```
 ./mfem-gko --no-partial-assembly
@@ -25,7 +22,6 @@ Useful non-default options:
 | -no-pa,  --no-partial-assembly | Don't use partial assembly, but build the full SparseMatrix for the system  |
 | --no-partial-assembly | build a full SparseMatrix for the system          |
 | -pc, --preconditioner | Use preconditioning                               |
-| -d "cuda"             | Use the MFEM cuda backend and Ginkgo CudaExecutor.|
 
 
 ## More about the MFEMVectorWrapper class
