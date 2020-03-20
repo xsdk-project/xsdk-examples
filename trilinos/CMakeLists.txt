@@ -22,8 +22,9 @@ find_library(AMESOS2_LIB NAMES amesos2 PATHS ${TRILINOS_LIBRARIES})
 find_library(TPETRA_LIB  NAMES tpetra PATHS ${TRILINOS_LIBRARIES})
 find_library(TEUCHOSCOMM_LIB NAMES teuchoscomm PATHS ${TRILINOS_LIBRARIES})
 find_library(TEUCHOSCORE_LIB NAMES teuchoscore PATHS ${TRILINOS_LIBRARIES})
+find_library(KOKKOSCORE_LIB NAMES kokkoscore PATHS ${TRILINOS_LIBRARIES})
 find_library(SUPERLU_DIST_LIB NAMES superlu_dist PATHS ${SUPERLU_LIBRARIES})
 target_link_libraries( SimpleSolve
-                       ${AMESOS2_LIB} ${TPETRA_LIB} ${TEUCHOSCOMM_LIB} ${TEUCHOSCORE_LIB}  ${SUPERLU_DIST_LIB} -fopenmp -lm -ldl)
+                       ${AMESOS2_LIB} ${TPETRA_LIB} ${TEUCHOSCOMM_LIB} ${TEUCHOSCORE_LIB} ${KOKKOSCORE_LIB} ${SUPERLU_DIST_LIB} -fopenmp -lm -ldl)
 
 target_include_directories(SimpleSolve PRIVATE  ${TRILINOS_INCLUDE_DIRS} ${SUPERLU_INCLUDE_DIRS} )

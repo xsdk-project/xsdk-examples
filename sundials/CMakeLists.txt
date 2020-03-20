@@ -56,7 +56,7 @@ if(ENABLE_PETSC)
   add_executable(cv_petsc_ex7 cv_petsc_ex7.c)
   target_link_libraries(cv_petsc_ex7 SUNDIALS::cvode SUNDIALS::nvecpetsc
                                      SUNDIALS::sunnonlinsolpetscsnes
-                                     PETSC::ALL)
+                                     PETSC::ALL m)
 endif()
 if(ENABLE_SUPERLU)
   add_executable(ark_brusselator1D_FEM_sludist ark_brusselator1D_FEM_sludist.cpp)
