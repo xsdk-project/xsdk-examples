@@ -1,11 +1,11 @@
 # xSDK Examples
 
-Example codes demonstrating the use of of various xSDK libraries in tandem to solve problems of 
+The example codes provided here demonstrate the use of of various xSDK libraries in tandem to solve problems of 
 interest.  Each of the library folders has one or more examples codes that are built of that library 
-and utilize the code integrations with the other xSDK libraries.  Running these example codes and
-examining the output is a ood way to better understand how these libraries can work together, and the
+and utilize code integrations with other xSDK libraries.  Running these example codes and
+examining the output is a good way to better understand how these libraries can work together. The
 code samples are a good place to start for new projects.  More details about the examples can be found 
-in the README.md files in these folders.
+in the README.md files in the library subfolders.
 
 ## Code Example Summary
 
@@ -26,8 +26,7 @@ in the README.md files in these folders.
 
 The examples can be installed along with the xSDK utilizing the spack package.
 ```
-spack install xsdk
 spack install xsdk-examples
 ```
 
-Further details on how to run each example can be found in each exampl folder's README.md file.
+Further details on how to run each example code can be found in each example folder's README.md file.
