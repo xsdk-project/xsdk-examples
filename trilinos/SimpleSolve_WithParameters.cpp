@@ -42,21 +42,19 @@
 // @HEADER
 
 /**
-   \file   SimpleSolve.cpp
-   \author Eric Bavier <etbavie@sandia.gov>
-   \date   Sat Jul 17 10:35:39 2010
+   \file   SimpleSolve_WithParameters.cpp
+   \author Eric Bavier <etbavier@sandia.gov>
+   \date   Sat Jul 17 14:07:36 2010
 
-   \brief  Simple example of Amesos2 usage.
-
-   This example solves a simple sparse system of linear equations using the
-   Amesos2 interface to the Superlu solver.
+   \brief  Small example of using a Teuchos::ParameterList to specify Amesos2
+           solver parameters.
 */
 
 #include <Teuchos_ScalarTraits.hpp>
 #include <Teuchos_RCP.hpp>
-#include <Teuchos_oblackholestream.hpp>
 #include <Teuchos_Tuple.hpp>
 #include <Teuchos_VerboseObject.hpp>
+#include <Teuchos_ParameterList.hpp>
 
 #include <Tpetra_Core.hpp>
 #include <Tpetra_Map.hpp>
@@ -69,6 +67,8 @@
 
 int main(int argc, char *argv[]) {
   Tpetra::ScopeGuard tpetraScope(&argc,&argv);
+  typedef double Scalar;
+  typedef Teuchos::ScalarTraits<Scalar>::magnitudeType Magnitude;
 
   typedef double Scalar;
   typedef Tpetra::Map<>::local_ordinal_type LO;
@@ -82,51 +82,42 @@ int main(int argc, char *argv[]) {
   using Teuchos::RCP;
   using Teuchos::rcp;
 
-  // Before we do anything, check that SuperLU is enabled
-  if( !Amesos2::query("SuperLUdist") ){
-    std::cerr << "SuperLUdist not enabled.  Exiting..." << std::endl;
-    return EXIT_SUCCESS;        // Otherwise CTest will pick it up as
-                                // failure, which it isn't really
-  }
+  Teuchos::RCP<const Teuchos::Comm<int> > comm = Tpetra::getDefaultComm();
+  RCP<Teuchos::FancyOStream> fos = Teuchos::fancyOStream(Teuchos::rcpFromRef(std::cout));
 
-  Teuchos::RCP<const Teuchos::Comm<int> > comm =
-    Tpetra::getDefaultComm();
 
   size_t myRank = comm->getRank();
 
-  std::ostream &out = std::cout;
-
-  out << Amesos2::version() << std::endl << std::endl;
+  if( myRank == 0 ) *fos << Amesos2::version() << std::endl << std::endl;
 
   const size_t numVectors = 1;
 
   // create a Map
   global_size_t nrows = 6;
-  RCP<Tpetra::Map<LO,GO> > map
-    = rcp( new Tpetra::Map<LO,GO>(nrows,0,comm) );
-
+  RCP<Tpetra::Map<LO,GO> > map = rcp( new Tpetra::Map<LO,GO>(nrows,0,comm) );
   RCP<MAT> A = rcp( new MAT(map,3) ); // max of three entries in a row
 
   /*
    * We will solve a system with a known solution, for which we will be using
    * the following matrix:
    *
-   * [ [ 7,  0,  -3, 0,  -1, 0 ]
-   *   [ 2,  8,  0,  0,  0,  0 ]
-   *   [ 0,  0,  1,  0,  0,  0 ]
-   *   [ -3, 0,  0,  5,  0,  0 ]
-   *   [ 0,  -1, 0,  0,  4,  0 ]
-   *   [ 0,  0,  0,  -2, 0,  6 ] ]
+   * [ [ 7,  2,  0, -3,  0,  0 ]
+   *   [ 0,  8,  0,  0, -1,  0 ]
+   *   [ -3, 0,  1,  0,  0,  0 ]
+   *   [ 0,  0,  0,  5,  0, -2 ]
+   *   [ -1, 0,  0,  0,  4,  0 ]
+   *   [ 0,  0,  0,  0,  0,  6 ] ]
    *
+   * And we will solve with A^T
    */
   // Construct matrix
   if( myRank == 0 ){
-    A->insertGlobalValues(0,tuple<GO>(0,2,4),tuple<Scalar>(7,-3,-1));
-    A->insertGlobalValues(1,tuple<GO>(0,1),tuple<Scalar>(2,8));
-    A->insertGlobalValues(2,tuple<GO>(2),tuple<Scalar>(1));
-    A->insertGlobalValues(3,tuple<GO>(0,3),tuple<Scalar>(-3,5));
-    A->insertGlobalValues(4,tuple<GO>(1,4),tuple<Scalar>(-1,4));
-    A->insertGlobalValues(5,tuple<GO>(3,5),tuple<Scalar>(-2,6));
+    A->insertGlobalValues(0,tuple<GO>(0,1,3),tuple<Scalar>(7,2,-3));
+    A->insertGlobalValues(1,tuple<GO>(1,4),tuple<Scalar>(8,-1));
+    A->insertGlobalValues(2,tuple<GO>(0,2),tuple<Scalar>(-3,1));
+    A->insertGlobalValues(3,tuple<GO>(3,5),tuple<Scalar>(5,-2));
+    A->insertGlobalValues(4,tuple<GO>(0,4),tuple<Scalar>(-1,4));
+    A->insertGlobalValues(5,tuple<GO>(5),tuple<Scalar>(6));
   }
   A->fillComplete();
 
@@ -153,29 +144,39 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  // Create solver interface to Superlu with Amesos2 factory method
-  RCP<Amesos2::Solver<MAT,MV> > solver = Amesos2::create<MAT,MV>("Superludist", A, X, B);
+  // Check first whether SuperLU is supported
+  if( Amesos2::query("Superludist") ){
 
-  solver->symbolicFactorization().numericFactorization().solve();
+    // Constructor from Factory
+    RCP<Amesos2::Solver<MAT,MV> > solver = Amesos2::create<MAT,MV>("Superludist", A, X, B);
 
+    // Create a Teuchos::ParameterList to hold solver parameters
+    Teuchos::ParameterList amesos2_params("Amesos2");
+    Teuchos::ParameterList superludist_params = amesos2_params.sublist("SuperLU_DIST");
+    superludist_params.set("Trans","No","Whether to solve with A^T");
+    superludist_params.set("npcol",1,"Number of Processor Columns");
+    superludist_params.set("nprow",1,"Number of Processor Rows");
+    superludist_params.set("ColPerm","NATURAL","Use 'natural' ordering of columns");
 
-  /* Print the solution
-   *
-   * Should be:
-   *
-   *  [[1]
-   *   [2]
-   *   [3]
-   *   [4]
-   *   [5]
-   *   [6]]
-   */
-  RCP<Teuchos::FancyOStream> fos = Teuchos::fancyOStream(Teuchos::rcpFromRef(out));
+    solver->setParameters( Teuchos::rcpFromRef(amesos2_params) );
+    solver->symbolicFactorization().numericFactorization().solve();
 
-  *fos << "Solution :" << std::endl;
-  X->describe(*fos,Teuchos::VERB_EXTREME);
-  *fos << std::endl;
+    /* Print the solution
+     *
+     * Should be:
+     *
+     *  [[1]
+     *   [2]
+     *   [3]
+     *   [4]
+     *   [5]
+     *   [6]]
+     */
+    X->describe(*fos,Teuchos::VERB_EXTREME);
+  } else {
+    *fos << "SuperLU_Dist solver not enable.  Exiting..." << std::endl;
+  }
 
   // We are done.
-  return 0;
+  return EXIT_SUCCESS;
 }
