@@ -16,7 +16,7 @@ in the README.md files in the library subfolders.  For more information on the x
 |  mfem/ginkgo/mfem_ex1_gko.cpp              | MFEM+Ginkgo                 | 2D Poisson problem with Ginko solver              |
 |  mfem/hypre-superlu/convdiff.cpp           | MFEM+HYPRE+SuperLU_Dist     | 2D steady state convective diffusion              |
 |  mfem/petsc/obstacle.cpp                   | MFEM+PETSc                  | Membrane obstacle problem (min energy functional) |
-|  mfem/sundials/transient-heat.cpp          | MFEM+Sundials               | 2D Transient nonlinear heat conduction            |
+|  mfem/sundials/transient-heat.cpp          | MFEM+SUNDIALS               | 2D Transient nonlinear heat conduction            |
 |  petsc/ex19.c                              | PETSc+HYPRE+SuperLU_Dist    | 2D nonlinear driven cavity problem                |
 |  sundials/ark_brusselator1D_FEM_sludist.cpp| SUNDIALS+SuperLU_Dist       | Chemical kinetics brusselator problem             |
 |  sundials/cv_petsc_ex7.c                   | SUNDIALS+PETSc              | 2D nonlinear PDE solution                         |
