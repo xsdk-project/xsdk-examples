@@ -9,11 +9,11 @@ class XsdkExamples(CMakePackage):
     """XSDK Examples show usage of libraries in the XSDK package."""
 
     homepage = "http://xsdk.info"
-    url      = "http://github.com/xsdk-project/xsdk-examples/xsdk-examples-0.1.0.tar.gz"
+    url      = "https://github.com/xsdk-project/xsdk-examples/archive/v0.1.0.tar.gz"
 
     maintainers = ['balos1', 'luszczek']
 
-    version('0.1.0', '8a2561d48bea92cdecf16e428f876f30')
+    version('0.1.0', 'd24cab1db7c0872b6474d69e598df9c8e25d254d09c425fb0a6a8d6469b8018f')
 
     variant('cuda', default=False, description='Enable CUDA dependent packages')
 
