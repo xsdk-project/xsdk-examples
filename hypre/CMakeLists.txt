@@ -25,11 +25,6 @@ find_library(HYPRE_LIBRARY HYPRE
   DOC "The HYPRE library.")
 find_library(HYPRE_LIBRARY HYPRE)
 
-# Link libraries for Unix systems
-if (UNIX)
-  list (APPEND HYPRE_LIBRARY m)
-endif (UNIX)
-
 # Find SuperLU_DIST
 find_path(SUPERLUDIST_INCLUDE_DIR superlu_defs.h
   HINTS ${SUPERLUDIST_DIR} $ENV{SUPERLUDIST_DIR}
@@ -52,6 +47,11 @@ target_link_libraries(ij_laplacian PRIVATE
   ${HYPRE_LIBRARY} ${SUPERLUDIST_LIBRARY} ${MPI_C_LIBRARIES})
 target_include_directories(ij_laplacian PRIVATE
   ${HYPRE_INCLUDE_DIRS} ${SUPERLUDIST_INCLUDE_DIRS} ${MPI_C_INCLUDE_PATH})
+
+find_library(MATH_LIBRARY NAMES m)
+if(MATH_LIBRARY)
+    target_link_libraries(ij_laplacian PRIVATE ${MATH_LIBRARY})
+endif()
 
 # Copy glvis helper script and directory
 file(COPY vis DESTINATION .)

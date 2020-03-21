@@ -11,12 +11,11 @@ set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
 
 find_package(PETSC REQUIRED)
 
-if (UNIX)
-    set(MATH_LIB m)
-else (UNIX)
-    set(MATH_LIB)
-endif (UNIX)
-
 add_executable(ex19 ex19.c)
-target_link_libraries(ex19 PRIVATE PETSC::ALL ${MATH_LIB})
+target_link_libraries(ex19 PRIVATE PETSC::ALL)
 target_include_directories(ex19 PRIVATE ${PETSC_DIR}/include)
+
+find_library(MATH_LIBRARY NAMES m)
+if(MATH_LIBRARY)
+    target_link_libraries(ex19 PRIVATE ${MATH_LIBRARY})
+endif()
