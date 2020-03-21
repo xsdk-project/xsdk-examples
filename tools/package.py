@@ -9,16 +9,16 @@ class XsdkExamples(CMakePackage):
     """XSDK Examples show usage of libraries in the XSDK package."""
 
     homepage = "http://xsdk.info"
-    git      = "https://github.com/xsdk-project/xsdk-examples"
+    url      = "http://github.com/xsdk-project/xsdk-examples/xsdk-examples-0.1.0.tar.gz"
 
     maintainers = ['balos1', 'luszczek']
 
-    version('0.5.0', branch='master')
+    version('0.1.0', '8a2561d48bea92cdecf16e428f876f30')
 
     variant('cuda', default=False, description='Enable CUDA dependent packages')
 
     depends_on('xsdk@develop', when='@develop')
-    depends_on('xsdk@0.5.0', when='@0.5.0')
+    depends_on('xsdk@0.5.0', when='@0.1.0')
     depends_on('mpi')
 
     def cmake_args(self):
