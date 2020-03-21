@@ -57,3 +57,11 @@ install(TARGETS ij_laplacian RUNTIME DESTINATION bin)
 
 # Copy glvis helper script and directory
 file(COPY vis DESTINATION .)
+
+install(DIRECTORY vis
+    DESTINATION share/xsdk-examples/hypre
+    PATTERN vis/*
+    PERMISSIONS
+        OWNER_EXECUTE OWNER_WRITE OWNER_READ
+        GROUP_EXECUTE GROUP_READ
+        WORLD_READ WORLD_EXECUTE)
