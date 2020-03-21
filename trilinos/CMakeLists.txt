@@ -46,3 +46,5 @@ find_library(DYNLNK_LIBRARY NAMES dl)
 if(DYNLNK_LIBRARY)
     target_link_libraries(SimpleSolve_WithParameters ${DYNLNK_LIBRARY})
 endif()
+
+install(TARGETS SimpleSolve_WithParameters RUNTIME DESTINATION bin)

@@ -53,5 +53,7 @@ if(MATH_LIBRARY)
     target_link_libraries(ij_laplacian PRIVATE ${MATH_LIBRARY})
 endif()
 
+install(TARGETS ij_laplacian RUNTIME DESTINATION bin)
+
 # Copy glvis helper script and directory
 file(COPY vis DESTINATION .)

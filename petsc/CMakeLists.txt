@@ -19,3 +19,5 @@ find_library(MATH_LIBRARY NAMES m)
 if(MATH_LIBRARY)
     target_link_libraries(ex19 PRIVATE ${MATH_LIBRARY})
 endif()
+
+install(TARGETS ex19 RUNTIME DESTINATION bin)
