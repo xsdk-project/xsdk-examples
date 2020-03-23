@@ -58,7 +58,7 @@ if(ENABLE_PETSC)
   add_executable(cv_petsc_ex7 cv_petsc_ex7.c)
   target_link_libraries(cv_petsc_ex7 SUNDIALS::cvode SUNDIALS::nvecpetsc
                                      SUNDIALS::sunnonlinsolpetscsnes
-                                     PETSC::ALL ${SUPERLU_INCLUDE_DIRS})
+                                     PETSC::ALL)
     if(MATH_LIBRARY)
         target_link_libraries(cv_petsc_ex7 ${MATH_LIBRARY})
     endif()

@@ -42,7 +42,6 @@ find_library(SUPERLUDIST_LIBRARY superlu_dist
 find_library(SUPERLUDIST_LIBRARY superlu_dist)
 
 add_executable(ij_laplacian ij_laplacian.c)
-target_compile_options(ij_laplacian PRIVATE -g -Wall)
 target_link_libraries(ij_laplacian PRIVATE
   ${HYPRE_LIBRARY} ${SUPERLUDIST_LIBRARY} ${MPI_C_LIBRARIES})
 target_include_directories(ij_laplacian PRIVATE
