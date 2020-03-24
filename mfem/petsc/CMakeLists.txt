@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project( obstacle
          DESCRIPTION "Obstacle problem using MFEM + PETSC/Tao"
-         LANGUAGES C)
+         LANGUAGES CXX)
 
 find_package(MPI REQUIRED)
 set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
@@ -61,7 +61,7 @@ find_library(PETSC_LIBRARY petsc)
 
 add_executable(obstacle obstacle.cpp)
 target_link_libraries( obstacle PRIVATE
-    ${MFEM_LIBRARY} SUNDIALS::nvecserial SUNDIALS::nvecparhyp PETSC::ALL ${HYPRE_LIBRARY} ${METIS_LIBRARY} ${ZLIB_LIBRARY} ${MPI_C_LIBRARIES})
+    ${MFEM_LIBRARY} SUNDIALS::nvecserial SUNDIALS::nvecparhyp PETSC::ALL ${HYPRE_LIBRARY} ${METIS_LIBRARY} ${ZLIB_LIBRARY} ${MPI_CXX_LIBRARIES})
 target_include_directories(obstacle PRIVATE
     ${MFEM_INCLUDE_DIRS} ${PETSC_DIR}/include ${HYPRE_INCLUDE_DIRS} ${MPI_C_INCLUDE_PATH})
 

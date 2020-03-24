@@ -6,6 +6,6 @@ project( mfem-examples
 option(ENABLE_MFEM "Enable MFEM" ON)
 
 #add_subdirectory(ginkgo)
-#add_subdirectory(hypre-superlu)
+add_subdirectory(hypre-superlu)
 add_subdirectory(petsc)
 add_subdirectory(sundials)

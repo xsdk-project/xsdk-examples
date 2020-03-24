@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project( convdiff
          DESCRIPTION "Convective diffusion using MFEM + SUPERLU + HYPRE"
-         LANGUAGES C)
+         LANGUAGES CXX)
 
 option(SUPERLUDIST_DIR "absolute/path/to/superlu-dist@develop/install" [.])
 
@@ -22,6 +22,10 @@ find_library(METIS_LIBRARY metis
     NO_DEFAULT_PATH
     DOC "The Metis library.")
 find_library(METIS_LIBRARY metis)
+
+find_package(PETSC REQUIRED)
+
+find_package(SUNDIALS REQUIRED)
 
 # Find MFEM
 # Find the MFEM header files
@@ -57,7 +61,6 @@ find_library(SUPERLUDIST_LIBRARY superlu_dist
     DOC "The SUPERLUDIST library.")
 find_library(SUPERLUDIST_LIBRARY SUPERLU)
 
-
 # Find HYPRE
 # Find the header files
 find_path(HYPRE_INCLUDE_DIRS HYPRE.h
@@ -77,6 +80,8 @@ find_library(HYPRE_LIBRARY HYPRE)
 
 add_executable(convdiff convdiff.cpp)
 target_link_libraries( convdiff PRIVATE
-    ${MFEM_LIBRARY} ${SUPERLU_LIBRARY} ${HYPRE_LIBRARY} ${MPI_C_LIBRARIES})
+    ${MFEM_LIBRARY} SUNDIALS::nvecserial SUNDIALS::nvecparhyp PETSC::ALL ${HYPRE_LIBRARY} ${SUPERLUDIST_LIBRARY} ${METIS_LIBRARY} ${ZLIB_LIBRARY} ${MPI_CXX_LIBRARIES})
 target_include_directories(convdiff PRIVATE
-    ${MFEM_INCLUDE_DIRS} ${SUPERLUDIST_INCLUDE_DIR} ${HYPRE_INCLUDE_DIRS} ${MPI_C_INCLUDE_PATH})
+    ${MFEM_INCLUDE_DIRS} ${SUPERLUDIST_INCLUDE_DIRS} ${HYPRE_INCLUDE_DIRS} ${MPI_CXX_INCLUDE_PATH})
+
+install(TARGETS convdiff RUNTIME DESTINATION bin)
