@@ -51,12 +51,19 @@ endif()
 # check for SUNDIALS
 find_package(SUNDIALS REQUIRED)
 
+find_library(MATH_LIBRARY NAMES m)
+
 # add the executables
 if(ENABLE_PETSC)
   add_executable(cv_petsc_ex7 cv_petsc_ex7.c)
   target_link_libraries(cv_petsc_ex7 SUNDIALS::cvode SUNDIALS::nvecpetsc
                                      SUNDIALS::sunnonlinsolpetscsnes
-                                     PETSC::ALL m)
+                                     PETSC::ALL)
+    if(MATH_LIBRARY)
+        target_link_libraries(cv_petsc_ex7 ${MATH_LIBRARY})
+    endif()
+
+    install(TARGETS cv_petsc_ex7 RUNTIME DESTINATION bin)
 endif()
 if(ENABLE_SUPERLU)
   add_executable(ark_brusselator1D_FEM_sludist ark_brusselator1D_FEM_sludist.cpp)
@@ -64,4 +71,9 @@ if(ENABLE_SUPERLU)
                                                       SUNDIALS::sunmatrixslunrloc
                                                       SUNDIALS::sunlinsolsuperludist
                                                       SuperLU_DIST::SuperLU_DIST)
+    if(MATH_LIBRARY)
+        target_link_libraries(ark_brusselator1D_FEM_sludist ${MATH_LIBRARY})
+    endif()
+
+    install(TARGETS ark_brusselator1D_FEM_sludist RUNTIME DESTINATION bin)
 endif()

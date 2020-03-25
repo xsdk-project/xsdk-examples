@@ -35,6 +35,10 @@ if(ENABLE_PETSC)
   list(APPEND SUNDIALS_FIND_COMPONENTS "nvecpetsc")
   list(APPEND SUNDIALS_FIND_COMPONENTS "sunnonlinsolpetscsnes")
 endif()
+if(ENABLE_MFEM)
+  list(APPEND SUNDIALS_FIND_COMPONENTS "kinsol")
+  list(APPEND SUNDIALS_FIND_COMPONENTS "nvecparhyp")
+endif()
 
 # find the library for each component
 foreach(component ${SUNDIALS_FIND_COMPONENTS})

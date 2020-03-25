@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
    int slu_colperm = 4;
    int slu_rowperm = 1;
    int slu_iterref = 2;
-   int slu_parsymbfact = 0;
    bool two_matrix = false;
    bool two_rhs = false;
 
@@ -48,9 +47,7 @@ int main(int argc, char *argv[])
                   "1-mmd-ata, 2-mmd_at_plus_a, 3-colamd, 4-metis_at_plus_a, 5-parmetis, 6-zoltan");
    args.AddOption(&slu_rowperm, "-rp", "--slu-rowperm",
                   "Set the SuperLU Row permutation algorithm:  0-NoRowPerm, "
-                  "1-LargeDiag_MC64, 2-LargeDiag_AWPM, 3-MyPermR");
-   args.AddOption(&slu_parsymbfact, "-psf", "--slu-parsymbfact",
-                  "Set the SuperLU ParSymbFact option:  0-No, 1-Yes");
+                  "1-LargeDiag, 2-MyPermR");
    args.AddOption(&two_matrix, "-2mat", "--two-matrix", "-1mat", "--one-matrix",
                   "Solve with 1 or two different matrices.");
    args.AddOption(&two_rhs, "-2rhs", "--two-rhs", "-1rhs", "--one-rhs",
@@ -165,7 +162,7 @@ int main(int argc, char *argv[])
    {
       SLUCD = new SuperLURowLocMatrix(CD);
       superlu = new SuperLUSolver(MPI_COMM_WORLD);
-      superlu->SetPrintStatistics(false);
+      superlu->SetPrintStatistics(true);
       superlu->SetSymmetricPattern(false);
 
       if (slu_colperm == 0)
@@ -203,13 +200,9 @@ int main(int argc, char *argv[])
       }
       else if (slu_rowperm == 1)
       {
-         superlu->SetRowPermutation(superlu::LargeDiag_MC64);
+         superlu->SetRowPermutation(superlu::LargeDiag);
       }
       else if (slu_rowperm == 2)
-      {
-         superlu->SetRowPermutation(superlu::LargeDiag_AWPM);
-      }      
-      else if (slu_rowperm == 3)
       {
          superlu->SetRowPermutation(superlu::MY_PERMR);
       }
@@ -231,8 +224,6 @@ int main(int argc, char *argv[])
          superlu->SetIterativeRefine(superlu::SLU_EXTRA);
       }
 
-      superlu->SetParSymbFact(slu_parsymbfact);
-
       superlu->SetOperator(*SLUCD);
       solver = superlu;
    }
@@ -250,7 +241,6 @@ int main(int argc, char *argv[])
    {
       cout << "Final L2 norm of residual: " << sqrt(R*R) << endl << endl;
    }
-   if (slu_solver) {superlu->StatPrint();}
    if (two_rhs)
    {
       X = 0.0;
@@ -265,8 +255,7 @@ int main(int argc, char *argv[])
       if (myid == 0)
       {
          cout << "Final L2 norm of residual: " << sqrt(R*R) << endl << endl;
-      }
-      if (slu_solver) {superlu->StatPrint();}      
+      } 
    }
 
    // 9b. Complete the solve a second time with another matrix to show off the saved
@@ -305,7 +294,6 @@ int main(int argc, char *argv[])
       {
          cout << "Final L2 norm of residual: " << sqrt(R*R) << endl;
       }
-      if (slu_solver) {superlu->StatPrint();}
    }
    cd->RecoverFEMSolution(X, *b, x);
 
