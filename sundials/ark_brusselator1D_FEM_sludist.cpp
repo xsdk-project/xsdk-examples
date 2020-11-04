@@ -169,19 +169,19 @@ int main(int argc, char *argv[]) {
   N_Vector umask = NULL;
   N_Vector vmask = NULL;
   N_Vector wmask = NULL;
-  SUNMatrix A = NULL;         /* empty matrix object for solver */
-  SUNMatrix M = NULL;         /* empty mass matrix object */
-  SUNLinearSolver LS = NULL;  /* empty linear solver object */
-  SUNLinearSolver MLS = NULL; /* empty mass matrix solver object */
-  SuperMatrix Asuper;         /* empty SuperLU-DIST matrix object for solver */
-  SuperMatrix Msuper;         /* empty SuperLU-DIST mass matrix object */
-  SuperMatrix Rsuper;         /* empty SuperLU-DIST reaction matrix object */
-  gridinfo_t grid;            /* SuperLU-DIST process grid */
-  LUstruct_t Alu, Mlu;        /* SuperLU-DIST LUstruct_t */
-  ScalePermstruct_t Ascaleperm, Mscaleperm; /* SuperLU-DIST ScalePermstruct_t */
-  SOLVEstruct_t Asolve, Msolve;             /* SuperLU-DIST SOLVEstruct_t */
-  SuperLUStat_t Astat, Mstat;               /* SuperLU-DIST SuperLUState_t */
-  superlu_dist_options_t Aopts, Mopts;      /* SuperLU-DIST options struct */
+  SUNMatrix A = NULL;          /* empty matrix object for solver */
+  SUNMatrix M = NULL;          /* empty mass matrix object */
+  SUNLinearSolver LS = NULL;   /* empty linear solver object */
+  SUNLinearSolver MLS = NULL;  /* empty mass matrix solver object */
+  SuperMatrix Asuper;          /* empty SuperLU-DIST matrix object for solver */
+  SuperMatrix Msuper;          /* empty SuperLU-DIST mass matrix object */
+  SuperMatrix Rsuper;          /* empty SuperLU-DIST reaction matrix object */
+  gridinfo_t grid;             /* SuperLU-DIST process grid */
+  dLUstruct_t Alu, Mlu;        /* SuperLU-DIST LUstruct_t */
+  dScalePermstruct_t Ascaleperm, Mscaleperm; /* SuperLU-DIST ScalePermstruct_t */
+  dSOLVEstruct_t Asolve, Msolve;             /* SuperLU-DIST SOLVEstruct_t */
+  SuperLUStat_t Astat, Mstat;                /* SuperLU-DIST SuperLUState_t */
+  superlu_dist_options_t Aopts, Mopts;       /* SuperLU-DIST options struct */
 
   void *arkode_mem = NULL;
   FILE *FID, *UFID, *VFID, *WFID;
@@ -353,16 +353,16 @@ int main(int argc, char *argv[]) {
   /* SuperLU_DIST structures */
   dCreate_CompRowLoc_Matrix_dist(&Asuper, NEQ, NEQ, NNZ, NEQ, 0,
                                  Adata, Acolind, Arowptr, SLU_NR_loc, SLU_D, SLU_GE);
-  ScalePermstructInit(NEQ, NEQ, &Ascaleperm);
-  LUstructInit(NEQ, &Alu);
+  dScalePermstructInit(NEQ, NEQ, &Ascaleperm);
+  dLUstructInit(NEQ, &Alu);
   PStatInit(&Astat);
   set_default_options_dist(&Aopts);
   Aopts.PrintStat = NO;
 
   dCreate_CompRowLoc_Matrix_dist(&Msuper, NEQ, NEQ, NNZ, NEQ, 0,
                                  Mdata, Mcolind, Mrowptr, SLU_NR_loc, SLU_D, SLU_GE);
-  ScalePermstructInit(NEQ, NEQ, &Mscaleperm);
-  LUstructInit(NEQ, &Mlu);
+  dScalePermstructInit(NEQ, NEQ, &Mscaleperm);
+  dLUstructInit(NEQ, &Mlu);
   PStatInit(&Mstat);
   set_default_options_dist(&Mopts);
   Mopts.PrintStat = NO;
@@ -515,8 +515,8 @@ int main(int argc, char *argv[]) {
 
   /* Free the SuperLU_DIST structures */
   PStatFree(&Astat); PStatFree(&Mstat);
-  ScalePermstructFree(&Ascaleperm); ScalePermstructFree(&Mscaleperm);
-  LUstructFree(&Alu); LUstructFree(&Mlu);
+  dScalePermstructFree(&Ascaleperm); dScalePermstructFree(&Mscaleperm);
+  dLUstructFree(&Alu); dLUstructFree(&Mlu);
   Destroy_CompRowLoc_Matrix_dist(&Asuper);
   Destroy_CompRowLoc_Matrix_dist(&Msuper);
   Destroy_CompRowLoc_Matrix_dist(&Rsuper);
