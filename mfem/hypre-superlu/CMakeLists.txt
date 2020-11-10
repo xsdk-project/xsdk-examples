@@ -3,85 +3,9 @@ project( convdiff
          DESCRIPTION "Convective diffusion using MFEM + SUPERLU + HYPRE"
          LANGUAGES CXX)
 
-option(SUPERLUDIST_DIR "absolute/path/to/superlu-dist@develop/install" [.])
-
-find_package(MPI REQUIRED)
-
-option(ENABLE_MFEM "Enable MFEM" ON)
-
-find_library(ZLIB_LIBRARY z
-    HINTS ${ZLIB_LIBRARY_DIR} $ENV{METIS_LIBRARY_DIR}
-    PATH_SUFFIXES lib
-    NO_DEFAULT_PATH
-    DOC "The zlib library.")
-find_library(ZLIB_LIBRARY z)
-
-find_library(METIS_LIBRARY metis
-    HINTS ${METIS_DIR} $ENV{METIS_DIR}
-    PATH_SUFFIXES lib
-    NO_DEFAULT_PATH
-    DOC "The Metis library.")
-find_library(METIS_LIBRARY metis)
-
-find_package(PETSC REQUIRED)
-
-find_package(SUNDIALS REQUIRED)
-
-# Find MFEM
-# Find the MFEM header files
-find_path(MFEM_INCLUDE_DIRS mfem.hpp
-  HINTS ${MFEM_DIR} $ENV{MFEM_DIR}
-  PATH_SUFFIXES include
-  NO_DEFAULT_PATH
-  DOC "Directory with MFEM header.")
-find_path(MFEM_INCLUDE_DIRS mfem.hpp)
-
-# Find the MFEM library
-find_library(MFEM_LIBRARY mfem
-  HINTS ${MFEM_DIR} $ENV{MFEM_DIR}
-  PATH_SUFFIXES lib
-  NO_DEFAULT_PATH
-  DOC "The MFEM library.")
-find_library(MFEM_LIBRARY MFEM)
-
-# Find SUPERLUDIST
-# Find the header files
-find_path(SUPERLUDIST_INCLUDE_DIRS superlu_defs.h
-    HINTS ${SUPERLUDIST_DIR} $ENV{SUPERLUDIST_DIR}
-    PATH_SUFFIXES include
-    NO_DEFAULT_PATH
-    DOC "Directory with SUPERLUDIST header.")
-find_path(SUPERLUDIST_INCLUDE_DIRS superlu_defs.h)
-
-# Find the library
-find_library(SUPERLUDIST_LIBRARY superlu_dist
-    HINTS ${SUPERLUDIST_DIR} $ENV{SUPERLUDIST_DIR}
-    PATH_SUFFIXES lib
-    NO_DEFAULT_PATH
-    DOC "The SUPERLUDIST library.")
-find_library(SUPERLUDIST_LIBRARY SUPERLU)
-
-# Find HYPRE
-# Find the header files
-find_path(HYPRE_INCLUDE_DIRS HYPRE.h
-  HINTS ${HYPRE_DIR} $ENV{HYPRE_DIR}
-  PATH_SUFFIXES include
-  NO_DEFAULT_PATH
-  DOC "Directory with HYPRE header.")
-find_path(HYPRE_INCLUDE_DIRS HYPRE.h)
-
-# Find the library
-find_library(HYPRE_LIBRARY HYPRE
-  HINTS ${HYPRE_DIR} $ENV{HYPRE_DIR}
-  PATH_SUFFIXES lib
-  NO_DEFAULT_PATH
-  DOC "The HYPRE library.")
-find_library(HYPRE_LIBRARY HYPRE)
+set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
 
 add_executable(convdiff convdiff.cpp)
-target_link_libraries( convdiff PRIVATE
-    ${MFEM_LIBRARY} SUNDIALS::nvecserial SUNDIALS::nvecparhyp PETSC::ALL ${HYPRE_LIBRARY} ${SUPERLUDIST_LIBRARY} ${METIS_LIBRARY} ${ZLIB_LIBRARY} ${MPI_CXX_LIBRARIES})
-target_include_directories(convdiff PRIVATE
-    ${MFEM_INCLUDE_DIRS} ${SUPERLUDIST_INCLUDE_DIRS} ${HYPRE_INCLUDE_DIRS} ${MPI_CXX_INCLUDE_PATH})
+target_link_libraries(convdiff PRIVATE PETSC::ALL SUNDIALS::cvodes XSDK::HYPRE XSDK::SUPERLU XSDK::MFEM)
 
 install(TARGETS convdiff RUNTIME DESTINATION bin)
