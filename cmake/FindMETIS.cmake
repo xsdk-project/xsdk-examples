@@ -22,6 +22,7 @@ find_package_handle_standard_args(METIS
   REQUIRED_VARS
     METIS_LIBRARY
     METIS_INCLUDE_DIRS
+    ZLIB_LIBRARY
   )
 
 # Create target for METIS

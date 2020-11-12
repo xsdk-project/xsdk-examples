@@ -6,6 +6,6 @@ project( convdiff
 set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
 
 add_executable(convdiff convdiff.cpp)
-target_link_libraries(convdiff PRIVATE PETSC::ALL SUNDIALS::cvodes XSDK::HYPRE XSDK::SUPERLU XSDK::MFEM)
+target_link_libraries(convdiff PRIVATE XSDK::MFEM PETSC::ALL XSDK::SUNDIALS XSDK::HYPRE XSDK::SUPERLU)
 
 install(TARGETS convdiff RUNTIME DESTINATION bin)

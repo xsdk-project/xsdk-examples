@@ -16,6 +16,12 @@ find_library(MFEM_LIBRARY mfem
   NO_DEFAULT_PATH
   DOC "The MFEM library.")
 
+find_library(ZLIB_LIBRARY z
+  HINTS ${ZLIB_LIBRARY_DIR} $ENV{ZLIB_LIBRARY_DIR}
+  PATH_SUFFIXES lib
+  NO_DEFAULT_PATH
+  DOC "The zlib library.")
+
 # set package variables including MFEM_FOUND
 find_package_handle_standard_args(MFEM
   REQUIRED_VARS
