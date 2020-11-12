@@ -11,11 +11,11 @@ find_library(METIS_LIBRARY metis
     NO_DEFAULT_PATH
     DOC "The Metis library.")
 
-# find_library(ZLIB_LIBRARY z
-#   HINTS ${ZLIB_LIBRARY_DIR} $ENV{ZLIB_LIBRARY_DIR}
-#     PATH_SUFFIXES lib
-#     NO_DEFAULT_PATH
-#     DOC "The zlib library.")
+find_library(ZLIB_LIBRARY z
+    HINTS ${ZLIB_LIBRARY_DIR} $ENV{ZLIB_LIBRARY_DIR}
+    PATH_SUFFIXES lib
+    NO_DEFAULT_PATH
+    DOC "The zlib library.")
 
 # set package variables including METIS_FOUND
 find_package_handle_standard_args(METIS
