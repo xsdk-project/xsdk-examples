@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
       }
       else if (slu_rowperm == 1)
       {
-         superlu->SetRowPermutation(superlu::LargeDiag);
+         superlu->SetRowPermutation(superlu::LargeDiag_MC64);
       }
       else if (slu_rowperm == 2)
       {
