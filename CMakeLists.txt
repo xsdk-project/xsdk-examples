@@ -34,6 +34,7 @@ endif()
 
 # check for PETSc
 if(ENABLE_MFEM)
+  find_package(ZLIB REQUIRED)
   find_package(MFEM REQUIRED)
 endif()
 
