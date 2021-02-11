@@ -36,9 +36,15 @@ find_library(MFEM_LIBRARY mfem)
 find_library(GINKGO_LIBRARY ginkgo
     HINTS ${GINKGO_LIBRARY_DIR} ${GINKGO_DIR})
 
+find_library(GINKGO_OMP_LIBRARY ginkgo_omp
+    HINTS ${GINKGO_LIBRARY_DIR} ${GINKGO_DIR})
+
+find_library(GINKGO_CUDA_LIBRARY ginkgo_cuda
+    HINTS ${GINKGO_LIBRARY_DIR} ${GINKGO_DIR})
+
 add_executable(mfem_ex1_gko mfem_ex1_gko.cpp)
 target_sources(mfem_ex1_gko PRIVATE mfem_ex1_gko.cpp mfem_wrapper.cpp)
 
-target_link_libraries(mfem_ex1_gko PRIVATE ${MFEM_LIBRARY} ${GINKGO_LIBRARY} ${METIS_LIBRARY})
+target_link_libraries(mfem_ex1_gko PRIVATE ${MFEM_LIBRARY} XSDK::SUNDIALS XSDK::HYPRE ${GINKGO_LIBRARY} ${GINKGO_OMP_LIBRARY} ${GINKGO_CUDA_LIBRARY} PETSC::ALL ${METIS_LIBRARY} ZLIB::ZLIB)
 
 target_include_directories(mfem_ex1_gko PRIVATE ${MFEM_INCLUDE_DIR} ${GINKGO_INCLUDE_DIR})
