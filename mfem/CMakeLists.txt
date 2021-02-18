@@ -3,7 +3,7 @@ project(mfem-examples
         DESCRIPTION "MFEM Examples"
         LANGUAGES CXX)
 
-add_subdirectory(ginkgo)
 add_subdirectory(hypre-superlu)
+add_subdirectory(ginkgo)
 add_subdirectory(petsc)
 add_subdirectory(sundials)
