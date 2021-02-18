@@ -7,6 +7,9 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(FindPackageHandleStandardArgs)
 
 # build options
+option(ENABLE_CUDA "Enable CUDA" OFF)
+option(CMAKE_CUDA_ARCHITECTURES "CUDA architecture(s) to target" "70")
+
 option(ENABLE_HYPRE "Enable hypre" ON)
 set(HYPRE_DIR "${HYPRE_DIR}" CACHE PATH "Path to hypre installation directory")
 
@@ -26,6 +29,11 @@ option(ENABLE_TRILINOS "Enable TRILINOS" ON)
 set(TRILINOS_DIR "${Trilinos_DIR}" CACHE PATH "Path to Trilinos installation directory")
 
 set(METIS_DIR "${METIS_DIR}" CACHE PATH "Path to Metis installation directory")
+
+if(ENABLE_CUDA)
+  enable_language(CUDA)
+  set(CMAKE_CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
+endif()
 
 # check for hypre
 if(ENABLE_HYPRE)
