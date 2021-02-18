@@ -16,6 +16,7 @@ project(sundials-xsdk-examples CXX C)
 
 set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
 set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
+set(CMAKE_CUDA_HOST_COMPILER ${MPI_CXX_COMPILER})
 
 # add the executables
 if(ENABLE_PETSC)
@@ -34,3 +35,12 @@ if(ENABLE_SUPERLU)
   endif()
   install(TARGETS ark_brusselator1D_FEM_sludist RUNTIME DESTINATION bin)
 endif()
+if(ENABLE_MAGMA)
+  add_executable(cvRoberts_blockdiag_magma cvRoberts_blockdiag_magma.cpp)
+  target_link_libraries(cvRoberts_blockdiag_magma XSDK::SUNDIALS XSDK::MAGMA)
+  if(MATH_LIBRARY)
+    target_link_libraries(cvRoberts_blockdiag_magma ${MATH_LIBRARY})
+  endif()
+  install(TARGETS cvRoberts_blockdiag_magma RUNTIME DESTINATION bin)
+endif()
+
