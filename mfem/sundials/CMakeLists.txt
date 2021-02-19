@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(transient-heat
         DESCRIPTION "Transient Heat Conduction using MFEM + SUNDIALS + HYPRE"
-        LANGUAGES C)
+        LANGUAGES C CXX)
 
 set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
 set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
