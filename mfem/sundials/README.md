@@ -32,7 +32,7 @@ Useful non-default options:
 | ..............        | 10 - ARKODE (default explicit).                       |
 | ..............        | 11 - ARKODE (explicit Fehlberg-6-4-5).                |
 | ..............        | 12 - ARKODE (default impicit).                        |
-| --mesh                | Mesh file to use.                                     |
+| --mesh s              | Mesh file to use.                                     |
 
 
 ## advection.cpp
@@ -43,7 +43,7 @@ demonstrates MFEM integration with the SUNDIALS CVODE and ARKODE solvers for CUD
 
 This example is built to run in parallel, so launch it with mpirun and your desired options:
 ```
-mpirun -np 4 ./transient-heat --kappa 0.5 --alpha 0.01 --ode-solver 8
+mpirun -np 4 ./advection --device cuda --partial-assembly --ode-solver 9
 ```
 
 Useful non-default options:
@@ -51,8 +51,9 @@ Useful non-default options:
 |:----------------------| :-----------------------------------------------------|
 | --device s            | Device configuration string. Choose cpu or cuda.      |
 | --order n             | Set the polynomial order of the discretization.       |
-| --kappa n             | Set up the conductivity model C(T) = kappa + alpha T. |
-| --alpha n             | Set up the conductivity model C(T) = kappa + alpha T. |
+| --partial-assembly    | Enable Partial Assembly.                              |
+| --element-assembly    | Enable Element Assembly.                              |
+| --full-assembly       | Enable Full Assembly.                                 |
 | --ode-solver n        | Pick the ODE solver used for the time integration.    |
 | ..............        | 1  - MFEM (Forward Euler).                            |
 | ..............        | 2  - MFEM (RK2).                                      |
@@ -62,4 +63,4 @@ Useful non-default options:
 | ..............        | 7  - CVODE (implicit Adams).                          |
 | ..............        | 8  - ARKODE (default 4th order explicit).             |
 | ..............        | 9  - ARKODE (RK8).                                    |
-| --mesh                | Mesh file to use.                                     |
+| --mesh s              | Mesh file to use.                                     |
