@@ -46,6 +46,8 @@ class XsdkExamples(CMakePackage):
             '-DGINKGO_DIR=%s' % spec['ginkgo'].prefix,
             '-DGINKGO_INCLUDE_DIR=%s' % spec['ginkgo'].prefix.include,
             '-DGINKGO_LIBRARY_DIR=%s' % spec['ginkgo'].prefix.include.lib,
+            # allow use of default `find_package(Ginkgo)`
+            '-DCMAKE_PREFIX_PATH=%s/cmake' % spec['ginkgo'].prefix.include.lib
         ]
         if 'trilinos' in spec:  # if trilinos variant was activated for xsdk
             args.extend([
