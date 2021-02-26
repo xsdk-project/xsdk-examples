@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
     std::shared_ptr<gko::Executor> executor;
 
     // We will always need an OpenMP executor.
-    auto omp_executor = gko::OmpExecutor::create();
+    auto ref_executor = gko::ReferenceExecutor::create();
 
     // If the user has requested to use CUDA, then build a 
     // CudaExecutor and set `executor` to it; otherwise,
@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
     bool on_device = false;
     if (!strcmp(device_config, "cuda")) {
         auto cuda_executor =
-            gko::CudaExecutor::create(0, gko::OmpExecutor::create());
+            gko::CudaExecutor::create(0, ref_executor);
         executor = cuda_executor;
         on_device = true;
         // Check we don't want full assembly + pc with this backend:
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
             return 1;
         }
     } else {
-        executor = omp_executor;
+        executor = ref_executor;
     }
   
     // --------------------- End Ginkgo set-up -----------------------
