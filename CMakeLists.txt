@@ -36,6 +36,7 @@ endif()
 if(ENABLE_MFEM)
   find_package(ZLIB REQUIRED)
   find_package(MFEM REQUIRED)
+  find_package(Ginkgo REQUIRED)
 endif()
 
 # check for PETSC
