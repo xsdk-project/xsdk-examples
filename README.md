@@ -20,13 +20,12 @@ in the README.md files in the library subfolders.  For more information on the x
 |  sundials/ark_brusselator1D_FEM_sludist.cpp| SUNDIALS+SuperLU_Dist       | Chemical kinetics brusselator problem             |
 |  sundials/cv_petsc_ex7.c                   | SUNDIALS+PETSc              | 2D nonlinear PDE solution                         |
 |  trilinos/SimpleSolve_WithParameters.cpp   | Trilinos+SuperLU_Dist       | Small linear system direct solution               |
-
+|  mfem/ginkgo/mfem_ex1_gko.cpp              | MFEM+Ginkgo                 | 2D Poisson problem with Ginko solver              |
 
 These examples are currently in the repo but will not be enabled until we release a new version of the xSDK.
 
 |   Example                                  | Libraries                   | Description                                       |
 |:-------------------------------------------|:----------------------------|:--------------------------------------------------|
-|  mfem/ginkgo/mfem_ex1_gko.cpp              | MFEM+Ginkgo                 | 2D Poisson problem with Ginko solver              |
 
 ## Install the code samples
 
