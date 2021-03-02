@@ -16,6 +16,10 @@ set(HYPRE_DIR "${HYPRE_DIR}" CACHE PATH "Path to hypre installation directory")
 option(ENABLE_MFEM "Enable MFEM" ON)
 set(MFEM_DIR "${MFEM_DIR}" CACHE PATH "Path to MFEM installation directory")
 
+option(ENABLE_MAGMA "Enable MAGMA" OFF)
+option(MAGMA_DIR "${MAGMA_DIR}" CACHE PATH "Path to MAGMA installation directory")
+# option(MAGMA_BACKEND "${MAGMA_BACKEND}" CACHE STRING "MAGMA backend to use (CUDA or HIP)")
+
 option(ENABLE_PETSC "Enable PETSc" ON)
 set(PETSC_DIR "${PETSC_DIR}" CACHE PATH "Path to PETSc installation directory")
 
@@ -40,11 +44,16 @@ if(ENABLE_HYPRE)
   find_package(HYPRE REQUIRED)
 endif()
 
-# check for PETSc
+# check for MFEM
 if(ENABLE_MFEM)
   find_package(ZLIB REQUIRED)
   find_package(MFEM REQUIRED)
   find_package(Ginkgo REQUIRED)
+endif()
+
+# check for MAGMA
+if(ENABLE_MAGMA)
+  find_package(MAGMA REQUIRED)
 endif()
 
 # check for PETSC
