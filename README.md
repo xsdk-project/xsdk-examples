@@ -14,18 +14,21 @@ in the README.md files in the library subfolders.  For more information on the x
 |  hypre/ij_laplacian.c                      | HYPRE+SuperLU_Dist          | 2D Laplacian problem                              |
 |  libensemble/test_persistent_aposmm_tao.py | libEnsemble+PETSc           | 2D constrained optimization problem               |
 |  mfem/hypre-superlu/convdiff.cpp           | MFEM+HYPRE+SuperLU_Dist     | 2D steady state convective diffusion              |
+|  mfem/ginkgo/mfem_ex1_gko.cpp              | MFEM+Ginkgo                 | 2D Poisson problem with Ginko solver              |
 |  mfem/petsc/obstacle.cpp                   | MFEM+PETSc                  | Membrane obstacle problem (min energy functional) |
 |  mfem/sundials/transient-heat.cpp          | MFEM+SUNDIALS               | 2D Transient nonlinear heat conduction            |
+|  mfem/sundials/advection.cpp               | MFEM+SUNDIALS (CUDA)        | 2D Time-dependent advection                       |
 |  petsc/ex19.c                              | PETSc+HYPRE+SuperLU_Dist    | 2D nonlinear driven cavity problem                |
 |  sundials/ark_brusselator1D_FEM_sludist.cpp| SUNDIALS+SuperLU_Dist       | Chemical kinetics brusselator problem             |
 |  sundials/cv_petsc_ex7.c                   | SUNDIALS+PETSc              | 2D nonlinear PDE solution                         |
 |  trilinos/SimpleSolve_WithParameters.cpp   | Trilinos+SuperLU_Dist       | Small linear system direct solution               |
-|  mfem/ginkgo/mfem_ex1_gko.cpp              | MFEM+Ginkgo                 | 2D Poisson problem with Ginko solver              |
 
-These examples are currently in the repo but will not be enabled until we release a new version of the xSDK.
+These examples are currently in the repo but will not be enabled in the xsdk-examples spack package until we release a new version of the xSDK.
+They can still be built using CMake directly.
 
 |   Example                                  | Libraries                   | Description                                       |
 |:-------------------------------------------|:----------------------------|:--------------------------------------------------|
+| sundials/cvRoberts_blockdiag_magma.cpp     | SUNDIALS+MAGMA (CUDA)       | Solves a group of chemical kinetics ODEs          |
 
 ## Install the code samples
 
