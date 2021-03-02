@@ -19,6 +19,9 @@ class XsdkExamples(CMakePackage):
     version('0.2.0', sha256='03756da932e653714bc027ee1b9cab4cd308f1eef28797b4c125fd4615fe368e')
     version('0.1.0', sha256='d24cab1db7c0872b6474d69e598df9c8e25d254d09c425fb0a6a8d6469b8018f')
 
+    variant('cuda', default=False, description='Compile CUDA examples')
+
+    depends_on('xsdk+cuda ^mfem+cuda', when='+cuda')
     depends_on('xsdk@0.6.0', when='@0.2.0')
     depends_on('xsdk@0.5.0', when='@0.1.0')
 
