@@ -17,8 +17,7 @@ option(ENABLE_MFEM "Enable MFEM" ON)
 set(MFEM_DIR "${MFEM_DIR}" CACHE PATH "Path to MFEM installation directory")
 
 option(ENABLE_MAGMA "Enable MAGMA" OFF)
-option(MAGMA_DIR "${MAGMA_DIR}" CACHE PATH "Path to MAGMA installation directory")
-# option(MAGMA_BACKEND "${MAGMA_BACKEND}" CACHE STRING "MAGMA backend to use (CUDA or HIP)")
+set(MAGMA_DIR "${MAGMA_DIR}" CACHE PATH "Path to MAGMA installation directory")
 
 option(ENABLE_PETSC "Enable PETSc" ON)
 set(PETSC_DIR "${PETSC_DIR}" CACHE PATH "Path to PETSc installation directory")

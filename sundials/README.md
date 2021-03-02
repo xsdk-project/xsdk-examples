@@ -58,6 +58,22 @@ To view all the options available:
 ./cv_petsc_ex7 -h
 ```
 
+## SUNDIALS + MAGMA
+
+The ``cvRoberts_blockdiag_magma.cpp`` example solves a group of independent ODEs
+simulating a problem from chemical kinetics. The example groups the independent ODEs together
+to form a larger system which is evolved with the CVODE implicit BDF time integration
+method. The linear system that arises is block-diagonal and there is no coupling
+between the blocks. Thus, a batched LU method from the [MAGMA](https://icl.utk.edu/magma/) linear algebra library
+is utilized. This example is CUDA-enabled.
+
+To run:
+
+```
+./cvRoberts_blockdiag_magma [number of groups]
+```
+
+
 ## License
 
 SUNDIALS is released under the BSD 3-clause license. See the

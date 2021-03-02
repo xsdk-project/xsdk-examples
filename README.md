@@ -23,10 +23,12 @@ in the README.md files in the library subfolders.  For more information on the x
 |  sundials/cv_petsc_ex7.c                   | SUNDIALS+PETSc              | 2D nonlinear PDE solution                         |
 |  trilinos/SimpleSolve_WithParameters.cpp   | Trilinos+SuperLU_Dist       | Small linear system direct solution               |
 
-These examples are currently in the repo but will not be enabled until we release a new version of the xSDK.
+These examples are currently in the repo but will not be enabled in the xsdk-examples spack package until we release a new version of the xSDK.
+They can still be built using CMake directly.
 
 |   Example                                  | Libraries                   | Description                                       |
 |:-------------------------------------------|:----------------------------|:--------------------------------------------------|
+| sundials/cvRoberts_blockdiag_magma.cpp     | SUNDIALS+MAGMA (CUDA)       | Solves a group of chemical kinetics ODEs          |
 
 ## Install the code samples
 
