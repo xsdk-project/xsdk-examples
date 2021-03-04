@@ -1,8 +1,5 @@
 # MFEM-Ginkgo Example
 
-**NOTE:  This example is disabled in the current version of the xSDK (v0.5.0) and will be 
-enabled in a later version that supports this integration.**
-
 This example discretizes a Poisson problem with the MFEM library and uses the 
 the CG solver from the Ginkgo library to solve the linear system.  To do 
 this, it uses two special wrapper classes, for MFEM Operators and Vectors.  The 
