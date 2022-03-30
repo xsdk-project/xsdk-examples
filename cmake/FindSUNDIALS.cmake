@@ -12,11 +12,11 @@
 # SUNDIALS Copyright End
 # ---------------------------------------------------------------
 
-# check if the SUNDIALS path is set
-if(NOT SUNDIALS_DIR)
-  message(FATAL_ERROR "Error: SUNDIALS_DIR not set!")
-  set(SUNDIALS_DIR "" CACHE PATH "SUNDIALS install directory")
-endif()
+# # check if the SUNDIALS path is set
+# if(NOT SUNDIALS_DIR)
+#   message(FATAL_ERROR "Error: SUNDIALS_DIR not set!")
+#   set(SUNDIALS_DIR "" CACHE PATH "SUNDIALS install directory")
+# endif()
 
 # determine SUNDIALS components needed
 if(NOT SUNDIALS_FIND_COMPONENTS)
@@ -47,39 +47,7 @@ if(ENABLE_SUPERLU)
   list(APPEND SUNDIALS_FIND_COMPONENTS "sunlinsolsuperludist")
 endif()
 
-# find the library for each component
-foreach(component ${SUNDIALS_FIND_COMPONENTS})
-  find_library(${component}_LIBRARY sundials_${component}
-    PATHS ${SUNDIALS_DIR}/lib ${SUNDIALS_DIR}/lib64
+find_package(SUNDIALS REQUIRED COMPONENTS ${SUNDIALS_FIND_COMPONENTS}
+    HINTS ${SUNDIALS_DIR} $ENV{SUNDIALS_DIR} ${CMAKE_PREFIX_PATH}
     NO_DEFAULT_PATH)
-  if(${component}_LIBRARY)
-    list(APPEND SUNDIALS_LIBRARIES ${${component}_LIBRARY})
-    list(APPEND SUNDIALS_REQUIRED_VARS ${component}_LIBRARY)
-    set(SUNDIALS_${component}_FOUND TRUE)
-  endif()
-endforeach()
 
-find_package_handle_standard_args(SUNDIALS
-  REQUIRED_VARS ${SUNDIALS_REQUIRED_VARS}
-  HANDLE_COMPONENTS)
-
-# create a target for each component
-if(SUNDIALS_FOUND)
-  foreach(component ${SUNDIALS_FIND_COMPONENTS})
-    if(NOT TARGET SUNDIALS::${component})
-      add_library(SUNDIALS::${component} UNKNOWN IMPORTED)
-      set_target_properties(SUNDIALS::${component}
-        PROPERTIES
-        IMPORTED_LOCATION ${${component}_LIBRARY}
-        INTERFACE_INCLUDE_DIRECTORIES ${SUNDIALS_DIR}/include)
-    endif()
-  endforeach()
-  if(NOT TARGET XSDK::SUNDIALS)
-    add_library(XSDK::SUNDIALS UNKNOWN IMPORTED)
-    set_target_properties(XSDK::SUNDIALS
-      PROPERTIES
-      IMPORTED_LOCATION "${nvecserial_LIBRARY}"
-      INTERFACE_LINK_LIBRARIES "${SUNDIALS_LIBRARIES}"
-      INTERFACE_INCLUDE_DIRECTORIES ${SUNDIALS_DIR}/include)
-  endif()
-endif()

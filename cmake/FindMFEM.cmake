@@ -4,20 +4,20 @@ find_package(METIS REQUIRED)
 # Find MFEM
 # Find the MFEM header files
 find_path(MFEM_INCLUDE_DIRS mfem.hpp
-  HINTS ${MFEM_DIR} $ENV{MFEM_DIR}
+  HINTS ${MFEM_DIR} $ENV{MFEM_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES include
   NO_DEFAULT_PATH
   DOC "Directory with MFEM header.")
 
 # Find the MFEM library
 find_library(MFEM_LIBRARY mfem
-  HINTS ${MFEM_DIR} $ENV{MFEM_DIR}
+  HINTS ${MFEM_DIR} $ENV{MFEM_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES lib
   NO_DEFAULT_PATH
   DOC "The MFEM library.")
 
 find_library(ZLIB_LIBRARY z
-  HINTS ${ZLIB_LIBRARY_DIR} $ENV{ZLIB_LIBRARY_DIR}
+  HINTS ${ZLIB_LIBRARY_DIR} $ENV{ZLIB_LIBRARY_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES lib
   NO_DEFAULT_PATH
   DOC "The zlib library.")

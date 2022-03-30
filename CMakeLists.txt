@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.18)
 project(xsdk-examples
         DESCRIPTION "xSDK Examples"
         LANGUAGES CXX C)
@@ -8,7 +8,9 @@ include(FindPackageHandleStandardArgs)
 
 # build options
 option(ENABLE_CUDA "Enable CUDA" OFF)
-option(CMAKE_CUDA_ARCHITECTURES "CUDA architecture(s) to target" "70")
+if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+  set(CMAKE_CUDA_ARCHITECTURES 70)
+endif()
 
 option(ENABLE_HYPRE "Enable hypre" ON)
 set(HYPRE_DIR "${HYPRE_DIR}" CACHE PATH "Path to hypre installation directory")
@@ -32,6 +34,13 @@ option(ENABLE_TRILINOS "Enable TRILINOS" ON)
 set(TRILINOS_DIR "${Trilinos_DIR}" CACHE PATH "Path to Trilinos installation directory")
 
 set(METIS_DIR "${METIS_DIR}" CACHE PATH "Path to Metis installation directory")
+
+# compiler options
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
 
 if(ENABLE_CUDA)
   enable_language(CUDA)
@@ -95,3 +104,4 @@ endif()
 if(ENABLE_TRILINOS)
   add_subdirectory(trilinos)
 endif()
+

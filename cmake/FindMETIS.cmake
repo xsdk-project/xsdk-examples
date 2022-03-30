@@ -1,18 +1,18 @@
 
 find_path(METIS_INCLUDE_DIRS metis.h
-    HINTS ${METIS_DIR} $ENV{METIS_DIR}
+    HINTS ${METIS_DIR} $ENV{METIS_DIR} ${CMAKE_PREFIX_PATH}
     PATH_SUFFIXES include
     NO_DEFAULT_PATH
     DOC "The directory with the Metis header file.")
 
 find_library(METIS_LIBRARY metis
-    HINTS ${METIS_DIR} $ENV{METIS_DIR}
+    HINTS ${METIS_DIR} $ENV{METIS_DIR} ${CMAKE_PREFIX_PATH}
     PATH_SUFFIXES lib
     NO_DEFAULT_PATH
     DOC "The Metis library.")
 
 find_library(ZLIB_LIBRARY z
-    HINTS ${ZLIB_LIBRARY_DIR} $ENV{ZLIB_LIBRARY_DIR}
+    HINTS ${ZLIB_LIBRARY_DIR} $ENV{ZLIB_LIBRARY_DIR} ${CMAKE_PREFIX_PATH}
     PATH_SUFFIXES lib
     NO_DEFAULT_PATH
     DOC "The zlib library.")
