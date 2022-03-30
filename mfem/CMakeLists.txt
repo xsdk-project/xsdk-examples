@@ -1,18 +1,18 @@
-cmake_minimum_required(VERSION 3.12)
-project(mfem-examples
-        DESCRIPTION "MFEM Examples"
-        LANGUAGES CXX)
+# cmake_minimum_required(VERSION 3.12) project(mfem-examples DESCRIPTION "MFEM
+# Examples" LANGUAGES CXX)
 
 if(ENABLE_GINKGO)
   add_subdirectory(ginkgo)
 endif()
-if(ENABLE_PETSC AND ENABLE_SUPERLU AND ENABLE_HYPRE)
+if(ENABLE_PETSC
+   AND ENABLE_SUPERLU
+   AND ENABLE_HYPRE)
   add_subdirectory(hypre-superlu)
 endif()
 if(ENABLE_PETSC)
-  add_subdirectory(petsc)
+  # add_subdirectory(petsc)
 endif()
-if(ENABLE_PETSC AND ENABLE_SUNDIALS)
+if(ENABLE_SUNDIALS)
   add_subdirectory(sundials)
 endif()
 

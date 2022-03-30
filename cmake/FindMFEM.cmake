@@ -41,4 +41,8 @@ if(MFEM_FOUND)
     INTERFACE_LINK_LIBRARIES "${METIS_LIBRARY}"
     IMPORTED_LOCATION "${MFEM_LIBRARY}")
 
+   if(ENABLE_CUDA)
+     target_link_libraries(XSDK::MFEM INTERFACE CUDA::cudart CUDA::cusparse)
+   endif()
+
 endif()

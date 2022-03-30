@@ -1,50 +1,69 @@
 cmake_minimum_required(VERSION 3.18)
-project(xsdk-examples
-        DESCRIPTION "xSDK Examples"
-        LANGUAGES CXX C)
+project(
+  xsdk-examples
+  DESCRIPTION "xSDK Examples"
+  LANGUAGES CXX C)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(FindPackageHandleStandardArgs)
 
 # build options
 option(ENABLE_CUDA "Enable CUDA" OFF)
-if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-  set(CMAKE_CUDA_ARCHITECTURES 70)
-endif()
 
 option(ENABLE_HYPRE "Enable hypre" ON)
-set(HYPRE_DIR "${HYPRE_DIR}" CACHE PATH "Path to hypre installation directory")
+set(HYPRE_DIR
+    "${HYPRE_DIR}"
+    CACHE PATH "Path to hypre installation directory")
 
 option(ENABLE_MFEM "Enable MFEM" ON)
-set(MFEM_DIR "${MFEM_DIR}" CACHE PATH "Path to MFEM installation directory")
+set(MFEM_DIR
+    "${MFEM_DIR}"
+    CACHE PATH "Path to MFEM installation directory")
 
 option(ENABLE_MAGMA "Enable MAGMA" OFF)
-set(MAGMA_DIR "${MAGMA_DIR}" CACHE PATH "Path to MAGMA installation directory")
+set(MAGMA_DIR
+    "${MAGMA_DIR}"
+    CACHE PATH "Path to MAGMA installation directory")
 
 option(ENABLE_PETSC "Enable PETSc" ON)
-set(PETSC_DIR "${PETSC_DIR}" CACHE PATH "Path to PETSc installation directory")
+set(PETSC_DIR
+    "${PETSC_DIR}"
+    CACHE PATH "Path to PETSc installation directory")
 
 option(ENABLE_SUNDIALS "Enable SUNDIALS" ON)
-set(SUNDIALS_DIR "${SUNDIALS_DIR}" CACHE PATH "Path to SUNDIALS installation directory")
+set(SUNDIALS_DIR
+    "${SUNDIALS_DIR}"
+    CACHE PATH "Path to SUNDIALS installation directory")
 
 option(ENABLE_SUPERLU "Enable SuperLU" ON)
-set(SUPERLUDIST_DIR "${SUPERLUDIST__DIR}" CACHE PATH "Path to SuperLU_DIST installation directory")
+set(SUPERLUDIST_DIR
+    "${SUPERLUDIST_DIR}"
+    CACHE PATH "Path to SuperLU_DIST installation directory")
 
 option(ENABLE_TRILINOS "Enable TRILINOS" ON)
-set(TRILINOS_DIR "${Trilinos_DIR}" CACHE PATH "Path to Trilinos installation directory")
+set(TRILINOS_DIR
+    "${Trilinos_DIR}"
+    CACHE PATH "Path to Trilinos installation directory")
 
-set(METIS_DIR "${METIS_DIR}" CACHE PATH "Path to Metis installation directory")
+set(METIS_DIR
+    "${METIS_DIR}"
+    CACHE PATH "Path to Metis installation directory")
 
 # compiler options
-if (NOT DEFINED CMAKE_CXX_STANDARD)
+if(NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
   set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
   set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 
+# setup CUDA
 if(ENABLE_CUDA)
   enable_language(CUDA)
+  if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
+    set(CMAKE_CUDA_ARCHITECTURES 70)
+  endif()
   set(CMAKE_CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
+  find_package(CUDAToolkit REQUIRED)
 endif()
 
 # check for hypre
@@ -66,7 +85,7 @@ endif()
 
 # check for PETSC
 if(ENABLE_PETSC)
-  find_package(PETSC REQUIRED)
+  find_package(PETSc REQUIRED)
 endif()
 
 # check for SUNDIALS
@@ -104,4 +123,3 @@ endif()
 if(ENABLE_TRILINOS)
   add_subdirectory(trilinos)
 endif()
-

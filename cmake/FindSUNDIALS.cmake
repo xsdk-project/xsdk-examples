@@ -12,12 +12,6 @@
 # SUNDIALS Copyright End
 # ---------------------------------------------------------------
 
-# # check if the SUNDIALS path is set
-# if(NOT SUNDIALS_DIR)
-#   message(FATAL_ERROR "Error: SUNDIALS_DIR not set!")
-#   set(SUNDIALS_DIR "" CACHE PATH "SUNDIALS install directory")
-# endif()
-
 # determine SUNDIALS components needed
 if(NOT SUNDIALS_FIND_COMPONENTS)
   set(SUNDIALS_FIND_COMPONENTS
@@ -51,3 +45,10 @@ find_package(SUNDIALS REQUIRED COMPONENTS ${SUNDIALS_FIND_COMPONENTS}
     HINTS ${SUNDIALS_DIR} $ENV{SUNDIALS_DIR} ${CMAKE_PREFIX_PATH}
     NO_DEFAULT_PATH)
 
+if(NOT TARGET XSDK::SUNDIALS)
+  add_library(XSDK_SUNDIALS INTERFACE)
+  foreach(_component ${SUNDIALS_FIND_COMPONENTS})
+      target_link_libraries(XSDK_SUNDIALS INTERFACE SUNDIALS::${_component})
+  endforeach()
+  add_library(XSDK::SUNDIALS ALIAS XSDK_SUNDIALS)
+endif()
