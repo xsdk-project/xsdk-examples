@@ -17,7 +17,7 @@ target_link_libraries(
           XSDK::SUNDIALS
           XSDK::HYPRE
           Ginkgo::ginkgo
-          PETSC::ALL
+          XSDK::PETSc
           ${METIS_LIBRARY}
           ZLIB::ZLIB)
 
