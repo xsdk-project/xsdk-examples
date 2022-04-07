@@ -40,6 +40,11 @@ set(SUPERLUDIST_DIR
     "${SUPERLUDIST_DIR}"
     CACHE PATH "Path to SuperLU_DIST installation directory")
 
+option(ENABLE_STRUMPACK "Enable STRUMPACK" ON)
+set(STRUMPACK_DIR
+    "${STRUMPACK_DIR}"
+    CACHE PATH "Path to STRUMPACK installation directory")
+
 option(ENABLE_TRILINOS "Enable TRILINOS" ON)
 set(TRILINOS_DIR
     "${Trilinos_DIR}"
@@ -98,6 +103,11 @@ if(ENABLE_SUPERLU)
   find_package(SUPERLUDIST REQUIRED)
 endif()
 
+# check for STRUMPACK
+if(ENABLE_STRUMPACK)
+  find_package(STRUMPACK REQUIRED)
+endif()
+
 # check for math
 find_library(MATH_LIBRARY NAMES m)
 
@@ -122,4 +132,7 @@ if(ENABLE_SUNDIALS)
 endif()
 if(ENABLE_TRILINOS)
   add_subdirectory(trilinos)
+endif()
+if(ENABLE_STRUMPACK)
+  add_subdirectory(strumpack)
 endif()
