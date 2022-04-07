@@ -45,7 +45,7 @@ respectively. Without compression, the solver behaves as a sparse
 direct method. The sparse direct solver still uses iterative
 refinement, but typically only needs a single iteration.  When
 compression is enabled, the LU factorization is only approximate, and
-the solver is used as a preconditioner fot GMRES (or BiCGStab).
+the solver is used as a preconditioner for GMRES (or BiCGStab).
 
 
 ### Usage
@@ -55,7 +55,7 @@ the solver is used as a preconditioner fot GMRES (or BiCGStab).
  - This run solves a system corresponding to a discretization
     of the Laplace equation -Delta u = f with zero boundary
     conditions on a 100 x 100 x 100 grid, using STRUMPACK's
-    distributed LU factorizatio, and with both HODBF compression
+    distributed LU factorization, and with both HODBF compression
     for the largest fronts (dense sub-blocks in the sparse factors).
  - The output of the example is various information regarding the
     solver and solver performance.
