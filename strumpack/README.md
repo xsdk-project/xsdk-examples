@@ -74,6 +74,9 @@ tuned using `--blr_rel_tol 1e-6` or `--hodlr_rel_tol 1e-6`
 
 To see the full list of command-line options, run: `./sparse --help`
 
+For more information on how to tune the preconditioners, see
+[here](https://portal.nersc.gov/project/sparse/strumpack/master/prec.html).
+
 ## License
 STRUMPACK -- STRUctured Matrix PACKage, Copyright (c) 2014-2022, The
 Regents of the University of California, through Lawrence Berkeley
