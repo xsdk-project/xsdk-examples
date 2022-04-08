@@ -21,6 +21,7 @@ in the README.md files in the library subfolders.  For more information on the x
 |  sundials/ark_brusselator1D_FEM_sludist.cpp| SUNDIALS+SuperLU_Dist       | Chemical kinetics brusselator problem             |
 |  sundials/cv_petsc_ex7.c                   | SUNDIALS+PETSc              | 2D nonlinear PDE solution                         |
 |  trilinos/SimpleSolve_WithParameters.cpp   | Trilinos+SuperLU_Dist       | Small linear system direct solution               |
+|  strumpack/sparse.cpp                      | STRUMPACK+ButterflyPACK     | 3D Poisson problem with STRUMPACK preconditioner  |
 
 These examples are currently in the repo but will not be enabled in the xsdk-examples spack package until we release a new version of the xSDK.
 They can still be built using CMake directly.
