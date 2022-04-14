@@ -45,7 +45,7 @@ set(STRUMPACK_DIR
     "${STRUMPACK_DIR}"
     CACHE PATH "Path to STRUMPACK installation directory")
 
-option(ENABLE_TRILINOS "Enable TRILINOS" ON)
+option(ENABLE_TRILINOS "Enable TRILINOS" OFF)
 set(TRILINOS_DIR
     "${Trilinos_DIR}"
     CACHE PATH "Path to Trilinos installation directory")
