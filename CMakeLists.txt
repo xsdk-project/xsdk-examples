@@ -40,7 +40,7 @@ set(SUPERLUDIST_DIR
     "${SUPERLUDIST_DIR}"
     CACHE PATH "Path to SuperLU_DIST installation directory")
 
-option(ENABLE_STRUMPACK "Enable STRUMPACK" ON)
+option(ENABLE_STRUMPACK "Enable STRUMPACK" OFF)
 set(STRUMPACK_DIR
     "${STRUMPACK_DIR}"
     CACHE PATH "Path to STRUMPACK installation directory")
