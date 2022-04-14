@@ -26,8 +26,8 @@ set(MAGMA_DIR
     CACHE PATH "Path to MAGMA installation directory")
 
 option(ENABLE_PETSC "Enable PETSc" ON)
-set(PETSC_DIR
-    "${PETSC_DIR}"
+set(PETSc_DIR
+    "${PETSc_DIR}"
     CACHE PATH "Path to PETSc installation directory")
 
 option(ENABLE_SUNDIALS "Enable SUNDIALS" ON)
