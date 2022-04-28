@@ -1,0 +1,5 @@
+add_executable(amrex_sundials_advection_diffusion
+  amrex_sundials_advection_diffusion.cpp)
+target_link_libraries(amrex_sundials_advection_diffusion
+  XSDK::AMReX XSDK::SUNDIALS)
+install(TARGETS amrex_sundials_advection_diffusion RUNTIME DESTINATION bin)
