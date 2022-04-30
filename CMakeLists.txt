@@ -8,12 +8,12 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(FindPackageHandleStandardArgs)
 
 # build options
+option(ENABLE_CUDA "Enable CUDA" OFF)
+
 option(ENABLE_AMREX "Enable AMReX" ON)
 set(AMREX_DIR
   "${AMREX_DIR}"
   CACHE PATH "Path to AMReX installation directory")
-
-option(ENABLE_CUDA "Enable CUDA" OFF)
 
 option(ENABLE_HYPRE "Enable hypre" ON)
 set(HYPRE_DIR
@@ -66,11 +66,6 @@ if(NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 
-# check for AMReX
-if(ENABLE_AMREX)
-  find_package(AMReX REQUIRED)
-endif()
-
 # setup CUDA
 if(ENABLE_CUDA)
   enable_language(CUDA)
@@ -79,6 +74,11 @@ if(ENABLE_CUDA)
   endif()
   set(CMAKE_CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
   find_package(CUDAToolkit REQUIRED)
+endif()
+
+# check for AMReX
+if(ENABLE_AMREX)
+  find_package(AMReX REQUIRED)
 endif()
 
 # check for hypre
