@@ -1,19 +1,13 @@
-/*--------------------------------------------------------------------
-  Time Integration and Nonlinear Solvers
-  Hands-on Lessons with SUNDIALS + AMReX
-  2019 Argonne Training Program in Extreme-Scale Computing
-
-  Authors (alphabetical):
-    David Gardner (gardner48@llnl.gov)
-    John Loffeld (loffeld1@llnl.gov)
-    Daniel Reynolds (reynolds@smu.edu)
-    Donald Willcox (dewillcox@lbl.gov)
-
-  --------------------------------------------------------------------
-  Header file for 'general' SUNDIALS interface ARKode, with many
-  configuration options) for 2D Advection-Diffusion
-  example problem.
-  --------------------------------------------------------------------*/
+/* -----------------------------------------------------------------------------
+ * AMReX + SUNDIALS xSDK 2D Advection-Diffusion example code
+ *
+ * Based on Hands-on Lessons with SUNDIALS + AMReX from the Argonne Training
+ * Program in Extreme-Scale Computing (ATPESC) written by (alphabetical):
+ *   David Gardner (gardner48@llnl.gov)
+ *   John Loffeld (loffeld1@llnl.gov)
+ *   Daniel Reynolds (reynolds@smu.edu)
+ *   Donald Willcox (dewillcox@lbl.gov)
+ * ---------------------------------------------------------------------------*/
 
 #ifndef ADVECTION_DIFFUSION_H
 #define ADVECTION_DIFFUSION_H
@@ -98,12 +92,14 @@ void ComputeSolutionARK(N_Vector nv_sol, ProblemOpt* prob_opt,
 void FillInitConds2D(amrex::MultiFab& sol, const amrex::Geometry& geom);
 
 // Decompose the problem in space
-void SetUpGeometry(amrex::BoxArray& ba, amrex::Geometry& geom, ProblemData& prob_data);
+void SetUpGeometry(amrex::BoxArray& ba, amrex::Geometry& geom,
+                   ProblemData& prob_data);
 
 // SUNDIALS ODE RHS functions
 int ComputeRhsAdv(amrex::Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data);
 int ComputeRhsDiff(amrex::Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data);
-int ComputeRhsAdvDiff(amrex::Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data);
+int ComputeRhsAdvDiff(amrex::Real t, N_Vector nv_sol, N_Vector nv_rhs,
+                      void* data);
 
 // Advective portion of ODE RHS
 void ComputeAdvectionUpwind(amrex::MultiFab& sol,
