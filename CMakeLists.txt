@@ -30,6 +30,11 @@ set(PETSc_DIR
     "${PETSc_DIR}"
     CACHE PATH "Path to PETSc installation directory")
 
+option(ENABLE_PLASMA "Enable PLASMA" ON)
+set(PLASMA_DIR
+    "${PLASMA_DIR}"
+    CACHE PATH "Path to PLASMA installation directory")
+
 option(ENABLE_SUNDIALS "Enable SUNDIALS" ON)
 set(SUNDIALS_DIR
     "${SUNDIALS_DIR}"
@@ -93,6 +98,14 @@ if(ENABLE_PETSC)
   find_package(PETSc REQUIRED)
 endif()
 
+# check for PLASMA
+if(ENABLE_PLASMA)
+  find_package(PLASMA REQUIRED)
+  find_package(BLASPP REQUIRED)
+  find_package(LAPACKPP REQUIRED)
+  find_package(SLATE REQUIRED)
+endif()
+
 # check for SUNDIALS
 if(ENABLE_SUNDIALS)
   find_package(SUNDIALS REQUIRED)
@@ -126,6 +139,9 @@ if(ENABLE_MFEM)
 endif()
 if(ENABLE_PETSC)
   add_subdirectory(petsc)
+endif()
+if(ENABLE_PLASMA)
+  add_subdirectory(plasma)
 endif()
 if(ENABLE_SUNDIALS)
   add_subdirectory(sundials)
