@@ -18,6 +18,7 @@ in the README.md files in the library subfolders.  For more information on the x
 |  mfem/petsc/obstacle.cpp                   | MFEM+PETSc                  | Membrane obstacle problem (min energy functional) |
 |  mfem/sundials/transient-heat.cpp          | MFEM+SUNDIALS               | 2D Transient nonlinear heat conduction            |
 |  petsc/ex19.c                              | PETSc+HYPRE+SuperLU_Dist    | 2D nonlinear driven cavity problem                |
+|  plasma/ex1solve.c                         | PLASMA+SLATE+BLASPP         | Linear system direct solution                     |
 |  sundials/ark_brusselator1D_FEM_sludist.cpp| SUNDIALS+SuperLU_Dist       | Chemical kinetics brusselator problem             |
 |  sundials/cv_petsc_ex7.c                   | SUNDIALS+PETSc              | 2D nonlinear PDE solution                         |
 |  trilinos/SimpleSolve_WithParameters.cpp   | Trilinos+SuperLU_Dist       | Small linear system direct solution               |
@@ -29,7 +30,7 @@ They can still be built using CMake directly.
 |   Example                                  | Libraries                   | Description                                       |
 |:-------------------------------------------|:----------------------------|:--------------------------------------------------|
 |  mfem/sundials/advection.cpp               | MFEM+SUNDIALS (CUDA)        | 2D Time-dependent advection                       |
-| sundials/cvRoberts_blockdiag_magma.cpp     | SUNDIALS+MAGMA (CUDA)       | Solves a group of chemical kinetics ODEs          |
+|  sundials/cvRoberts_blockdiag_magma.cpp    | SUNDIALS+MAGMA (CUDA)       | Solves a group of chemical kinetics ODEs          |
 
 ## Install the code samples
 
