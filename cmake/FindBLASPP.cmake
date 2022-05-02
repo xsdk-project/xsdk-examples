@@ -1,0 +1,41 @@
+# find the BLAS++ include path
+find_path(BLASPP_INCLUDE_DIR blas.hh
+  NAMES blas.hh
+  HINTS ${BLASPP_DIR} $ENV{BLASPP_DIR} ${CMAKE_PREFIX_PATH}
+  PATH_SUFFIXES include
+  NO_DEFAULT_PATH
+  DOC "Directory with BLASPP header"
+)
+
+# find the main BLAS++ library
+find_library(BLASPP_LIBRARY_DIR
+  NAMES blaspp
+  HINTS ${BLASPP_DIR} $ENV{BLASPP_DIR} ${CMAKE_PREFIX_PATH}
+  PATH_SUFFIXES lib lib64
+  NO_DEFAULT_PATH
+  DOC "The BLAS++ library."
+)
+
+set(BLASPP_LIBRARIES "blaspp")
+
+find_package_handle_standard_args(BLASPP
+  REQUIRED_VARS
+    BLASPP_LIBRARY_DIR
+    BLASPP_LIBRARIES
+    BLASPP_INCLUDE_DIR
+  VERSION_VAR
+    BLASPP_VERSION
+)
+
+# Create target for BLAS++
+if(BLASPP_FOUND)
+
+  if(NOT TARGET XSDK::BLASPP)
+    add_library(XSDK::BLASPP UNKNOWN IMPORTED)
+  endif()
+
+  set_target_properties(XSDK::BLASPP PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${BLASPP_INCLUDE_DIR}"
+      INTERFACE_LINK_LIBRARIES "${BLASPP_LIBRARIES}"
+      IMPORTED_LOCATION "${BLASPP_LIBRARY_DIR}")
+endif()
