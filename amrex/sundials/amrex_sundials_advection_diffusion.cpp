@@ -239,7 +239,7 @@ void ParseInputs(ProblemOpt& prob_opt, ProblemData& prob_data)
   pp.query("ls_max_iter", prob_opt.ls_max_iter);
 
   // Specify RHS functions/splitting
-  prob_opt.rhs_adv  = 1; // implicit advection
+  prob_opt.rhs_adv  = 2; // explicit advection
   prob_opt.rhs_diff = 1; // implicit diffusion
   pp.query("rhs_adv", prob_opt.rhs_adv);
   pp.query("rhs_diff", prob_opt.rhs_diff);
@@ -255,7 +255,7 @@ void ParseInputs(ProblemOpt& prob_opt, ProblemData& prob_data)
   pp.query("fixed_dt", prob_opt.fixed_dt);
 
   // Specify final time for integration
-  prob_opt.tfinal = 1.0e4;
+  prob_opt.tfinal = 1.0e3;
   pp.query("tfinal", prob_opt.tfinal);
 
   // Specify output frequency
@@ -263,7 +263,7 @@ void ParseInputs(ProblemOpt& prob_opt, ProblemData& prob_data)
   pp.query("dtout", prob_opt.dtout);
 
   // Specify maximum number of steps between outputs
-  prob_opt.max_steps = 1000;
+  prob_opt.max_steps = 10000;
   pp.query("max_steps", prob_opt.max_steps);
 
   // Decide whether to use a preconditioner or not
@@ -275,7 +275,7 @@ void ParseInputs(ProblemOpt& prob_opt, ProblemData& prob_data)
   // --------------------------------------------------------------------------
 
   // The number of cells on each side of a square domain.
-  prob_data.n_cell = 256;
+  prob_data.n_cell = 128;
   pp.query("n_cell", prob_data.n_cell);
 
   // The domain is broken into boxes of size max_grid_size
