@@ -10,6 +10,11 @@ include(FindPackageHandleStandardArgs)
 # build options
 option(ENABLE_CUDA "Enable CUDA" OFF)
 
+option(ENABLE_AMREX "Enable AMReX" ON)
+set(AMREX_DIR
+  "${AMREX_DIR}"
+  CACHE PATH "Path to AMReX installation directory")
+
 option(ENABLE_HYPRE "Enable hypre" ON)
 set(HYPRE_DIR
     "${HYPRE_DIR}"
@@ -76,6 +81,11 @@ if(ENABLE_CUDA)
   find_package(CUDAToolkit REQUIRED)
 endif()
 
+# check for AMReX
+if(ENABLE_AMREX)
+  find_package(AMReX REQUIRED)
+endif()
+
 # check for hypre
 if(ENABLE_HYPRE)
   find_package(HYPRE REQUIRED)
@@ -131,6 +141,9 @@ find_package(METIS)
 find_package(MPI REQUIRED)
 
 # example subdirectories
+if(ENABLE_AMREX)
+  add_subdirectory(amrex)
+endif()
 if(ENABLE_HYPRE)
   add_subdirectory(hypre)
 endif()
