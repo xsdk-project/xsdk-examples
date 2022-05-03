@@ -457,24 +457,19 @@ void FillInitConds2D(MultiFab& sol, const Geometry& geom)
   Real a = 1.0/(sigma*sqrt(2*M_PI));
   Real b = -0.5/(sigma*sigma);
 
-  for (MFIter mfi(sol); mfi.isValid(); ++mfi)
+  for (MFIter mfi(sol,TilingIfNotGPU()); mfi.isValid(); ++mfi)
   {
-    const Box& bx = mfi.validbox();
-    Array4<Real> const& fab = sol.array(mfi);
-    const auto lo = lbound(bx);
-    const auto hi = ubound(bx);
-    for (int j = lo.y; j <= hi.y; ++j)
-    {
-      Real y = prob_lo[1] + (((Real) j) + 0.5) * dx[1];
+    const Box& bx = mfi.tilebox();
+    Array4<Real> const& fab = sol[mfi].array();
 
-      for (int i = lo.x; i <= hi.x; ++i)
-      {
-        Real x = prob_lo[0] + (((Real) i) + 0.5) * dx[0];
-
-        Real r = x*x + y*y;
-        fab(i,j,0,0) = a * exp(b*r);
-      }
-    }
+    amrex::ParallelFor
+      (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
+       {
+         Real y = prob_lo[1] + (((Real) j) + 0.5) * dx[1];
+         Real x = prob_lo[0] + (((Real) i) + 0.5) * dx[0];
+         Real r = x * x + y * y;
+         fab(i,j,k,n) = a * exp(b * r);
+       });
   }
 }
 
@@ -531,7 +526,7 @@ int ComputeRhsAdv(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
   sol->FillBoundary(geom->periodicity());
 
   // compute advection
-  ComputeAdvectionUpwind(*sol, *rhs, *geom, 0, advCoeffx, advCoeffy);
+  ComputeAdvectionUpwind(*sol, *rhs, *geom, advCoeffx, advCoeffy);
 
   return 0;
 }
@@ -556,7 +551,7 @@ int ComputeRhsDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
   *rhs = 0.0;
 
   // compute diffusion
-  ComputeDiffusion(*sol, *rhs, flux[0], flux[1], *geom, 0,
+  ComputeDiffusion(*sol, *rhs, flux[0], flux[1], *geom,
                    diffCoeffx, diffCoeffy);
 
   return 0;
@@ -584,10 +579,10 @@ int ComputeRhsAdvDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
   sol->FillBoundary(geom->periodicity());
 
   // compute advection
-  ComputeAdvectionUpwind(*sol, *rhs, *geom, 0, advCoeffx, advCoeffy);
+  ComputeAdvectionUpwind(*sol, *rhs, *geom, advCoeffx, advCoeffy);
 
   // compute diffusion
-  ComputeDiffusion(*sol, *rhs, flux[0], flux[1], *geom, 0,
+  ComputeDiffusion(*sol, *rhs, flux[0], flux[1], *geom,
                    diffCoeffx, diffCoeffy);
 
   return 0;
@@ -600,7 +595,7 @@ int ComputeRhsAdvDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 // Assumes ghost cells already filled
 // Adds result to adv_mf MultiFab
 void ComputeAdvectionUpwind(MultiFab& sol_mf, MultiFab& adv_mf, Geometry& geom,
-                            int comp, Real advCoeffx, Real advCoeffy)
+                            Real advCoeffx, Real advCoeffy)
 {
   const auto dx = geom.CellSize();
   Real dxInv = 1.0 / dx[0]; // assume same over entire mesh
@@ -608,41 +603,50 @@ void ComputeAdvectionUpwind(MultiFab& sol_mf, MultiFab& adv_mf, Geometry& geom,
   Real sideCoeffx = advCoeffx * dxInv;
   Real sideCoeffy = advCoeffy * dyInv;
 
-  int c = comp;  // for brevity
-  for (MFIter mfi(sol_mf); mfi.isValid(); ++mfi)
+  for (MFIter mfi(sol_mf,TilingIfNotGPU); mfi.isValid(); ++mfi)
   {
-    const Box& bx = mfi.validbox();
-    Array4<Real> const& sol_fab = sol_mf.array(mfi);
-    Array4<Real> const& adv_fab = adv_mf.array(mfi);
-    const auto lo = lbound(bx);
-    const auto hi = ubound(bx);
+    const Box& bx = mfi.tilebox();
+    Array4<Real> const& sol_fab = sol_mf[mfi].array();
+    Array4<Real> const& adv_fab = adv_mf[mfi].array();
 
     // x-direction
     if (advCoeffx > 0)
     {
-      for (int j = lo.y; j <= hi.y; ++j)
-        for (int i = lo.x; i <= hi.x; ++i)
-          adv_fab(i,j,0,c) -= sideCoeffx * (sol_fab(i,j,0,c) - sol_fab(i-1,j,0,c));
+      amrex::ParallelFor
+        (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
+         {
+           adv_fab(i,j,k,n) -= sideCoeffx *
+             (sol_fab(i,j,k,n) - sol_fab(i-1,j,k,n));
+         });
     }
     else
     {
-      for (int j = lo.y; j <= hi.y; ++j)
-        for (int i = lo.x; i <= hi.x; ++i)
-          adv_fab(i,j,0,c) -= sideCoeffx * (sol_fab(i+1,j,0,c) - sol_fab(i,j,0,c));
+      amrex::ParallelFor
+        (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
+         {
+           adv_fab(i,j,k,n) -= sideCoeffx *
+             (sol_fab(i+1,j,k,n) - sol_fab(i,j,k,n));
+         });
     }
 
     // y-direction
     if (advCoeffy > 0)
     {
-      for (int j = lo.y; j <= hi.y; ++j)
-        for (int i = lo.x; i <= hi.x; ++i)
-          adv_fab(i,j,0,c) -= sideCoeffy * (sol_fab(i,j,0,c) - sol_fab(i,j-1,0,c));
+      amrex::ParallelFor
+        (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
+         {
+           adv_fab(i,j,k,n) -= sideCoeffy *
+             (sol_fab(i,j,k,n) - sol_fab(i,j-1,k,n));
+         });
     }
     else
     {
-      for (int j = lo.y; j <= hi.y; ++j)
-        for (int i = lo.x; i <= hi.x; ++i)
-          adv_fab(i,j,0,c) -= sideCoeffy * (sol_fab(i,j+1,0,c) - sol_fab(i,j,0,c));
+      amrex::ParallelFor
+        (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
+         {
+           adv_fab(i,j,k,n) -= sideCoeffy *
+             (sol_fab(i,j+1,k,n) - sol_fab(i,j,k,n));
+         });
     }
   }
 }
@@ -654,17 +658,17 @@ void ComputeAdvectionUpwind(MultiFab& sol_mf, MultiFab& adv_mf, Geometry& geom,
 // Assumes ghots cells are already filled
 // Adds result to diff_mf
 void ComputeDiffusion(MultiFab& sol, MultiFab& diff_mf, MultiFab& fx_mf,
-                      MultiFab& fy_mf, Geometry& geom, int comp,
+                      MultiFab& fy_mf, Geometry& geom,
                       Real diffCoeffx, Real diffCoeffy)
 {
-  ComputeDiffFlux(sol, fx_mf, fy_mf, geom, comp, diffCoeffx, diffCoeffy);
-  ComputeDivergence(diff_mf, fx_mf, fy_mf, geom, comp);
+  ComputeDiffFlux(sol, fx_mf, fy_mf, geom, diffCoeffx, diffCoeffy);
+  ComputeDivergence(diff_mf, fx_mf, fy_mf, geom);
 }
 
 // Assumes ghost cells already filled
 // Overwrites fx_mf and fy_mf MultiFabs
 void ComputeDiffFlux(MultiFab& sol_mf, MultiFab& fx_mf, MultiFab& fy_mf,
-                     Geometry& geom, int comp, Real diffCoeffx, Real diffCoeffy)
+                     Geometry& geom, Real diffCoeffx, Real diffCoeffy)
 {
   const auto dx = geom.CellSize();
   Real dxInv = 1.0 / dx[0]; // assume same over entire mesh
@@ -672,54 +676,54 @@ void ComputeDiffFlux(MultiFab& sol_mf, MultiFab& fx_mf, MultiFab& fy_mf,
   Real coeffX = diffCoeffx * dxInv;
   Real coeffY = diffCoeffy * dyInv;
 
-  int c = comp;  // for brevity
-  for (MFIter mfi(sol_mf); mfi.isValid(); ++mfi)
+  for (MFIter mfi(sol_mf,TilingIfNotGPU()); mfi.isValid(); ++mfi)
   {
-    const Box& bx = mfi.validbox();
-    Array4<Real> const& sol = sol_mf.array(mfi);
-    Array4<Real> const& fx = fx_mf.array(mfi);
-    Array4<Real> const& fy = fy_mf.array(mfi);
-    const auto lo = lbound(bx);
-    const auto hi = ubound(bx);
+    const Box& bx = mfi.tilebox();
+    Array4<Real> const& sol = sol_mf[mfi].array();
+    Array4<Real> const& fx = fx_mf[mfi].array();
+    Array4<Real> const& fy = fy_mf[mfi].array();
 
     // x-flux
-    for (int j = lo.y; j <= hi.y; ++j)
-      for (int i = lo.x; i <= hi.x+1; ++i)
-        // always use zero component for flux
-        fx(i,j,0,0) = coeffX * (sol(i,j,0,c) - sol(i-1,j,0,c));
+    amrex::ParallelFor
+      (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
+       {
+         // always use zero component for flux
+         fx(i,j,k,0) = coeffX * (sol(i,j,k,n) - sol(i-1,j,k,n));
+       });
 
     // y-flux
-    for (int j = lo.y; j <= hi.y+1; ++j)
-      for (int i = lo.x; i <= hi.x; ++i)
-        // always use zero component for flux
-        fy(i,j,0,0) = coeffY * (sol(i,j,0,c) - sol(i,j-1,0,c));
+    amrex::ParallelFor
+      (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
+       {
+         // always use zero component for flux
+         fy(i,j,k,0) = coeffY * (sol(i,j,k,n) - sol(i,j-1,k,n));
+       });
   }
 }
 
 // Assumes ghost cells already filled
 // Adds result to div_mf MultiFab
 void ComputeDivergence(MultiFab& div_mf, MultiFab& fx_mf,
-                       MultiFab& fy_mf, Geometry& geom, int comp)
+                       MultiFab& fy_mf, Geometry& geom)
 {
   const auto dx = geom.CellSize();
   Real dxInv = 1.0 / dx[0]; // assume same over entire mesh
   Real dyInv = 1.0 / dx[1]; // assume same over entire mesh
 
-  int c = comp;  // for brevity
-  for (MFIter mfi(div_mf); mfi.isValid(); ++mfi)
+  for (MFIter mfi(div_mf,TilingIfNotGPU()); mfi.isValid(); ++mfi)
   {
-    const Box& bx = mfi.validbox();
-    Array4<Real> const& div = div_mf.array(mfi);
-    Array4<Real> const& fx = fx_mf.array(mfi);
-    Array4<Real> const& fy = fy_mf.array(mfi);
-    const auto lo = lbound(bx);
-    const auto hi = ubound(bx);
+    const Box& bx = mfi.tilebox();
+    Array4<Real> const& div = div_mf[mfi].array();
+    Array4<Real> const& fx = fx_mf[mfi].array();
+    Array4<Real> const& fy = fy_mf[mfi].array();
 
-    for (int j = lo.y; j <= hi.y; ++j)
-      for (int i = lo.x; i <= hi.x; ++i)
-        // always use zero component for flux
-        div(i,j,0,c) += (dxInv * (fx(i+1,j,0,0) - fx(i,j,0,0)) +
-                         dyInv * (fy(i,j+1,0,0) - fy(i,j,0,0)));
+    amrex::ParallelFor
+      (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
+       {
+         // always use zero component for flux
+         div(i,j,k,n) += (dxInv * (fx(i+1,j,k,0) - fx(i,j,k,0)) +
+                          dyInv * (fy(i,j+1,k,0) - fy(i,j,k,0)));
+       });
   }
 }
 

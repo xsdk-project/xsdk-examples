@@ -105,7 +105,6 @@ int ComputeRhsAdvDiff(amrex::Real t, N_Vector nv_sol, N_Vector nv_rhs,
 void ComputeAdvectionUpwind(amrex::MultiFab& sol,
                             amrex::MultiFab& advection,
                             amrex::Geometry& geom,
-                            int comp,
                             amrex::Real advCoeffx,
                             amrex::Real advCoeffy);
 
@@ -115,7 +114,6 @@ void ComputeDiffusion(amrex::MultiFab& sol,
                       amrex::MultiFab& fx_mf,
                       amrex::MultiFab& fy_mf,
                       amrex::Geometry& geom,
-                      int comp,
                       amrex::Real diffCoeffx,
                       amrex::Real diffCoeffy);
 
@@ -124,15 +122,13 @@ void ComputeDiffFlux(amrex::MultiFab& sol,
                      amrex::MultiFab& fx,
                      amrex::MultiFab& fy,
                      amrex::Geometry& geom,
-                     int comp,
                      amrex::Real diffCoeffx,
                      amrex::Real diffCoeffy);
 
 void ComputeDivergence(amrex::MultiFab& div,
                        amrex::MultiFab& fx,
                        amrex::MultiFab& fy,
-                       amrex::Geometry& geom,
-                       int comp);
+                       amrex::Geometry& geom);
 
 // Preconditioner routines
 int precondition_setup(realtype tn, N_Vector u, N_Vector fu,
