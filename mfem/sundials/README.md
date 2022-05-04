@@ -44,6 +44,7 @@ demonstrates MFEM integration with the SUNDIALS CVODE and ARKODE solvers for CUD
 This example is built to run in parallel, so launch it with mpirun and your desired options:
 ```
 mpirun -np 4 ./advection --device cuda --partial-assembly --ode-solver 9
+mpirun -np 4 ./advection --device cpu --partial-assembly --ode-solver 9
 ```
 
 Useful non-default options:

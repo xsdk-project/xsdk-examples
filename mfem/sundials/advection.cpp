@@ -1,28 +1,20 @@
+//                           xSDK Example is based on
 //                       MFEM Example 9 - Parallel Version
 //                             SUNDIALS Modification
 //
-// Compile with: make ex9p
-//
 // Sample runs:
-//    mpirun -np 4 ex9p -m ../../data/periodic-segment.mesh -p 1 -rp 1 -s 7 -dt 0.0025
-//    mpirun -np 4 ex9p -m ../../data/periodic-square.mesh  -p 1 -rp 1 -s 8 -dt 0.0025 -tf 9
-//    mpirun -np 4 ex9p -m ../../data/periodic-hexagon.mesh -p 0 -rp 1 -s 7 -dt 0.0009 -vs 25
-//    mpirun -np 4 ex9p -m ../../data/periodic-hexagon.mesh -p 0 -rp 1 -s 9 -dt 0.005 -vs 15
-//    mpirun -np 4 ex9p -m ../../data/amr-quad.mesh         -p 1 -rp 1 -s 9 -dt 0.001 -tf 9
-//    mpirun -np 4 ex9p -m ../../data/star-q3.mesh          -p 1 -rp 1 -s 9 -dt 0.0025 -tf 9
-//    mpirun -np 4 ex9p -m ../../data/disc-nurbs.mesh       -p 1 -rp 2 -s 7 -dt 0.0025 -tf 9
-//    mpirun -np 4 ex9p -m ../../data/periodic-cube.mesh    -p 0 -rp 1 -s 8 -dt 0.01 -tf 8 -o 2
+//    mpirun -np 4 ./advection -m ../data/periodic-hexagon.mesh -p 0 -rp 1 -s 7 -dt 0.0009 -vs 25
+//    mpirun -np 4 ./advection -m ../data/periodic-hexagon.mesh -p 0 -rp 1 -s 9 -dt 0.005 -vs 15
 //
 // Device sample runs:
-//    mpirun -np 4 ex9p -pa
-//    mpirun -np 4 ex9p -ea
-//    mpirun -np 4 ex9p -fa
-//    mpirun -np 4 ex9p -pa -m ../../data/periodic-cube.mesh
-//    mpirun -np 4 ex9p -pa -m ../../data/periodic-cube.mesh -d cuda
-//    mpirun -np 4 ex9p -ea -m ../../data/periodic-cube.mesh -d cuda
-//    mpirun -np 4 ex9p -fa -m ../../data/periodic-cube.mesh -d cuda
+//    mpirun -np 4 ./advection --device cuda -pa
+//    mpirun -np 4 ./advection --device cuda -ea
+//    mpirun -np 4 ./advection --device cuda -fa
 //
-// Description:  This example code solves the time-dependent advection equation
+// Description:  This xSDK example demonstrates the integration of MFEM with
+//               SUNDIALS.
+//
+//               This example code solves the time-dependent advection equation
 //               du/dt + v.grad(u) = 0, where v is a given fluid velocity, and
 //               u0(x)=u(0,x) is a given initial condition.
 //
@@ -160,7 +152,7 @@ int main(int argc, char *argv[])
 
    // 2. Parse command-line options.
    problem = 0;
-   const char *mesh_file = "../../data/periodic-hexagon.mesh";
+   const char *mesh_file = "../data/periodic-hexagon.mesh";
    int ser_ref_levels = 2;
    int par_ref_levels = 0;
    int order = 3;

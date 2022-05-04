@@ -2,8 +2,8 @@
 This example solves the classical obstacle problem which models an edge clamped 
 elastic membrane pulled over a rigid obstacle.  MFEM is used to discretize the
 underlying Poisson equation and PETSC-TAO is used the solve to optimization
-problem.  This proble also demonstrates the how MFEM and PETSc can share 
-the data from vectors of each type.
+problem.  This problem also demonstrates the how MFEM and PETSc can share the
+data from vectors of each type.
 
 This example is built to run in serial, so launch it wth your desired options:
 ```

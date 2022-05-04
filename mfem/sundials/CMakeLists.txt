@@ -13,9 +13,7 @@ target_link_libraries(transient-heat PRIVATE XSDK::SUNDIALS XSDK::PETSc
                                              XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB)
 install(TARGETS transient-heat RUNTIME DESTINATION bin)
 
-if(ENABLE_CUDA)
-  add_executable(advection advection.cpp)
-  target_link_libraries(advection PRIVATE XSDK::PETSc XSDK::SUNDIALS
-                                          XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB)
-  install(TARGETS advection RUNTIME DESTINATION bin)
-endif()
+add_executable(advection advection.cpp)
+target_link_libraries(advection PRIVATE XSDK::PETSc XSDK::SUNDIALS
+                                        XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB)
+install(TARGETS advection RUNTIME DESTINATION bin)

@@ -12,7 +12,7 @@ Ginkgo's use.
 
 This example is built to run in serial, so launch it with your desired options:
 ```
-./mfem-gko --no-partial-assembly
+./mfem_ex1_gko --no-partial-assembly
 ```
 
 Useful non-default options:
