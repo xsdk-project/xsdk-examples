@@ -1,14 +1,19 @@
+
+# Ginkgo is included at the upper level when MFEM is enabled
 add_subdirectory(ginkgo)
+if(ENABLE_HYPRE)
+  add_subdirectory(hypre)
+endif()
 if(ENABLE_SUPERLU AND ENABLE_HYPRE)
   add_subdirectory(hypre-superlu)
 endif()
 if(ENABLE_PETSC)
   add_subdirectory(petsc)
 endif()
-if(ENABLE_SUNDIALS)
+if(ENABLE_SUNDIALS AND ENABLE_HYPRE)
   add_subdirectory(sundials)
 endif()
-if (ENABLE_STRUMPACK)
+if (ENABLE_STRUMPACK AND ENABLE_HYPRE)
   add_subdirectory(strumpack)
 endif()
 
