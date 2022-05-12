@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.21)
 project(
   xsdk-examples
   DESCRIPTION "xSDK Examples"
   LANGUAGES CXX C)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+include(CTest)
 include(FindPackageHandleStandardArgs)
 
 # build options
@@ -14,6 +15,11 @@ option(ENABLE_AMREX "Enable AMReX" ON)
 set(AMREX_DIR
   "${AMREX_DIR}"
   CACHE PATH "Path to AMReX installation directory")
+
+option(ENABLE_GINKGO "Enable Ginkgo" ON)
+set(Ginkgo_DIR
+    "${Ginkgo_DIR}"
+    CACHE PATH "Path to Ginkgo installation directory")
 
 option(ENABLE_HYPRE "Enable hypre" ON)
 set(HYPRE_DIR
@@ -64,6 +70,18 @@ set(METIS_DIR
     "${METIS_DIR}"
     CACHE PATH "Path to Metis installation directory")
 
+# check for MPI
+find_package(MPI REQUIRED)
+set(MPIEXEC_TEST_COMMAND
+    "${MPIEXEC_EXECUTABLE}"
+    CACHE PATH "Path to command to launch MPI executables with (e.g. mpirun, srun, jsrun)")
+set(MPIEXEC_TEST_COMMAND_ARGS
+    "${MPIEXEC_TEST_COMMAND_ARGS}"
+    CACHE PATH "Arguments for MPIEXEC_TEST_COMMAND")
+
+# check for OpenMP
+find_package(OpenMP REQUIRED)
+
 # compiler options
 if(NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
@@ -95,7 +113,9 @@ endif()
 if(ENABLE_MFEM)
   find_package(ZLIB REQUIRED)
   find_package(MFEM REQUIRED)
-  find_package(Ginkgo REQUIRED)
+  if(ENABLE_GINKGO)
+    find_package(Ginkgo REQUIRED)
+  endif()
 endif()
 
 # check for MAGMA
@@ -136,9 +156,6 @@ find_library(MATH_LIBRARY NAMES m)
 
 # check for metis
 find_package(METIS)
-
-# check for MPI
-find_package(MPI REQUIRED)
 
 # example subdirectories
 if(ENABLE_AMREX)

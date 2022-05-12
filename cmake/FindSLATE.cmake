@@ -8,7 +8,7 @@ find_path(SLATE_INCLUDE_DIR slate.hh
 )
 
 # find the main SLATE library
-find_library(SLATE_LIBRARY_DIR
+find_library(SLATE_LIBRARIES
   NAMES slate
   HINTS ${SLATE_DIR} $ENV{SLATE_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES lib lib64
@@ -16,11 +16,8 @@ find_library(SLATE_LIBRARY_DIR
   DOC "The SLATE library."
 )
 
-set(SLATE_LIBRARIES "slate;lapackpp;blaspp")
-
 find_package_handle_standard_args(SLATE
   REQUIRED_VARS
-    SLATE_LIBRARY_DIR
     SLATE_LIBRARIES
     SLATE_INCLUDE_DIR
   VERSION_VAR
@@ -31,12 +28,15 @@ find_package_handle_standard_args(SLATE
 if(SLATE_FOUND)
 
   if(NOT TARGET XSDK::SLATE)
-    add_library(XSDK::SLATE UNKNOWN IMPORTED)
+      add_library(XSDK::SLATE INTERFACE IMPORTED)
   endif()
+
+  message(STATUS "Created XSDK::SLATE target")
+  message(STATUS "   INTERFACE_INCLUDE_DIRECTORIES: ${SLATE_INCLUDE_DIR}")
+  message(STATUS "   INTERFACE_LINK_LIBRARIES: ${SLATE_LIBRARIES}")
 
   set_target_properties(XSDK::SLATE PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${SLATE_INCLUDE_DIR}"
-    INTERFACE_LINK_LIBRARIES "${SLATE_LIBRARIES}"
-    IMPORTED_LOCATION "${SLATE_LIBRARY_DIR}")
+    INTERFACE_LINK_LIBRARIES "${SLATE_LIBRARIES}")
 
 endif()

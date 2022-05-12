@@ -1,19 +1,8 @@
-cmake_minimum_required(VERSION 3.12)
-project(
-  hypre-superludist
-  DESCRIPTION "HYPRE + SuperLU_DIST Example"
-  LANGUAGES C)
-
-set(CMAKE_C_COMPILER ${MPI_C_COMPILER})
-set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
-
 add_executable(ij_laplacian ij_laplacian.c)
-
-target_link_libraries(ij_laplacian PRIVATE XSDK::HYPRE XSDK::SUPERLU)
+target_link_libraries(ij_laplacian PRIVATE XSDK::HYPRE XSDK::SUPERLU MPI::MPI_C)
 if(MATH_LIBRARY)
   target_link_libraries(ij_laplacian PRIVATE ${MATH_LIBRARY})
 endif()
-
 install(TARGETS ij_laplacian RUNTIME DESTINATION bin)
 
 # Copy glvis helper script and directory

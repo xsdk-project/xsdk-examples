@@ -1,13 +1,5 @@
-cmake_minimum_required(VERSION 3.8)
-project(
-  convdiff
-  DESCRIPTION "Convective diffusion using MFEM + SUPERLU + HYPRE"
-  LANGUAGES CXX)
-
-set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
-
 add_executable(convdiff convdiff.cpp)
 target_link_libraries(convdiff PRIVATE XSDK::MFEM XSDK::PETSc XSDK::HYPRE
-                                       XSDK::SUPERLU XSDK::SUNDIALS ZLIB::ZLIB)
+    XSDK::SUPERLU XSDK::SUNDIALS ZLIB::ZLIB MPI::MPI_CXX)
 
 install(TARGETS convdiff RUNTIME DESTINATION bin)
