@@ -1,6 +1,6 @@
 add_executable(ex19 ex19.c)
 target_link_libraries(ex19 PRIVATE XSDK::PETSc OpenMP::OpenMP_C MPI::MPI_C)
 if(MATH_LIBRARY)
-  target_link_libraries(ex19 PRIVATE ${MATH_LIBRARY})
+    target_link_libraries(ex19 PRIVATE ${MATH_LIBRARY})
 endif()
 install(TARGETS ex19 RUNTIME DESTINATION bin)
