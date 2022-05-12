@@ -20,8 +20,8 @@ in the README.md files in the library subfolders.  For more information on the x
 | mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D Transient nonlinear heat conduction            |                |
 | mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda] ![hip] |
 | mfem/sundials/advection.cpp                           | MFEM+SUNDIALS            | 2D Time-dependent advection                       | ![cuda]        |
-| petsc/ex19.c                                          | PETSc+HYPRE+SuperLU_Dist | 2D nonlinear driven cavity problem                |                |
-| plasma/ex1solve.c                                     | PLASMA+SLATE+BLASPP      | Linear system direct solution                     |                |
+| petsc/ex19.c                                          | PETSc+HYPRE+SuperLU_Dist | 2D nonlinear driven cavity problem                | ![cuda]        |
+| plasma/ex1solve.c                                     | PLASMA+SLATE+BLASPP      | Linear system direct solution                     | ![cuda]        |
 | sundials/ark_brusselator1D_FEM_sludist.cpp            | SUNDIALS+SuperLU_Dist    | Chemical kinetics brusselator problem             |                |
 | sundials/cv_petsc_ex7.c                               | SUNDIALS+PETSc           | 2D nonlinear PDE solution                         |                |
 | sundials/cvRoberts_blockdiag_magma.cpp                | SUNDIALS+MAGMA           | Solves a group of chemical kinetics ODEs          | ![cuda] ![hip] | 
@@ -33,7 +33,7 @@ They can still be built using CMake directly.
 
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
-| amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    |                |
+| amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
 
 ## Install the code samples
 
