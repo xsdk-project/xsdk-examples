@@ -8,6 +8,7 @@ project(
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(CTest)
 include(FindPackageHandleStandardArgs)
+include(XsdkAddTest)
 
 # build options
 option(ENABLE_CUDA "Enable CUDA" OFF)
@@ -85,14 +86,6 @@ set(METIS_DIR
 
 # check for MPI
 find_package(MPI REQUIRED)
-set(MPIEXEC_TEST_COMMAND
-    "${MPIEXEC_EXECUTABLE}"
-    CACHE PATH "Path to command to launch MPI executables with (e.g. mpirun, srun, jsrun)"
-)
-set(MPIEXEC_TEST_COMMAND_ARGS
-    "${MPIEXEC_TEST_COMMAND_ARGS}"
-    CACHE PATH "Arguments for MPIEXEC_TEST_COMMAND"
-)
 
 # check for OpenMP
 find_package(OpenMP REQUIRED)

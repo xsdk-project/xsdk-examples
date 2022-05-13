@@ -12,4 +12,6 @@ target_link_libraries(
             MPI::MPI_CXX
 )
 
+xsdk_add_test(NAME MFEM-mfem_ex1_gko COMMAND $<TARGET_FILE:mfem_ex1_gko> --no-partial-assembly)
+
 install(TARGETS mfem_ex1_gko RUNTIME DESTINATION bin)

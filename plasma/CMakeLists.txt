@@ -14,4 +14,6 @@ if(ENABLE_CUDA)
     target_link_libraries(ex1solve PRIVATE CUDA::cudart)
 endif()
 
+xsdk_add_test(NAME PLASMA-ex1solve COMMAND $<TARGET_FILE:ex1solve> -n 1000)
+
 install(TARGETS ex1solve RUNTIME DESTINATION bin)

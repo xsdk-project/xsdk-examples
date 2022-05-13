@@ -1,5 +1,5 @@
 //                         MFEM Example 16 - Parallel Version
-//                             SUNDIALS Modification
+//                              SUNDIALS Modification
 //
 // Compile with: make ex16p
 //
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
    MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
    // 2. Parse command-line options.
-   const char *mesh_file = "../data/star.mesh";
+   const char *mesh_file = "../../data/star.mesh";
    int ser_ref_levels = 2;
    int par_ref_levels = 1;
    int order = 2;
@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
       args.PrintOptions(cout);
    }
 
-   // check for vaild ODE solver option
+   // check for valid ODE solver option
    if (ode_solver_type < 1 || ode_solver_type > 12)
    {
       if (myid == 0)

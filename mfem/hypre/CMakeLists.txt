@@ -12,4 +12,31 @@ target_link_libraries(
             MPI::MPI_CXX
 )
 
+if(ENABLE_CUDA)
+    xsdk_add_test(
+        NAME
+        MFEM-magnetic-diffusion-gpu
+        MPI_NPROCS
+        4
+        COMMAND
+        $<TARGET_FILE:magnetic-diffusion>
+        -m
+        ../data/star.mesh
+        -pa
+        -d
+        cuda
+    )
+elseif(NOT ENABLE_CUDA)
+    xsdk_add_test(
+        NAME
+        MFEM-magnetic-diffusion-cpu
+        MPI_NPROCS
+        4
+        COMMAND
+        $<TARGET_FILE:magnetic-diffusion>
+        -m
+        ../data/star.mesh
+    )
+endif()
+
 install(TARGETS ${example} RUNTIME DESTINATION bin)

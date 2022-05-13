@@ -15,8 +15,17 @@ if(ENABLE_PETSC)
     if(MATH_LIBRARY)
         target_link_libraries(cv_petsc_ex7 PRIVATE ${MATH_LIBRARY})
     endif()
-    add_test(NAME cv_petsc_ex7_1 COMMAND cv_petsc_ex7)
-    add_test(NAME cv_petsc_ex7_2 COMMAND cv_petsc_ex7 --snes_type anderson)
+    xsdk_add_test(NAME SUNDIALS-cv_petsc_ex7_1 COMMAND $<TARGET_FILE:cv_petsc_ex7> MPI_NPROCS 4)
+    xsdk_add_test(
+        NAME
+        SUNDIALS-cv_petsc_ex7_2
+        COMMAND
+        $<TARGET_FILE:cv_petsc_ex7>
+        --snes_type
+        anderson
+        MPI_NPROCS
+        4
+    )
     install(TARGETS cv_petsc_ex7 RUNTIME DESTINATION bin)
 endif()
 if(ENABLE_SUPERLU)
@@ -26,9 +35,7 @@ if(ENABLE_SUPERLU)
     if(MATH_LIBRARY)
         target_link_libraries(ark_brusselator1D_FEM_sludist PRIVATE ${MATH_LIBRARY})
     endif()
-    add_test(NAME ${tgt} COMMAND ${MPIEXEC_TEST_COMMAND} ${MPIEXEC_TEST_COMMAND_ARGS} -n1
-                                 $<TARGET_FILE:${tgt}>
-    )
+    xsdk_add_test(NAME SUNDIALS-${tgt} COMMAND $<TARGET_FILE:${tgt}> MPI_NPROCS 1)
     install(TARGETS ${tgt} RUNTIME DESTINATION bin)
 endif()
 if(ENABLE_MAGMA)
@@ -39,6 +46,8 @@ if(ENABLE_MAGMA)
     if(MATH_LIBRARY)
         target_link_libraries(cvRoberts_blockdiag_magma PRIVATE ${MATH_LIBRARY})
     endif()
-    add_test(NAME cvRoberts_blockdiag_magma COMMAND cvRoberts_blockdiag_magma)
+    xsdk_add_test(
+        NAME SUNDIALS-cvRoberts_blockdiag_magma COMMAND $<TARGET_FILE:cvRoberts_blockdiag_magma>
+    )
     install(TARGETS cvRoberts_blockdiag_magma RUNTIME DESTINATION bin)
 endif()

@@ -12,9 +12,6 @@ set(TRILINOS_LIBRARIES ${TRILINOS_DIR}/lib)
 
 find_package(OpenMP)
 
-add_executable(SimpleSolve_WithParameters SimpleSolve_WithParameters.cpp)
-target_link_libraries(SimpleSolve_WithParameters PRIVATE OpenMP::OpenMP_CXX XSDK::SUPERLU METIS)
-
 find_library(
     AMESOS2_LIB
     NAMES amesos2
@@ -46,20 +43,30 @@ find_library(
     PATHS ${TRILINOS_LIBRARIES}
 )
 
-target_link_libraries(
-    SimpleSolve_WithParameters PRIVATE ${AMESOS2_LIB} ${TPETRA_LIB} ${TEUCHOSCOMM_LIB}
-                                       ${TEUCHOSCORE_LIB} ${TEUCHOSLIST_LIB} ${KOKKOSCORE_LIB}
-)
+if(ENABLE_SUPERLU)
+    add_executable(SimpleSolve_WithParameters SimpleSolve_WithParameters.cpp)
+    target_link_libraries(SimpleSolve_WithParameters PRIVATE OpenMP::OpenMP_CXX XSDK::SUPERLU METIS)
 
-target_include_directories(SimpleSolve_WithParameters PRIVATE ${TRILINOS_INCLUDE_DIRS})
+    target_link_libraries(
+        SimpleSolve_WithParameters PRIVATE ${AMESOS2_LIB} ${TPETRA_LIB} ${TEUCHOSCOMM_LIB}
+                                           ${TEUCHOSCORE_LIB} ${TEUCHOSLIST_LIB} ${KOKKOSCORE_LIB}
+    )
 
-if(MATH_LIBRARY)
-    target_link_libraries(SimpleSolve_WithParameters PRIVATE ${MATH_LIBRARY})
+    target_include_directories(SimpleSolve_WithParameters PRIVATE ${TRILINOS_INCLUDE_DIRS})
+
+    if(MATH_LIBRARY)
+        target_link_libraries(SimpleSolve_WithParameters PRIVATE ${MATH_LIBRARY})
+    endif()
+
+    find_library(DYNLNK_LIBRARY NAMES dl)
+    if(DYNLNK_LIBRARY)
+        target_link_libraries(SimpleSolve_WithParameters PRIVATE ${DYNLNK_LIBRARY})
+    endif()
+
+    xsdk_add_test(
+        NAME TRILINOS-SimpleSolve_WithParameters MPI_NPROCS 1 COMMAND
+        $<TARGET_FILE:SimpleSolve_WithParameters>
+    )
+
+    install(TARGETS SimpleSolve_WithParameters RUNTIME DESTINATION bin)
 endif()
-
-find_library(DYNLNK_LIBRARY NAMES dl)
-if(DYNLNK_LIBRARY)
-    target_link_libraries(SimpleSolve_WithParameters PRIVATE ${DYNLNK_LIBRARY})
-endif()
-
-install(TARGETS SimpleSolve_WithParameters RUNTIME DESTINATION bin)
