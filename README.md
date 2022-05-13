@@ -1,4 +1,4 @@
-# xSDK Examples
+# xSDK Examples v0.3.0
 
 The example codes provided here demonstrate the use of of various xSDK libraries in tandem to solve problems of 
 interest.  Each of the library folders has one or more examples codes that are built of that library 
@@ -8,6 +8,8 @@ code samples are a good place to start for new projects.  More details about the
 in the README.md files in the library subfolders.  For more information on the xSDK see <https://xsdk.info/>.
 
 ## Code Example Summary
+
+These examples were tested and verified against xsdk@0.7.0. 
 
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
