@@ -81,7 +81,7 @@ if(ENABLE_TRILINOS)
     )
 endif()
 
-install(FILES output/ex19_1.testout output/ex19_cuda_1.out output/ex19_hypre_1.out
+install(FILES output/ex19_1.testout output/ex19_cuda_1.out output/ex19_hypre.out
               output/ex19_ml.out output/ex19_superlu.out DESTINATION output
 )
 install(TARGETS ex19 RUNTIME DESTINATION bin)
