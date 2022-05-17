@@ -10,15 +10,15 @@ STRUMPACK, SuperLU, or HYPRE's BoomerAMG.
 This example is built to run in parallel, so launch it with mpirun and your
 desired options, e.g. using STRUMPACK:
 ```
-mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh --strumpack
+mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh -ls strumpack
 ```
 SuperLU:
 ```
-mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh --superlu
+mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh -ls superlu
 ```
 or HYPRE:
 ```
-mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh --no-strumpack
+mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh -ls hypre
 ```
 
 For a full list of options, see

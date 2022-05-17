@@ -2,9 +2,9 @@
 //                       MFEM Example 11 - Parallel Version
 //
 // Sample runs:
-//    mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh --strumpack
-//    mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh --superlu
-//    mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh --no-strumpack
+//    mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh -ls strumpack
+//    mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh -ls superlu
+//    mpirun -np 4 ./diffusion-eigen -m ../data/star.mesh -ls hypre
 //
 // Description:  This xSDK examples demonstrates the integration of MFEM with
 //               STRUMPACK, as well as HYPRE and SuperLU.
@@ -53,8 +53,7 @@ int main(int argc, char *argv[])
    int order = 1;
    int nev = 5;
    int seed = 75;
-   bool sp_solver = true;
-   bool slu_solver = false;
+   const char *linear_solver = "strumpack";
    bool visualization = false;
 
    OptionsParser args(argc, argv);
@@ -71,27 +70,39 @@ int main(int argc, char *argv[])
                   "Number of desired eigenmodes.");
    args.AddOption(&seed, "-s", "--seed",
                   "Random seed used to initialize LOBPCG.");
-   args.AddOption(&sp_solver, "-sp", "--strumpack", "-no-sp",
-                  "--no-strumpack", "Use the STRUMPACK Solver.");
-#ifdef MFEM_USE_SUPERLU
-   args.AddOption(&slu_solver, "-slu", "--superlu", "-no-slu",
-                  "--no-superlu", "Use the SuperLU Solver.");
-#endif
+   args.AddOption(&linear_solver, "-ls", "--linear-solver",
+                  "Linear solver to use: "
+                  "'strumpack' (default), 'hypre', or 'superlu'.");
    args.AddOption(&visualization, "-vis", "--visualization", "-no-vis",
                   "--no-visualization",
                   "Enable or disable GLVis visualization.");
    args.Parse();
-   if (slu_solver && sp_solver)
+   const string lin_solver(linear_solver);
+   if (lin_solver != "strumpack" && lin_solver != "superlu" &&
+       lin_solver != "hypre")
    {
       if (myid == 0)
-         cout << "WARNING: Both SuperLU and STRUMPACK have been selected,"
-              << " please choose either one." << endl
-              << "         Defaulting to STRUMPACK." << endl;
-      slu_solver = false;
+      {
+         cout << "Unknown linear solver: " << lin_solver << endl;
+      }
+      MPI_Finalize();
+      return 2;
    }
+#ifndef MFEM_USE_SUPERLU
+   if (lin_solver == "superlu")
+   {
+      if (myid == 0)
+      {
+         cout << "Linear solver \"superlu\" requires MFEM_USE_SUPERLU=YES."
+              << endl;
+      }
+      MPI_Finalize();
+      return 3;
+   }
+#endif
    // The command line options are also passed to the STRUMPACK
    // solver. So do not exit if some options are not recognized.
-   if (!sp_solver)
+   if (lin_solver != "strumpack" || args.Help())
    {
       if (!args.Good())
       {
@@ -195,16 +206,18 @@ int main(int argc, char *argv[])
    HypreParMatrix *M = m->ParallelAssemble();
 
    Operator * Arow = NULL;
-   if (sp_solver)
+   A->HostRead();
+   if (lin_solver == "strumpack")
    {
       Arow = new STRUMPACKRowLocMatrix(*A);
    }
 #ifdef MFEM_USE_SUPERLU
-   if (slu_solver)
+   if (lin_solver == "superlu")
    {
       Arow = new SuperLURowLocMatrix(*A);
    }
 #endif
+   A->HypreRead();
 
    delete a;
    delete m;
@@ -213,7 +226,7 @@ int main(int argc, char *argv[])
    //    preconditioner for A to be used within the solver. Set the matrices
    //    which define the generalized eigenproblem A x = lambda M x.
    Solver * precond = NULL;
-   if (sp_solver)
+   if (lin_solver == "strumpack")
    {
       STRUMPACKSolver * strumpack = new STRUMPACKSolver(argc, argv, MPI_COMM_WORLD);
       strumpack->SetPrintFactorStatistics(true);
@@ -225,13 +238,13 @@ int main(int argc, char *argv[])
       strumpack->SetFromCommandLine();
       precond = strumpack;
    }
-   else if (!sp_solver && !slu_solver)
+   else if (lin_solver != "superlu")
    {
       HypreBoomerAMG * amg = new HypreBoomerAMG(*A);
       amg->SetPrintLevel(0);
       precond = amg;
    }
-   else if (slu_solver)
+   else // lin_solver == "superlu"
    {
 #ifdef MFEM_USE_SUPERLU
       SuperLUSolver * superlu = new SuperLUSolver(MPI_COMM_WORLD);

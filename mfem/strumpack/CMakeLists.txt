@@ -13,36 +13,41 @@ target_link_libraries(
 
 xsdk_add_test(
     NAME
-    MFEM-diffusion-eigen-no-strumpack
+    MFEM-diffusion-eigen--strumpack
     MPI_NPROCS
     4
     COMMAND
     $<TARGET_FILE:diffusion-eigen>
     -m
     ../data/star.mesh
-    --no-strumpack
+    -ls
+    strumpack
 )
+if(ENABLE_SUPERLU)
+    xsdk_add_test(
+        NAME
+        MFEM-diffusion-eigen--superlu
+        MPI_NPROCS
+        4
+        COMMAND
+        $<TARGET_FILE:diffusion-eigen>
+        -m
+        ../data/star.mesh
+        -ls
+        superlu
+    )
+endif()
 xsdk_add_test(
     NAME
-    MFEM-diffusion-eigen-strumpack
+    MFEM-diffusion-eigen--hypre-boomeramg
     MPI_NPROCS
     4
     COMMAND
     $<TARGET_FILE:diffusion-eigen>
     -m
     ../data/star.mesh
-    --strumpack
-)
-xsdk_add_test(
-    NAME
-    MFEM-diffusion-eigen-superlu
-    MPI_NPROCS
-    4
-    COMMAND
-    $<TARGET_FILE:diffusion-eigen>
-    -m
-    ../data/star.mesh
-    --superlu
+    -ls
+    hypre
 )
 
 install(TARGETS diffusion-eigen RUNTIME DESTINATION bin)

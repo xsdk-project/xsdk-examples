@@ -88,7 +88,7 @@ set(METIS_DIR
 find_package(MPI REQUIRED)
 
 # check for OpenMP
-find_package(OpenMP REQUIRED)
+find_package(OpenMP)
 
 # compiler options
 if(NOT DEFINED CMAKE_CXX_STANDARD)

@@ -12,7 +12,7 @@ target_link_libraries(
 
 xsdk_add_test(
     NAME
-    MFEM-convdiff-no-superlu
+    MFEM-convdiff--hypre-boomeramg
     MPI_NPROCS
     4
     COMMAND
@@ -23,7 +23,7 @@ xsdk_add_test(
 )
 xsdk_add_test(
     NAME
-    MFEM-convdiff-superlu
+    MFEM-convdiff--superlu
     MPI_NPROCS
     4
     COMMAND

@@ -45,7 +45,10 @@ find_library(
 
 if(ENABLE_SUPERLU)
     add_executable(SimpleSolve_WithParameters SimpleSolve_WithParameters.cpp)
-    target_link_libraries(SimpleSolve_WithParameters PRIVATE OpenMP::OpenMP_CXX XSDK::SUPERLU METIS)
+    target_link_libraries(SimpleSolve_WithParameters PRIVATE XSDK::SUPERLU METIS)
+    if (TARGET OpenMP::OpenMP_CXX)
+      target_link_libraries(SimpleSolve_WithParameters PRIVATE OpenMP::OpenMP_CXX)
+    endif()
 
     target_link_libraries(
         SimpleSolve_WithParameters PRIVATE ${AMESOS2_LIB} ${TPETRA_LIB} ${TEUCHOSCOMM_LIB}

@@ -1,5 +1,8 @@
 add_executable(ex19 ex19.c)
-target_link_libraries(ex19 PRIVATE XSDK::PETSc OpenMP::OpenMP_C MPI::MPI_C)
+target_link_libraries(ex19 PRIVATE XSDK::PETSc MPI::MPI_C)
+if (TARGET OpenMP::OpenMP_C)
+  target_link_libraries(ex19 PRIVATE OpenMP::OpenMP_C)
+endif()
 
 # The makefile to run examples requires rm command
 find_program(RM rm)

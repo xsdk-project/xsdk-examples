@@ -10,10 +10,13 @@
 if(ENABLE_PETSC)
     add_executable(cv_petsc_ex7 cv_petsc_ex7.c)
     target_link_libraries(
-        cv_petsc_ex7 PRIVATE XSDK::SUNDIALS XSDK::PETSc OpenMP::OpenMP_C MPI::MPI_C
+        cv_petsc_ex7 PRIVATE XSDK::SUNDIALS XSDK::PETSc MPI::MPI_C
     )
     if(MATH_LIBRARY)
         target_link_libraries(cv_petsc_ex7 PRIVATE ${MATH_LIBRARY})
+    endif()
+    if (TARGET OpenMP::OpenMP_C)
+      target_link_libraries(cv_petsc_ex7 PRIVATE OpenMP::OpenMP_C)
     endif()
     xsdk_add_test(NAME SUNDIALS-cv_petsc_ex7_1 COMMAND $<TARGET_FILE:cv_petsc_ex7> MPI_NPROCS 4)
     xsdk_add_test(

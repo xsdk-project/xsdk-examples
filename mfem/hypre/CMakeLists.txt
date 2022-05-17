@@ -12,10 +12,21 @@ target_link_libraries(
             MPI::MPI_CXX
 )
 
+xsdk_add_test(
+    NAME
+    MFEM-magnetic-diffusion--cpu
+    MPI_NPROCS
+    4
+    COMMAND
+    $<TARGET_FILE:magnetic-diffusion>
+    -m
+    ../data/star.mesh
+)
+# TODO: add the other CPU sample runs from README.md
 if(ENABLE_CUDA)
     xsdk_add_test(
         NAME
-        MFEM-magnetic-diffusion-gpu
+        MFEM-magnetic-diffusion--gpu
         MPI_NPROCS
         4
         COMMAND
@@ -26,17 +37,7 @@ if(ENABLE_CUDA)
         -d
         cuda
     )
-elseif(NOT ENABLE_CUDA)
-    xsdk_add_test(
-        NAME
-        MFEM-magnetic-diffusion-cpu
-        MPI_NPROCS
-        4
-        COMMAND
-        $<TARGET_FILE:magnetic-diffusion>
-        -m
-        ../data/star.mesh
-    )
+    # TODO: add the other GPU sample runs from README.md
 endif()
 
 install(TARGETS ${example} RUNTIME DESTINATION bin)

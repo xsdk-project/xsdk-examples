@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
    args.AddOption(&two_matrix, "-2mat", "--two-matrix", "-1mat", "--one-matrix",
                   "Solve with 1 or two different matrices.");
    args.AddOption(&two_rhs, "-2rhs", "--two-rhs", "-1rhs", "--one-rhs",
-                  "Solve with 1 or two different rhs.");    
+                  "Solve with 1 or two different rhs.");
    args.Parse();
    if (!args.Good())
    {
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
       }
       MPI_Finalize();
       return 1;
-   }   
+   }
    if (myid == 0)
    {
       args.PrintOptions(cout);
@@ -70,15 +70,16 @@ int main(int argc, char *argv[])
    // 3. Read the (serial) mesh from the given mesh file on all processors. We
    //    can handle triangular, quadrilateral, tetrahedral, hexahedral, surface
    //    and volume meshes with the same code.
-   Mesh *mesh = new Mesh(100, 100, Element::QUADRILATERAL, 1, 1.0, 1.0);
-   int dim = mesh->Dimension();
+   Mesh mesh = Mesh::MakeCartesian2D(100, 100, Element::QUADRILATERAL,
+                                     true, 1.0, 1.0);
+   int dim = mesh.Dimension();
 
    // 5. Define a parallel mesh by a partitioning of the serial mesh. Refine
    //    this mesh further in parallel to increase the resolution (1 time by
    //    default, or specified on the command line with -rp). Once the parallel
    //    mesh is defined, the serial mesh can be deleted.
-   ParMesh *pmesh = new ParMesh(MPI_COMM_WORLD, *mesh);
-   delete mesh;
+   ParMesh *pmesh = new ParMesh(MPI_COMM_WORLD, mesh);
+   mesh.Clear();
    for (int lev = 0; lev < ref_levels; lev++)
    {
       pmesh->UniformRefinement();
@@ -160,7 +161,9 @@ int main(int argc, char *argv[])
    }
    else
    {
+      CD.HostRead();
       SLUCD = new SuperLURowLocMatrix(CD);
+      CD.HypreRead();
       superlu = new SuperLUSolver(MPI_COMM_WORLD);
       superlu->SetPrintStatistics(true);
       superlu->SetSymmetricPattern(false);
@@ -237,9 +240,10 @@ int main(int argc, char *argv[])
    }
    Vector R(B); // R = B
    CD.Mult(1.0, X, -1.0, R); // R = CD X - B
+   double res_final = sqrt(InnerProduct(pmesh->GetComm(), R, R));
    if (myid == 0)
    {
-      cout << "Final L2 norm of residual: " << sqrt(R*R) << endl << endl;
+      cout << "Final L2 norm of residual: " << res_final << endl << endl;
    }
    if (two_rhs)
    {
@@ -252,10 +256,11 @@ int main(int argc, char *argv[])
       }
       Vector R(B); // R = B
       CD.Mult(1.0, X, -1.0, R); // R = CD X - B
+      res_final = sqrt(InnerProduct(pmesh->GetComm(), R, R));
       if (myid == 0)
       {
-         cout << "Final L2 norm of residual: " << sqrt(R*R) << endl << endl;
-      } 
+         cout << "Final L2 norm of residual: " << res_final << endl << endl;
+      }
    }
 
    // 9b. Complete the solve a second time with another matrix to show off the saved
@@ -277,9 +282,11 @@ int main(int argc, char *argv[])
          solver = gmres;
       }
       else
-      {  
+      {
          delete SLUCD;
+         CD.HostRead();
          SLUCD = new SuperLURowLocMatrix(CD);
+         CD.HypreRead();
          superlu->SetOperator(*SLUCD);
       }
       tic();
@@ -290,9 +297,10 @@ int main(int argc, char *argv[])
       }
       R = B;
       CD.Mult(1.0, X, -1.0, R); // R = CD X - B
+      res_final = sqrt(InnerProduct(pmesh->GetComm(), R, R));
       if (myid == 0)
       {
-         cout << "Final L2 norm of residual: " << sqrt(R*R) << endl;
+         cout << "Final L2 norm of residual: " << res_final << endl;
       }
    }
    cd->RecoverFEMSolution(X, *b, x);

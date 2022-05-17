@@ -7,9 +7,9 @@
 //    mpirun -np 4 ./advection -m ../data/periodic-hexagon.mesh -p 0 -rp 1 -s 9 -dt 0.005 -vs 15
 //
 // Device sample runs:
-//    mpirun -np 4 ./advection --device cuda -pa
-//    mpirun -np 4 ./advection --device cuda -ea
-//    mpirun -np 4 ./advection --device cuda -fa
+//    mpirun -np 4 ./advection --device cuda -pa -s 8
+//    mpirun -np 4 ./advection --device cuda -ea -s 8
+//    mpirun -np 4 ./advection --device cuda -fa -s 8
 //
 // Description:  This xSDK example demonstrates the integration of MFEM with
 //               SUNDIALS.
