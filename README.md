@@ -37,7 +37,7 @@ They can still be built using CMake directly.
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
 | amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
 
-## Install the examples
+## Installing the Examples
 
 The examples can be installed along with the xSDK utilizing the Spack package.
 
