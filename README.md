@@ -39,7 +39,7 @@ They can still be built using CMake directly.
 
 ## Install the code samples
 
-The examples can be installed along with the xSDK utilizing the spack package.
+The examples can be installed along with the xSDK utilizing the Spack package.
 
 ```
 spack install xsdk-examples
@@ -51,18 +51,29 @@ To install with CUDA support,
 spack install xsdk-examples+cuda
 ```
 
-Alternatively the examples can be built and installed with CMake.
+Since `xsdk-examples` depends on the `xsdk` Spack package, Spack will also install `xsdk`. In many cases, it may be easier to first install the xsdk following https://xsdk.info/download/ prior to the `xsdk-examples` package. 
+
+Alternatively the examples can be built and installed with CMake:
 
 ```
 git clone https://github.com/xsdk-project/xsdk-examples
 cmake -DCMAKE_PREFIX_PATH=/path/to/libraries -DENABLE_CUDA=<YES|NO> -S xsdk-examples/ -B xsdk-examples/builddir
 cd xsdk-examples/builddir
 make
-make test # test the examples by running them
 make install
 ```
 
-Details on how to run each example code can be found in each example folder's README.md file.
+## Running and Testing
+
+xsdk-examples is setup to use `ctest`. Each example in the repository is tested with at least a set of default options. If CMake is used to build xsdk-examples, the tests can be run from the build directory (`builddir` above):
+```
+ctest
+```
+or
+```
+make test
+```
+Details on how to run each example code manually (and with different options) can be found in each example folder's README.md file.
 
 
 [cuda]: https://img.shields.io/badge/-cuda-brightgreen?style=flat "CUDA"
