@@ -57,7 +57,7 @@ Alternatively the examples can be built and installed with CMake:
 
 ```
 git clone https://github.com/xsdk-project/xsdk-examples
-cmake -DCMAKE_PREFIX_PATH=/path/to/libraries -DENABLE_CUDA=<YES|NO> -S xsdk-examples/ -B xsdk-examples/builddir
+cmake -DCMAKE_PREFIX_PATH=/path/to/libraries -DENABLE_CUDA=<TRUE|FALSE> -S xsdk-examples/ -B xsdk-examples/builddir
 cd xsdk-examples/builddir
 make
 make install
