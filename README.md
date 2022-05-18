@@ -59,6 +59,7 @@ cmake -DCMAKE_PREFIX_PATH=/path/to/libraries -DENABLE_CUDA=<YES|NO> -S xsdk-exam
 cd xsdk-examples/builddir
 make
 make test # test the examples by running them
+make install
 ```
 
 Details on how to run each example code can be found in each example folder's README.md file.
