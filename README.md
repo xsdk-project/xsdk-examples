@@ -7,7 +7,7 @@ examining the output is a good way to better understand how these libraries can 
 code samples are a good place to start for new projects.  More details about the examples can be found 
 in the README.md files in the library subfolders.  For more information on the xSDK see <https://xsdk.info/>.
 
-## Code Example Summary
+## Example Summary
 
 These examples were tested and verified against xsdk@0.7.0. 
 
@@ -37,7 +37,7 @@ They can still be built using CMake directly.
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
 | amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
 
-## Install the code samples
+## Install the examples
 
 The examples can be installed along with the xSDK utilizing the Spack package.
 
