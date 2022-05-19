@@ -15,15 +15,26 @@ if(MATH_LIBRARY)
     target_link_libraries(ex19 PRIVATE ${MATH_LIBRARY})
 endif()
 
+xsdk_add_test(
+    NAME
+    PETSc-ex19_1
+    COMMAND
+    make
+    -f
+    makefile-run
+    runex19
+    ENVIRONMENT
+    PETSC_DIR=${PETSc_DIR}
+)
 if(ENABLE_CUDA)
     xsdk_add_test(
         NAME
-        PETSc-ex19_1
+        PETSc-ex19_cuda
         COMMAND
         make
         -f
         makefile-run
-        runex19
+        runex19_cuda
         ENVIRONMENT
         PETSC_DIR=${PETSc_DIR}
     )
