@@ -54,7 +54,7 @@ spack install xsdk-examples+cuda cuda_arch=<arch> ^xsdk+cuda cuda_arch=<arch> ^s
 
 Since `xsdk-examples` depends on the `xsdk` Spack package, Spack will also install `xsdk`. In many cases, it may be easier to install the `xsdk` package (separately) following https://xsdk.info/download/ prior to the `xsdk-examples` package. 
 
-Alternatively the examples can be built and installed with CMake:
+Alternatively the examples can be built and installed with CMake directly:
 
 ```
 git clone https://github.com/xsdk-project/xsdk-examples
@@ -64,11 +64,13 @@ make
 make install
 ```
 
+Note, that to build with HIP support CMake must be used directly.
+
 ## Running and Testing
 
 xsdk-examples is setup to use `ctest`. Each example in the repository is tested with at least a set of default options. If CMake is used to build xsdk-examples, the tests can be run from the build directory (`builddir` above):
 ```
-ctest
+ctest .
 ```
 or
 ```
