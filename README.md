@@ -20,7 +20,7 @@ These examples were tested and verified against xsdk@0.7.0.
 | mfem/petsc/obstacle.cpp                               | MFEM+PETSc               | Membrane obstacle problem (min energy functional) |                |
 | mfem/strumpack/diffusion-eigen.cpp                    | MFEM+STRUMPACK+HYPRE     | Diffusion eigenvalue problem                      |                |
 | mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D Transient nonlinear heat conduction            |                |
-| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda] ![hip] |
+| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda]        |
 | mfem/sundials/advection.cpp                           | MFEM+SUNDIALS            | 2D Time-dependent advection                       | ![cuda]        |
 | petsc/ex19.c                                          | PETSc+HYPRE+SuperLU_Dist | 2D nonlinear driven cavity problem                | ![cuda]        |
 | plasma/ex1solve.c                                     | PLASMA+SLATE+BLASPP      | Linear system direct solution                     | ![cuda]        |
@@ -36,6 +36,7 @@ They can still be built using CMake directly.
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
 | amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
+| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![hip]         |
 
 ## Installing the Examples
 
