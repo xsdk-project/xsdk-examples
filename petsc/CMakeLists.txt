@@ -43,7 +43,7 @@ if(ENABLE_HYPRE)
     if(ENABLE_CUDA)
         xsdk_add_test(
             NAME
-            PETSc-ex19_hypre
+            PETSc-ex19_hypre_cuda
             COMMAND
             make
             -f
