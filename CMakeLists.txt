@@ -12,6 +12,7 @@ include(XsdkAddTest)
 
 # build options
 option(ENABLE_CUDA "Enable CUDA" OFF)
+option(ENABLE_HIP "Enable HIP" OFF)
 
 option(ENABLE_AMREX "Enable AMReX" ON)
 set(AMREX_DIR
@@ -100,11 +101,13 @@ endif()
 # setup CUDA
 if(ENABLE_CUDA)
     enable_language(CUDA)
-    if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-        set(CMAKE_CUDA_ARCHITECTURES 70)
-    endif()
     set(CMAKE_CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
     find_package(CUDAToolkit REQUIRED)
+endif()
+
+if(ENABLE_HIP)
+    enable_language(HIP)
+    find_package(hip REQUIRED)
 endif()
 
 # check for AMReX
