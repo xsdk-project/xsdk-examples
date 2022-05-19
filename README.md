@@ -52,7 +52,7 @@ To install with CUDA support,
 spack install xsdk-examples+cuda cuda_arch=<arch> ^xsdk+cuda cuda_arch=<arch> ^sundials+magma
 ```
 
-Since `xsdk-examples` depends on the `xsdk` Spack package, Spack will also install `xsdk`. In many cases, it may be easier to install the `xsdk` package (separately) following https://xsdk.info/download/ prior to the `xsdk-examples` package. 
+Since `xsdk-examples` depends on the `xsdk` Spack package, Spack will also install `xsdk`. In some cases, it may be easier to install the `xsdk` package (separately) following https://xsdk.info/download/ prior to the `xsdk-examples` package. 
 
 Alternatively the examples can be built and installed with CMake directly:
 
