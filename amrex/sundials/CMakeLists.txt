@@ -7,7 +7,7 @@ if(ENABLE_CUDA)
     ) # This adds -dc
 endif()
 
-target_link_libraries(amrex_sundials_advection_diffusion XSDK::AMReX XSDK::SUNDIALS)
+target_link_libraries(amrex_sundials_advection_diffusion PRIVATE XSDK::AMReX XSDK::SUNDIALS MPI::MPI_CXX)
 
 xsdk_add_test(
     NAME AMREX-amrex_sundials_advection_diffusion COMMAND
