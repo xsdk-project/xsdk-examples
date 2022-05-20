@@ -108,9 +108,11 @@ endif()
 if(ENABLE_HIP)
     enable_language(HIP)
     find_package(hip REQUIRED)
+    find_package(hipsparse REQUIRED)
     find_package(hiprand REQUIRED)
     find_package(rocrand REQUIRED)
     find_package(rocprim REQUIRED)
+    find_package(rocsparse REQUIRED)
 endif()
 
 # check for AMReX

@@ -39,5 +39,21 @@ if(ENABLE_CUDA)
     )
     # TODO: add the other GPU sample runs from README.md
 endif()
+if(ENABLE_HIP)
+    xsdk_add_test(
+        NAME
+        MFEM-magnetic-diffusion--gpu
+        MPI_NPROCS
+        4
+        COMMAND
+        $<TARGET_FILE:magnetic-diffusion>
+        -m
+        ../data/star.mesh
+        -pa
+        -d
+        hip
+    )
+    # TODO: add the other GPU sample runs from README.md
+endif()
 
 install(TARGETS ${example} RUNTIME DESTINATION bin)

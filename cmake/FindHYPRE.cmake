@@ -63,4 +63,8 @@ if(HYPRE_FOUND)
     INTERFACE_LINK_LIBRARIES "${HYPRE_LIBRARIES}"
     IMPORTED_LOCATION "${HYPRE_LIBRARY}")
 
+  if(ENABLE_HIP)
+    target_link_libraries(XSDK::HYPRE INTERFACE roc::rocsparse roc::rocrand)
+  endif()
+
 endif()

@@ -44,5 +44,8 @@ if(MFEM_FOUND)
    if(ENABLE_CUDA)
      target_link_libraries(XSDK::MFEM INTERFACE CUDA::cudart CUDA::cusparse)
    endif()
+   if(ENABLE_HIP)
+     target_link_libraries(XSDK::MFEM INTERFACE hip::amdhip64 roc::hipsparse)
+   endif()
 
 endif()
