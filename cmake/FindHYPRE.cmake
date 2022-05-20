@@ -25,7 +25,7 @@
 ### find include dir
 find_path(HYPRE_INCLUDE_DIR
   NAMES HYPRE.h hypre.h
-  HINTS ${HYPRE_DIR} $ENV{HYPRE_DIR}
+  HINTS ${HYPRE_DIR} $ENV{HYPRE_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES include
   NO_DEFAULT_PATH
   DOC "Directory with hypre header.")
@@ -33,7 +33,7 @@ find_path(HYPRE_INCLUDE_DIR
 ### find library
 find_library(HYPRE_LIBRARY
   NAMES HYPRE hypre
-  HINTS ${HYPRE_DIR} $ENV{HYPRE_DIR}
+  HINTS ${HYPRE_DIR} $ENV{HYPRE_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES lib lib64
   NO_DEFAULT_PATH
   DOC "The hypre library.")
@@ -62,5 +62,9 @@ if(HYPRE_FOUND)
     INTERFACE_INCLUDE_DIRECTORIES "${HYPRE_INCLUDE_DIR}"
     INTERFACE_LINK_LIBRARIES "${HYPRE_LIBRARIES}"
     IMPORTED_LOCATION "${HYPRE_LIBRARY}")
+
+  if(ENABLE_HIP)
+    target_link_libraries(XSDK::HYPRE INTERFACE roc::rocsparse roc::rocrand)
+  endif()
 
 endif()

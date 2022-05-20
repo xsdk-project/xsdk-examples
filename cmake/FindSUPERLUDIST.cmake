@@ -23,14 +23,14 @@
 
 ### find include dir
 find_path(SUPERLUDIST_INCLUDE_DIR superlu_defs.h
-  HINTS ${SUPERLU_DIR} $ENV{SUPERLU_DIR}
+  HINTS ${SUPERLU_DIR} $ENV{SUPERLU_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES include
   NO_DEFAULT_PATH
   DOC "Directory with the SuperLU DIST header")
 
 ### find library
 find_library(SUPERLUDIST_LIBRARY superlu_dist
-  HINTS ${SUPERLU_DIR} $ENV{SUPERLU_DIR}
+  HINTS ${SUPERLU_DIR} $ENV{SUPERLU_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES lib lib64
   NO_DEFAULT_PATH
   DOC "The SuperLU DIST library")

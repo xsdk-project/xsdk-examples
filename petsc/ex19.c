@@ -10,7 +10,7 @@ The flow can be driven with the lid or with bouyancy or both:\n\
 /* in HTML, '&lt' = '<' and '&gt' = '>' */
 
 /*
-      See src/ksp/ksp/examples/tutorials/ex45.c
+      See src/ksp/ksp/tutorials/ex45.c
 */
 
 /*T
@@ -19,7 +19,6 @@ The flow can be driven with the lid or with bouyancy or both:\n\
    Concepts: multicomponent
    Processors: n
 T*/
-
 
 /*F-----------------------------------------------------------------------
 
@@ -151,7 +150,6 @@ int main(int argc,char **argv)
   ierr = SNESSetFromOptions(snes);CHKERRQ(ierr);
   ierr = PetscPrintf(comm,"lid velocity = %g, prandtl # = %g, grashof # = %g\n",(double)user.lidvelocity,(double)user.prandtl,(double)user.grashof);CHKERRQ(ierr);
 
-
   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
      Solve the nonlinear system
      - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -262,7 +260,6 @@ PetscErrorCode FormFunctionLocal(DMDALocalInfo *info,Field **x,Field **f,void *p
      Note: FD formulae below are normalized by multiplying through by
      local volume element (i.e. hx*hy) to obtain coefficients O(1) in two dimensions.
 
-
   */
   dhx   = (PetscReal)(info->mx-1);  dhy = (PetscReal)(info->my-1);
   hx    = 1.0/dhx;                   hy = 1.0/dhy;
@@ -371,7 +368,7 @@ PetscErrorCode FormFunctionLocal(DMDALocalInfo *info,Field **x,Field **f,void *p
 }
 
 /*
-    Performs sweeps of point block nonlinear Gauss-Seidel on all the local grid points 
+    Performs sweeps of point block nonlinear Gauss-Seidel on all the local grid points
 */
 PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
 {
@@ -648,7 +645,6 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
   PetscFunctionReturn(0);
 }
 
-
 /*TEST
 
    test:
@@ -700,7 +696,7 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
 
    test:
       suffix: 18
-      args: -ksp_monitor_snes_lg -ksp_pc_side right
+      args: -snes_monitor_ksp draw::draw_lg -ksp_pc_side right
       requires: x !single
 
    test:
@@ -889,7 +885,7 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
    test:
       suffix: fieldsplit_hypre
       nsize: 2
-      requires: hypre mumps !complex
+      requires: hypre mumps !complex !defined(PETSC_HAVE_HYPRE_DEVICE)
       args: -pc_type fieldsplit -pc_fieldsplit_block_size 4 -pc_fieldsplit_type SCHUR -pc_fieldsplit_0_fields 0,1,2 -pc_fieldsplit_1_fields 3 -fieldsplit_0_pc_type lu -fieldsplit_0_pc_factor_mat_solver_type mumps -fieldsplit_1_pc_type hypre -fieldsplit_1_pc_hypre_type boomeramg -snes_monitor_short -ksp_monitor_short
 
    test:
@@ -909,9 +905,10 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
    test:
       suffix: hypre
       nsize: 2
-      requires: hypre !complex
-      args: -da_refine 3 -snes_monitor_short -pc_type hypre
+      requires: hypre !complex !defined(PETSC_HAVE_HYPRE_DEVICE)
+      args: -da_refine 3 -snes_monitor_short -pc_type hypre -ksp_norm_type unpreconditioned
 
+   # ibcgs is broken when using device vectors
    test:
       suffix: ibcgs
       nsize: 2
@@ -933,7 +930,7 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
    test:
       suffix: klu_2
       requires: suitesparse
-      args: -da_grid_x 20 -da_grid_y 20 -pc_type lu -pc_factor_mat_solver_type klu -mat_klu_ordering PETSC
+      args: -da_grid_x 20 -da_grid_y 20 -pc_type lu -pc_factor_mat_solver_type klu -pc_factor_mat_ordering_type nd
       output_file: output/ex19_superlu.out
 
    test:
@@ -1034,7 +1031,7 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
    test:
       suffix: umfpack
       requires: suitesparse
-      args: -da_refine 2 -pc_type lu -pc_factor_mat_solver_type umfpack -snes_view -snes_monitor_short -ksp_monitor_short
+      args: -da_refine 2 -pc_type lu -pc_factor_mat_solver_type umfpack -snes_view -snes_monitor_short -ksp_monitor_short -pc_factor_mat_ordering_type external
 
    test:
       suffix: tut_1
@@ -1052,7 +1049,7 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
    test:
       suffix: tut_3
       nsize: 4
-      requires: hypre !single !complex
+      requires: hypre !single !complex !defined(PETSC_HAVE_HYPRE_DEVICE)
       args: -da_refine 5 -snes_monitor -ksp_monitor -snes_view -pc_type hypre
 
    test:
@@ -1099,7 +1096,6 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
       requires: cuda
       args: -snes_monitor -dm_mat_type seqaijcusparse -dm_vec_type seqcuda -pc_type gamg -ksp_monitor -mg_levels_ksp_max_it 3
 
-
    test:
       suffix: cuda_2
       nsize: 3
@@ -1109,13 +1105,13 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
    test:
       suffix: seqbaijmkl
       nsize: 1
-      requires: define(PETSC_HAVE_MKL_SPARSE_OPTIMIZE)
+      requires: defined(PETSC_HAVE_MKL_SPARSE_OPTIMIZE)
       args: -dm_mat_type baij -snes_monitor -ksp_monitor -snes_view
 
    test:
       suffix: mpibaijmkl
       nsize: 2
-      requires:  define(PETSC_HAVE_MKL_SPARSE_OPTIMIZE)
+      requires:  defined(PETSC_HAVE_MKL_SPARSE_OPTIMIZE)
       args: -dm_mat_type baij -snes_monitor -ksp_monitor -snes_view
 
    test:
@@ -1126,8 +1122,34 @@ PetscErrorCode NonlinearGS(SNES snes, Vec X, Vec B, void *ctx)
 
    test:
      suffix: logviewmemory
-     requires: define(PETSC_USE_LOG) !define(PETSC_HAVE_VALGRIND)
+     requires: defined(PETSC_USE_LOG) !defined(PETSCTEST_VALGRIND)
      args: -log_view -log_view_memory -da_refine 4
      filter: grep MatFDColorSetUp | wc -w | xargs  -I % sh -c "expr % \> 21"
+
+   test:
+     suffix: fs
+     args: -pc_type fieldsplit -da_refine 3  -all_ksp_monitor -fieldsplit_y_velocity_pc_type lu  -fieldsplit_temperature_pc_type lu -fieldsplit_x_velocity_pc_type lu  -snes_view
+
+   test:
+     suffix: asm_matconvert
+     args: -mat_type aij -pc_type asm -pc_asm_sub_mat_type dense -snes_view
+
+   test:
+      suffix: euclid
+      nsize: 2
+      requires: hypre !single !complex !defined(PETSC_HAVE_HYPRE_MIXEDINT) !defined(PETSC_HAVE_HYPRE_DEVICE)
+      args: -da_refine 2 -ksp_monitor -snes_monitor -snes_view -pc_type hypre -pc_hypre_type euclid
+
+   test:
+      suffix: euclid_bj
+      nsize: 2
+      requires: hypre !single !complex !defined(PETSC_HAVE_HYPRE_MIXEDINT) !defined(PETSC_HAVE_HYPRE_DEVICE)
+      args: -da_refine 2 -ksp_monitor -snes_monitor -snes_view -pc_type hypre -pc_hypre_type euclid -pc_hypre_euclid_bj
+
+   test:
+      suffix: euclid_droptolerance
+      nsize: 1
+      requires: hypre !single !complex !defined(PETSC_HAVE_HYPRE_MIXEDINT) !defined(PETSC_HAVE_HYPRE_DEVICE)
+      args: -da_refine 2 -ksp_monitor -snes_monitor -snes_view -pc_type hypre -pc_hypre_type euclid -pc_hypre_euclid_droptolerance .1
 
 TEST*/

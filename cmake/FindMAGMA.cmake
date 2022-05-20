@@ -14,7 +14,7 @@
 # find the MAGMA include path
 find_path(MAGMA_INCLUDE_DIR magma_v2.h
   NAMES magma_v2.h
-  HINTS ${MAGMA_DIR} $ENV{MAGMA_DIR}
+  HINTS ${MAGMA_DIR} $ENV{MAGMA_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES include
   NO_DEFAULT_PATH
   DOC "Directory with MAGMA header"
@@ -23,7 +23,7 @@ find_path(MAGMA_INCLUDE_DIR magma_v2.h
 # find the main MAGMA library
 find_library(MAGMA_LIBRARY
   NAMES magma
-  HINTS ${MAGMA_DIR} $ENV{MAGMA_DIR}
+  HINTS ${MAGMA_DIR} $ENV{MAGMA_DIR} ${CMAKE_PREFIX_PATH}
   PATH_SUFFIXES lib lib64
   NO_DEFAULT_PATH
   DOC "The MAGMA library.")
@@ -33,7 +33,7 @@ if("SPARSE" IN_LIST MAGMA_FIND_COMPONENTS)
   set(_sparse_required MAGMA_SPARSE_LIBRARY)
   find_library(MAGMA_SPARSE_LIBRARY
     NAMES magma_sparse
-    HINTS ${MAGMA_DIR} $ENV{MAGMA_DIR}
+    HINTS ${MAGMA_DIR} $ENV{MAGMA_DIR} ${CMAKE_PREFIX_PATH}
     PATH_SUFFIXES lib lib64
     NO_DEFAULT_PATH
     DOC "The MAGMA sparse library.")
@@ -63,7 +63,7 @@ if(MAGMA_LIBRARY AND MAGMA_INCLUDE_DIR)
     set(_interface_libraires )
     foreach(lib ${_libraries_list})
       if(NOT (lib STREQUAL "-lmagma" OR lib STREQUAL "-lmagma_sparse" OR  lib STREQUAL "-L\${libdir}" OR lib STREQUAL "") )
-        string(REPLACE "-l" "" lib ${lib})
+        string(REGEX REPLACE "^-l" "" lib ${lib})
         list(APPEND _interface_libraires ${lib})
       endif()
     endforeach()

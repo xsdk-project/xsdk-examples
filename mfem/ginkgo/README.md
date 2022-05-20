@@ -12,7 +12,11 @@ Ginkgo's use.
 
 This example is built to run in serial, so launch it with your desired options:
 ```
-./mfem-gko --no-partial-assembly
+./mfem_ex1_gko --no-partial-assembly
+```
+When CUDA is enabled, this example can be run on GPU, e.g. with
+```
+./mfem_ex1_gko --partial-assembly --device cuda
 ```
 
 Useful non-default options:

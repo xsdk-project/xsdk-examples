@@ -18,7 +18,7 @@ mpirun -np 2 ./ex19 -da_grid_x 20 -da_grid_y 20 -pc_type lu -pc_factor_mat_solve
 ```
 To run with ML from Trilinos:
 ```
-mpirun -np 2 ./ex19 -da_refine 3 -snes_monitor_short -pc_type hypre
+mpirun -np 2 ./ex19 -da_refine 3 -snes_monitor_short -pc_type ml
 ```
 
 Useful non-default options:
