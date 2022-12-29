@@ -1,6 +1,6 @@
 add_executable(transient-heat transient-heat.cpp)
 target_link_libraries(
-    transient-heat PRIVATE XSDK::SUNDIALS XSDK::PETSc XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB
+    transient-heat PRIVATE XSDK::SUNDIALS XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB
                            MPI::MPI_CXX
 )
 if(NOT ENABLE_CUDA)
@@ -27,7 +27,7 @@ install(TARGETS transient-heat RUNTIME DESTINATION bin)
 
 add_executable(advection advection.cpp)
 target_link_libraries(
-    advection PRIVATE XSDK::PETSc XSDK::SUNDIALS XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB MPI::MPI_CXX
+    advection PRIVATE XSDK::SUNDIALS XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB MPI::MPI_CXX
 )
 if(NOT ENABLE_CUDA)
     # This example fails (as of 2022/05/16) when CUDA is enabled, so we disable
