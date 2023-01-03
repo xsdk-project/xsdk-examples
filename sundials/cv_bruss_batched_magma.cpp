@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 {
   const sunrealtype T0 = RCONST(0.0);     /* initial time                   */
   const sunrealtype Tf = RCONST(10.0);    /* final time                    */
-  const sunrealtype dTout = RCONST(1.0);  /* time between outputs          */
+  const sunrealtype dTout = RCONST(2.0);  /* time between outputs          */
   const int Nt = (int) ceil(Tf/dTout);    /* number of output times        */
   const sunrealtype reltol = 1.0e-6;      /* relative integrator tolerance */
   int retval;
