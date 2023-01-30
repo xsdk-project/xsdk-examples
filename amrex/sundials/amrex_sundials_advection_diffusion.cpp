@@ -20,6 +20,8 @@ using namespace amrex;
 void ComputeSolution(N_Vector nv_sol, ProblemOpt* prob_opt,
                      ProblemData* prob_data)
 {
+  BL_PROFILE("ComputeSolution()");
+
   // Extract problem data and options
   Geometry* geom         = prob_data->geom;
   int       plot_int     = prob_opt->plot_int;
@@ -118,7 +120,9 @@ void ComputeSolution(N_Vector nv_sol, ProblemOpt* prob_opt,
   Real tret;                // return time
   for (int iout=0; iout < nout; iout++)
   {
+    BL_PROFILE_VAR("ARKStepEvolve()", pevolve);
     ier = ARKStepEvolve(arkode_mem, tout, nv_sol, &tret, ARK_NORMAL);
+    BL_PROFILE_VAR_STOP(pevolve);
     if (ier < 0)
     {
       amrex::Print() << "Error in ARKStepEvolve" << std::endl;
@@ -166,9 +170,7 @@ void ComputeSolution(N_Vector nv_sol, ProblemOpt* prob_opt,
 int main(int argc, char* argv[])
 {
   amrex::Initialize(argc,argv);
-
-  // What time is it now?  We'll use this to compute total run time.
-  Real strt_time = amrex::second();
+  BL_PROFILE_VAR("main()", pmain);
 
   // Set problem data and options
   ProblemData prob_data;
@@ -224,15 +226,7 @@ int main(int argc, char* argv[])
   // Integrate in time
   ComputeSolution(nv_sol, &prob_opt, &prob_data);
 
-  // Call the timer again and compute the maximum difference between the start
-  // time and stop time over all processors
-  Real stop_time = amrex::second() - strt_time;
-  const int IOProc = ParallelDescriptor::IOProcessorNumber();
-  ParallelDescriptor::ReduceRealMax(stop_time, IOProc);
-
-  // Tell the I/O Processor to write out the "run time"
-  amrex::Print() << "Run time = " << stop_time << std::endl;
-
+  BL_PROFILE_VAR_STOP(pmain);
   amrex::Finalize();
 
   return 0;
@@ -441,6 +435,8 @@ void PrintSetup(ProblemOpt& prob_opt, ProblemData& prob_data)
 
 void FillInitConds2D(MultiFab& sol, const Geometry& geom)
 {
+  BL_PROFILE("FillInitConds2D()");
+
   const auto dx = geom.CellSizeArray();
   const auto prob_lo = geom.ProbLoArray();
   const auto prob_hi = geom.ProbHiArray();
@@ -473,6 +469,8 @@ void FillInitConds2D(MultiFab& sol, const Geometry& geom)
 
 void SetUpGeometry(BoxArray& ba, Geometry& geom, ProblemData& prob_data)
 {
+  BL_PROFILE("SetUpGeometry()");
+
   // Extract problem options
   int n_cell = prob_data.n_cell;
   int max_grid_size = prob_data.max_grid_size;
@@ -508,6 +506,8 @@ void SetUpGeometry(BoxArray& ba, Geometry& geom, ProblemData& prob_data)
 
 int ComputeRhsAdv(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 {
+  BL_PROFILE("ComputeRhsAdv()");
+
   // extract MultiFabs
   MultiFab* sol = amrex::sundials::N_VGetVectorPointer_MultiFab(nv_sol);
   MultiFab* rhs = amrex::sundials::N_VGetVectorPointer_MultiFab(nv_rhs);
@@ -533,6 +533,8 @@ int ComputeRhsAdv(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 
 int ComputeRhsDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 {
+  BL_PROFILE("ComputeRhsDiff()");
+
   // extract MultiFabs
   MultiFab* sol = amrex::sundials::N_VGetVectorPointer_MultiFab(nv_sol);
   MultiFab* rhs = amrex::sundials::N_VGetVectorPointer_MultiFab(nv_rhs);
@@ -560,6 +562,8 @@ int ComputeRhsDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 
 int ComputeRhsAdvDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 {
+  BL_PROFILE("ComputeRhsAdvDiff()");
+
   // extract MultiFabs
   MultiFab* sol = amrex::sundials::N_VGetVectorPointer_MultiFab(nv_sol);
   MultiFab* rhs = amrex::sundials::N_VGetVectorPointer_MultiFab(nv_rhs);
@@ -599,6 +603,8 @@ int ComputeRhsAdvDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 void ComputeAdvectionUpwind(MultiFab& sol_mf, MultiFab& adv_mf, Geometry& geom,
                             Real advCoeffx, Real advCoeffy)
 {
+  BL_PROFILE("ComputeAdvectionUpwind()");
+
   const auto dx = geom.CellSize();
   Real dxInv = 1.0 / dx[0]; // assume same over entire mesh
   Real dyInv = 1.0 / dx[1]; // assume same over entire mesh
@@ -659,6 +665,7 @@ void ComputeDiffusion(MultiFab& sol, MultiFab& diff_mf, MultiFab& fx_mf,
                       MultiFab& fy_mf, Geometry& geom,
                       Real diffCoeffx, Real diffCoeffy)
 {
+  BL_PROFILE("ComputeDiffusion()");
   ComputeDiffFlux(sol, fx_mf, fy_mf, geom, diffCoeffx, diffCoeffy);
   ComputeDivergence(diff_mf, fx_mf, fy_mf, geom);
 }
@@ -668,6 +675,8 @@ void ComputeDiffusion(MultiFab& sol, MultiFab& diff_mf, MultiFab& fx_mf,
 void ComputeDiffFlux(MultiFab& sol_mf, MultiFab& fx_mf, MultiFab& fy_mf,
                      Geometry& geom, Real diffCoeffx, Real diffCoeffy)
 {
+  BL_PROFILE("ComputeDiffFlux()");
+
   const auto dx = geom.CellSize();
   Real dxInv = 1.0 / dx[0]; // assume same over entire mesh
   Real dyInv = 1.0 / dx[1]; // assume same over entire mesh
@@ -704,6 +713,8 @@ void ComputeDiffFlux(MultiFab& sol_mf, MultiFab& fx_mf, MultiFab& fy_mf,
 void ComputeDivergence(MultiFab& div_mf, MultiFab& fx_mf,
                        MultiFab& fy_mf, Geometry& geom)
 {
+  BL_PROFILE("ComputeDivergence()");
+
   const auto dx = geom.CellSize();
   Real dxInv = 1.0 / dx[0]; // assume same over entire mesh
   Real dyInv = 1.0 / dx[1]; // assume same over entire mesh
@@ -735,6 +746,8 @@ int precondition_solve(amrex::Real tn, N_Vector u, N_Vector fu, N_Vector r,
                        N_Vector z, amrex::Real gamma, amrex::Real delta, int lr,
                        void *user_data)
 {
+  BL_PROFILE("precondition_solve()");
+
   ProblemData *prob_data = (ProblemData*) user_data;
 
   auto geom = *(prob_data->geom);
