@@ -9,11 +9,6 @@
  *   Donald Willcox (dewillcox@lbl.gov)
  * ---------------------------------------------------------------------------*/
 
-#include <AMReX_PlotFileUtil.H>
-#include <AMReX_ParmParse.H>
-#include <AMReX_Print.H>
-#include <AMReX_Sundials.H>
-
 #include <arkode/arkode_arkstep.h>
 #include <sunlinsol/sunlinsol_spgmr.h>
 #include <sunnonlinsol/sunnonlinsol_fixedpoint.h>
@@ -22,8 +17,8 @@
 
 using namespace amrex;
 
-void ComputeSolutionARK(N_Vector nv_sol, ProblemOpt* prob_opt,
-                        ProblemData* prob_data)
+void ComputeSolution(N_Vector nv_sol, ProblemOpt* prob_opt,
+                     ProblemData* prob_data)
 {
   // Extract problem data and options
   Geometry* geom         = prob_data->geom;
@@ -32,7 +27,6 @@ void ComputeSolutionARK(N_Vector nv_sol, ProblemOpt* prob_opt,
   int       nls_max_iter = prob_opt->nls_max_iter;
   int       ls_max_iter  = prob_opt->ls_max_iter;
   int       rhs_adv      = prob_opt->rhs_adv;
-  int       rhs_diff     = prob_opt->rhs_diff;
   Real      rtol         = prob_opt->rtol;
   Real      atol         = prob_opt->atol;
   Real      fixed_dt     = prob_opt->fixed_dt;
@@ -56,68 +50,17 @@ void ComputeSolutionARK(N_Vector nv_sol, ProblemOpt* prob_opt,
 
   // Create the ARK stepper
   void* arkode_mem = nullptr;
-
-  if (rhs_adv > 0 && rhs_diff > 0)
+  if (rhs_adv)
   {
-    if (rhs_adv > 1 && rhs_diff > 1)
-    {
-      // explicit advection and diffusion
-      arkode_mem = ARKStepCreate(ComputeRhsAdvDiff, nullptr, time, nv_sol,
-                                 *amrex::sundials::The_Sundials_Context());
-    }
-    else if (rhs_adv > 1)
-    {
-      // explicit advection and implicit diffusion
-      arkode_mem = ARKStepCreate(ComputeRhsAdv, ComputeRhsDiff, time, nv_sol,
-                                 *amrex::sundials::The_Sundials_Context());
-    }
-    else if (rhs_diff > 1)
-    {
-      // implicit advection and explicit diffusion
-      arkode_mem = ARKStepCreate(ComputeRhsDiff, ComputeRhsAdv, time, nv_sol,
-                                 *amrex::sundials::The_Sundials_Context());
-    }
-    else
-    {
-      // implicit advection and diffusion
-      arkode_mem = ARKStepCreate(nullptr, ComputeRhsAdvDiff, time, nv_sol,
-                                 *amrex::sundials::The_Sundials_Context());
-    }
-  }
-  else if (rhs_adv > 0)
-  {
-    if (rhs_adv > 1)
-    {
-      // explicit advection
-      arkode_mem = ARKStepCreate(ComputeRhsAdv, nullptr, time, nv_sol,
-                                 *amrex::sundials::The_Sundials_Context());
-    }
-    else
-    {
-      // implicit advection
-      arkode_mem = ARKStepCreate(nullptr, ComputeRhsAdv, time, nv_sol,
-                                 *amrex::sundials::The_Sundials_Context());
-    }
-  }
-  else if (rhs_diff > 0)
-  {
-    if (rhs_diff > 1)
-    {
-      // explicit diffusion
-      arkode_mem = ARKStepCreate(ComputeRhsDiff, nullptr, time, nv_sol,
-                                 *amrex::sundials::The_Sundials_Context());
-    }
-    else
-    {
-      // implicit diffusion
-      arkode_mem = ARKStepCreate(nullptr, ComputeRhsDiff, time, nv_sol,
-                                 *amrex::sundials::The_Sundials_Context());
-    }
+    // explicit advection and implicit diffusion
+    arkode_mem = ARKStepCreate(ComputeRhsAdv, ComputeRhsDiff, time, nv_sol,
+                               *amrex::sundials::The_Sundials_Context());
   }
   else
   {
-    amrex::Print() << "Invalid RHS options for ARKode" << std::endl;
-    return;
+    // implicit advection and diffusion
+    arkode_mem = ARKStepCreate(nullptr, ComputeRhsAdvDiff, time, nv_sol,
+                               *amrex::sundials::The_Sundials_Context());
   }
 
   // Attach the user data structure to ARKStep
@@ -135,43 +78,39 @@ void ComputeSolutionARK(N_Vector nv_sol, ProblemOpt* prob_opt,
   // Set the max number of steps between outputs
   ARKStepSetMaxNumSteps(arkode_mem, max_steps);
 
-  // Attach linear solver (if needed)
-  if (rhs_adv == 1 || rhs_diff == 1)
-  {
-    // Create and attach GMRES linear solver for Newton
-    SUNLinearSolver LS;
-    if (use_preconditioner)
-      LS = SUNLinSol_SPGMR(nv_sol, PREC_LEFT, ls_max_iter,
-                           *amrex::sundials::The_Sundials_Context());
-    else
-      LS = SUNLinSol_SPGMR(nv_sol, PREC_NONE, ls_max_iter,
-                           *amrex::sundials::The_Sundials_Context());
+  // Create and attach GMRES linear solver for Newton
+  SUNLinearSolver LS = nullptr;
+  if (use_preconditioner)
+    LS = SUNLinSol_SPGMR(nv_sol, PREC_LEFT, ls_max_iter,
+                         *amrex::sundials::The_Sundials_Context());
+  else
+    LS = SUNLinSol_SPGMR(nv_sol, PREC_NONE, ls_max_iter,
+                         *amrex::sundials::The_Sundials_Context());
 
-    ier = ARKStepSetLinearSolver(arkode_mem, LS, nullptr);
+  ier = ARKStepSetLinearSolver(arkode_mem, LS, nullptr);
+  if (ier != ARKLS_SUCCESS)
+  {
+    amrex::Print() << "Creating linear solver failed" << std::endl;
+    return;
+  }
+
+  if (use_preconditioner)
+  {
+    // Attach preconditioner setup/solve functions
+    ier = ARKStepSetPreconditioner(arkode_mem, nullptr, precondition_solve);
     if (ier != ARKLS_SUCCESS)
     {
-      amrex::Print() << "Creation of linear solver unsuccessful" << std::endl;
+      amrex::Print() << "Attaching preconditioner failed" << std::endl;
       return;
     }
+  }
 
-    if (use_preconditioner)
-    {
-      // Attach preconditioner setup/solve functions
-      ier = ARKStepSetPreconditioner(arkode_mem, precondition_setup, precondition_solve);
-      if (ier != ARKLS_SUCCESS)
-      {
-        amrex::Print() << "Attachment of preconditioner unsuccessful" << std::endl;
-        return;
-      }
-    }
-
-    // Set max number of nonlinear iterations
-    ier = ARKStepSetMaxNonlinIters(arkode_mem, nls_max_iter);
-    if (ier != ARK_SUCCESS)
-    {
-      amrex::Print() << "Error setting max number of nonlinear iterations" << std::endl;
-      return;
-    }
+  // Set max number of nonlinear iterations
+  ier = ARKStepSetMaxNonlinIters(arkode_mem, nls_max_iter);
+  if (ier != ARK_SUCCESS)
+  {
+    amrex::Print() << "Error setting max number of nonlinear iterations" << std::endl;
+    return;
   }
 
   // Advance the solution in time
@@ -189,10 +128,15 @@ void ComputeSolutionARK(N_Vector nv_sol, ProblemOpt* prob_opt,
     // Get integration stats
     long nfe_evals, nfi_evals;
     ARKStepGetNumRhsEvals(arkode_mem, &nfe_evals, &nfi_evals);
-    amrex::Print() << "t = " << std::setw(5) << tret
-                   << "  explicit evals = " << std::setw(7) << nfe_evals
-                   << "  implicit evals = " << std::setw(7) << nfi_evals
-                   << std::endl;
+    if (nfe_evals > 0)
+      amrex::Print() << "t = " << std::setw(5) << tret
+                     << "  explicit evals = " << std::setw(7) << nfe_evals
+                     << "  implicit evals = " << std::setw(7) << nfi_evals
+                     << std::endl;
+    else
+      amrex::Print() << "t = " << std::setw(5) << tret
+                     << "  RHS evals = " << std::setw(7) << nfi_evals
+                     << std::endl;
 
     // Write output
     if (plot_int > 0)
@@ -209,188 +153,32 @@ void ComputeSolutionARK(N_Vector nv_sol, ProblemOpt* prob_opt,
 
   // Output final solution statistics
   amrex::Print() << "\nFinal Solver Statistics:\n" << std::endl;
-  ARKStepPrintAllStats(arkode_mem, stdout, SUN_OUTPUTFORMAT_TABLE);
+  if (amrex::ParallelDescriptor::IOProcessor())
+    ARKStepPrintAllStats(arkode_mem, stdout, SUN_OUTPUTFORMAT_TABLE);
+
+  return;
 }
 
-
-void ParseInputs(ProblemOpt& prob_opt, ProblemData& prob_data)
-{
-  // ParmParse is way of reading inputs from the inputs file
-  ParmParse pp;
-
-  // --------------------------------------------------------------------------
-  // Problem options
-  // --------------------------------------------------------------------------
-
-  // Enable (>0) or disable (<0) writing output files
-  prob_opt.plot_int = -1; // plots off
-  pp.query("plot_int", prob_opt.plot_int);
-
-  // Specify the ARKode method order
-  prob_opt.arkode_order = 4; // 4th order
-  pp.query("arkode_order", prob_opt.arkode_order);
-
-  // Specify the max number of nonlinear iterations
-  prob_opt.nls_max_iter = 3;
-  pp.query("nls_max_iter", prob_opt.nls_max_iter);
-
-  // Specify the max number of linear iterations
-  prob_opt.ls_max_iter = 5;
-  pp.query("ls_max_iter", prob_opt.ls_max_iter);
-
-  // Specify RHS functions/splitting
-  prob_opt.rhs_adv  = 2; // explicit advection
-  prob_opt.rhs_diff = 1; // implicit diffusion
-  pp.query("rhs_adv", prob_opt.rhs_adv);
-  pp.query("rhs_diff", prob_opt.rhs_diff);
-
-  // Specify relative and absolute tolerances
-  prob_opt.rtol = 1.0e-4;
-  prob_opt.atol = 1.0e-9;
-  pp.query("rtol", prob_opt.rtol);
-  pp.query("atol", prob_opt.atol);
-
-  // Specify a fixed time step size
-  prob_opt.fixed_dt = -1.0; // diabled by default (use adaptive steps)
-  pp.query("fixed_dt", prob_opt.fixed_dt);
-
-  // Specify final time for integration
-  prob_opt.tfinal = 1.0e3;
-  pp.query("tfinal", prob_opt.tfinal);
-
-  // Specify output frequency
-  prob_opt.dtout = prob_opt.tfinal;
-  pp.query("dtout", prob_opt.dtout);
-
-  // Specify maximum number of steps between outputs
-  prob_opt.max_steps = 10000;
-  pp.query("max_steps", prob_opt.max_steps);
-
-  // Decide whether to use a preconditioner or not
-  prob_opt.use_preconditioner = 0;
-  pp.query("use_preconditioner", prob_opt.use_preconditioner);
-
-  // --------------------------------------------------------------------------
-  // Problem data
-  // --------------------------------------------------------------------------
-
-  // The number of cells on each side of a square domain.
-  prob_data.n_cell = 128;
-  pp.query("n_cell", prob_data.n_cell);
-
-  // The domain is broken into boxes of size max_grid_size
-  prob_data.max_grid_size = 64;
-  pp.query("max_grid_size", prob_data.max_grid_size);
-
-  // Advection coefficients
-  prob_data.advCoeffx = 5.0e-4;
-  prob_data.advCoeffy = 2.5e-4;
-  pp.query("advCoeffx", prob_data.advCoeffx);
-  pp.query("advCoeffy", prob_data.advCoeffy);
-
-  // Diffusion coefficients
-  prob_data.diffCoeffx = 1.0e-6;
-  prob_data.diffCoeffy = 1.0e-6;
-  pp.query("diffCoeffx", prob_data.diffCoeffx);
-  pp.query("diffCoeffy", prob_data.diffCoeffy);
-
-  // MLMG options
-  ParmParse ppmg("mlmg");
-  prob_data.mg_agglomeration = 1;
-  ppmg.query("agglomeration", prob_data.mg_agglomeration);
-  prob_data.mg_consolidation = 1;
-  ppmg.query("consolidation", prob_data.mg_consolidation);
-  prob_data.mg_max_coarsening_level = 1000;
-  ppmg.query("max_coarsening_level", prob_data.mg_max_coarsening_level);
-  prob_data.mg_linop_maxorder = 2;
-  ppmg.query("linop_maxorder", prob_data.mg_linop_maxorder);
-  prob_data.mg_max_iter = 1000;
-  ppmg.query("max_iter", prob_data.mg_max_iter);
-  prob_data.mg_max_fmg_iter = 1000;
-  ppmg.query("max_fmg_iter", prob_data.mg_max_fmg_iter);
-  prob_data.mg_verbose = 0;
-  ppmg.query("verbose", prob_data.mg_verbose);
-  prob_data.mg_bottom_verbose = 0;
-  ppmg.query("bottom_verbose", prob_data.mg_bottom_verbose);
-  prob_data.mg_use_hypre = 1;
-  ppmg.query("use_hypre", prob_data.mg_use_hypre);
-  prob_data.mg_hypre_interface = 3;
-  ppmg.query("hypre_interface", prob_data.mg_hypre_interface);
-  prob_data.mg_use_petsc = 0;
-  ppmg.query("use_petsc", prob_data.mg_use_petsc);
-  prob_data.mg_tol_rel = 1.0e-6;
-  ppmg.query("tol_rel", prob_data.mg_tol_rel);
-
-  // Ouput problem options and parameters
-  amrex::Print()
-    << "n_cell        = " << prob_data.n_cell        << std::endl
-    << "max_grid_size = " << prob_data.max_grid_size << std::endl
-    << "plot_int      = " << prob_opt.plot_int       << std::endl
-    << "arkode_order  = " << prob_opt.arkode_order   << std::endl
-    << "rhs_adv       = " << prob_opt.rhs_adv        << std::endl
-    << "rhs_diff      = " << prob_opt.rhs_diff       << std::endl;
-  if (prob_opt.fixed_dt > 0.0)
-    amrex::Print()
-      << "fixed_dt      = " << prob_opt.fixed_dt << std::endl;
-  else
-    amrex::Print()
-      << "rtol          = " << prob_opt.rtol << std::endl
-      << "atol          = " << prob_opt.atol << std::endl;
-  amrex::Print()
-    << "tfinal        = " << prob_opt.tfinal << std::endl
-    << "dtout         = " << prob_opt.dtout  << std::endl;
-  if (prob_opt.rhs_adv > 0)
-    amrex::Print()
-      << "advCoeffx     = " << prob_data.advCoeffx << std::endl
-      << "advCoeffy     = " << prob_data.advCoeffy << std::endl;
-  if (prob_opt.rhs_diff > 0)
-    amrex::Print()
-      << "diffCoeffx    = " << prob_data.diffCoeffx << std::endl
-      << "diffCoeffy    = " << prob_data.diffCoeffy << std::endl;
-  if ((prob_opt.rhs_adv > 0) && (prob_opt.rhs_diff > 0) &&
-      (prob_opt.rhs_adv != prob_opt.rhs_diff))
-    if (prob_opt.rhs_diff > 1)
-      amrex::Print() << "ImEx treatment: implicit advection and explicit diffusion" << std::endl;
-    else
-      amrex::Print() << "ImEx treatment: implicit diffusion and explicit advection" << std::endl;
-  if (prob_opt.use_preconditioner)
-    amrex::Print()
-      << "preconditioning enabled" << std::endl
-      << "  mlmg.agglomeration        = " << prob_data.mg_agglomeration << std::endl
-      << "  mlmg.consolidation        = " << prob_data.mg_consolidation << std::endl
-      << "  mlmg.max_coarsening_level = " << prob_data.mg_max_coarsening_level << std::endl
-      << "  mlmg.linop_maxorder       = " << prob_data.mg_linop_maxorder << std::endl
-      << "  mlmg.max_iter             = " << prob_data.mg_max_iter << std::endl
-      << "  mlmg.max_fmg_iter         = " << prob_data.mg_max_fmg_iter << std::endl
-      << "  mlmg.verbose              = " << prob_data.mg_verbose << std::endl
-      << "  mlmg.bottom_verbose       = " << prob_data.mg_bottom_verbose << std::endl
-      << "  mlmg.use_hypre            = " << prob_data.mg_use_hypre << std::endl
-      << "  mlmg.hypre_interface      = " << prob_data.mg_hypre_interface << std::endl
-      << "  mlmg.use_petsc            = " << prob_data.mg_use_petsc << std::endl
-      << "  mlmg.tol_rel              = " << prob_data.mg_tol_rel << std::endl;
-}
-
+// -----------------------------------------------------------------------------
+// Advection-Diffusion main
+// -----------------------------------------------------------------------------
 
 int main(int argc, char* argv[])
 {
   amrex::Initialize(argc,argv);
 
-  DoProblem();
-
-  amrex::Finalize();
-  return 0;
-}
-
-
-void DoProblem()
-{
   // What time is it now?  We'll use this to compute total run time.
   Real strt_time = amrex::second();
 
   // Set problem data and options
   ProblemData prob_data;
   ProblemOpt  prob_opt;
-  ParseInputs(prob_opt, prob_data);
+  if (ParseInputs(prob_opt, prob_data))
+  {
+    amrex::Finalize();
+    return 1;
+  }
+  PrintSetup(prob_opt, prob_data);
 
   // Make BoxArray and Geometry
   BoxArray ba;
@@ -434,7 +222,7 @@ void DoProblem()
   FillInitConds2D(sol, geom);
 
   // Integrate in time
-  ComputeSolutionARK(nv_sol, &prob_opt, &prob_data);
+  ComputeSolution(nv_sol, &prob_opt, &prob_data);
 
   // Call the timer again and compute the maximum difference between the start
   // time and stop time over all processors
@@ -444,14 +232,218 @@ void DoProblem()
 
   // Tell the I/O Processor to write out the "run time"
   amrex::Print() << "Run time = " << stop_time << std::endl;
+
+  amrex::Finalize();
+
+  return 0;
 }
+
+
+// -----------------------------------------------------------------------------
+// Parse inputs
+// -----------------------------------------------------------------------------
+
+
+int ParseInputs(ProblemOpt& prob_opt, ProblemData& prob_data)
+{
+  // ParmParse is way of reading inputs from the inputs file
+  ParmParse pp;
+
+  pp.query("help", prob_opt.help);
+  if (prob_opt.help)
+  {
+    PrintHelp();
+    return 1;
+  }
+
+  // Problem options
+  pp.query("plot_int", prob_opt.plot_int);
+  pp.query("arkode_order", prob_opt.arkode_order);
+  pp.query("rtol", prob_opt.rtol);
+  pp.query("atol", prob_opt.atol);
+  pp.query("fixed_dt", prob_opt.fixed_dt);
+  pp.query("tfinal", prob_opt.tfinal);
+  prob_opt.dtout = prob_opt.tfinal;
+  pp.query("dtout", prob_opt.dtout);
+  pp.query("max_steps", prob_opt.max_steps);
+  pp.query("nls_max_iter", prob_opt.nls_max_iter);
+  pp.query("ls_max_iter", prob_opt.ls_max_iter);
+  pp.query("rhs_adv", prob_opt.rhs_adv);
+  pp.query("use_preconditioner", prob_opt.use_preconditioner);
+
+  // Grid options
+  pp.query("n_cell", prob_data.n_cell);
+  pp.query("max_grid_size", prob_data.max_grid_size);
+
+  // Advection and diffusion coefficient values
+  pp.query("advCoeffx", prob_data.advCoeffx);
+  pp.query("advCoeffy", prob_data.advCoeffy);
+  pp.query("diffCoeffx", prob_data.diffCoeffx);
+  pp.query("diffCoeffy", prob_data.diffCoeffy);
+
+  // ParmParse options prefixed with mlmg.
+  ParmParse ppmg("mlmg");
+
+  // MLMG Preconditioner options
+  ppmg.query("agglomeration", prob_data.mg_agglomeration);
+  ppmg.query("consolidation", prob_data.mg_consolidation);
+  ppmg.query("max_coarsening_level", prob_data.mg_max_coarsening_level);
+  ppmg.query("linop_maxorder", prob_data.mg_linop_maxorder);
+  ppmg.query("max_iter", prob_data.mg_max_iter);
+  ppmg.query("max_fmg_iter", prob_data.mg_max_fmg_iter);
+  ppmg.query("fixed_iter", prob_data.mg_fixed_iter);
+  ppmg.query("verbose", prob_data.mg_verbose);
+  ppmg.query("bottom_verbose", prob_data.mg_bottom_verbose);
+  ppmg.query("use_hypre", prob_data.mg_use_hypre);
+  ppmg.query("hypre_interface", prob_data.mg_hypre_interface);
+  ppmg.query("use_petsc", prob_data.mg_use_petsc);
+  ppmg.query("tol_rel", prob_data.mg_tol_rel);
+  ppmg.query("tol_abs", prob_data.mg_tol_abs);
+
+  return 0;
+}
+
+
+// -----------------------------------------------------------------------------
+// Print help message
+// -----------------------------------------------------------------------------
+
+
+void PrintHelp()
+{
+  amrex::Print()
+    << std:: endl
+    << "Usage: amrex_sundials_advection_diffusion [fname] [options]" << std::endl
+    << "Options:" << std::endl
+    << "  help=1" << std::endl
+    << "    Print this help message and exit." << std::endl
+    << "  plot_int=<int>" << std::endl
+    << "    enable (1) or disable (0) plots [default=0]." << std::endl
+    << "  arkode_order=<int>" << std::endl
+    << "    ARKStep method order [default=4]." << std::endl
+    << "  nls_max_iter=<int>" << std::endl
+    << "    maximum number of nonlinear iterations [default=3]." << std::endl
+    << "  ls_max_iter=<int>" << std::endl
+    << "    maximum number of linear iterations [default=5]." << std::endl
+    << "  rhs_adv=<int>" << std::endl
+    << "    treat advection implicitly (0) or explicitly (1) [default=1]." << std::endl
+    << "  fixed_dt=<float>" << std::endl
+    << "    use a fixed time step size (if value > 0.0) [default=-1.0]." << std::endl
+    << "  rtol=<float>" << std::endl
+    << "    relative tolerance for time step adaptivity [default=1e-4]." << std::endl
+    << "  atol=<float>" << std::endl
+    << "    absolute tolerance for time step adaptivity [default=1e-9]." << std::endl
+    << "  tfinal=<float>" << std::endl
+    << "    final integration time [default=1e4]." << std::endl
+    << "  dtout=<float>" << std::endl
+    << "    time between outputs [default=tfinal]." << std::endl
+    << "  max_steps=<int>" << std::endl
+    << "    maximum number of internal steps between outputs [default=10000]." << std::endl
+    << "  use_preconditioner=<int>"  << std::endl
+    << "    use preconditioning (1) or not (0) [default=0]." << std::endl
+    << "  n_cell=<int>" << std::endl
+    << "    number of cells on each side of the square domain [default=128]." << std::endl
+    << "  max_grid_size=<int>" << std::endl
+    << "    max size of boxes in box array [default=64]." << std::endl
+    << "  advCoeffx=<float>" << std::endl
+    << "    advection speed in the x-direction [default=5e-4]." << std::endl
+    << "  advCoeffy=<float>" << std::endl
+    << "    advection speed in the y-direction [default=2.5e-4]." << std::endl
+    << "  diffCoeffx=<float>" << std::endl
+    << "    diffusion coefficient in the x-direction [default=1e-6]." << std::endl
+    << "  diffCoeffy=<float>" << std::endl
+    << "    diffusion coefficient in the y-direction [default=1e-6]." << std::endl << std::endl
+    << "If preconditioning is enabled, then additional options may be set" << std::endl
+    << "(see AMReX documentation of the MLMG solver for descriptions)" << std::endl
+    << "  mlmg.agglomeration=<int> [default=1]" << std::endl
+    << "  mlmg.consolidation=<int> [default=1]" << std::endl
+    << "  mlmg.max_coarsening_level=<int> [default=1000]" << std::endl
+    << "  mlmg.linop_maxorder=<int> [default=2]" << std::endl
+    << "  mlmg.max_iter=<int> [default=1000]" << std::endl
+    << "  mlmg.max_fmg_iter=<int> [default=1000]" << std::endl
+    << "  mlmg.fixed_iter=<int> [default=0]" << std::endl
+    << "  mlmg.verbose=<int> [default=0]" << std::endl
+    << "  mlmg.bottom_verbose=<int> [default=0]" << std::endl
+    << "  mlmg.use_hypre=<int> [default=1]" << std::endl
+    << "  mlmg.hypre_interface=<int> [default=3]" << std::endl
+    << "  mlmg.use_petsc=<int> [default=0]" << std::endl
+    << "  mlmg.tol_rel=<float> [default=1e-6]" << std::endl << std::endl
+    << "  mlmg.tol_abs=<float> [default=1e-6]" << std::endl << std::endl
+    << "If a file name 'fname' is provided, it will be parsed for each of the above" << std::endl
+    << "options.  If an option is specified in both the input file and on the" << std::endl
+    << "command line, then the command line option takes precedence." << std::endl << std::endl;
+  return;
+}
+
+
+// -----------------------------------------------------------------------------
+// Print problem setup
+// -----------------------------------------------------------------------------
+
+
+void PrintSetup(ProblemOpt& prob_opt, ProblemData& prob_data)
+{
+  // Ouput problem options and parameters
+  amrex::Print()
+    << "n_cell        = " << prob_data.n_cell        << std::endl
+    << "max_grid_size = " << prob_data.max_grid_size << std::endl
+    << "plot_int      = " << prob_opt.plot_int       << std::endl
+    << "arkode_order  = " << prob_opt.arkode_order   << std::endl;
+  if (prob_opt.rhs_adv)
+    amrex::Print()
+      << "ImEx treatment (implicit diffusion, explicit advection)" << std::endl;
+  else
+    amrex::Print()
+      << "fully implicit treatment" << std::endl;
+  if (prob_opt.fixed_dt > 0.0)
+    amrex::Print()
+      << "fixed_dt      = " << prob_opt.fixed_dt << std::endl;
+  else
+    amrex::Print()
+      << "rtol          = " << prob_opt.rtol << std::endl
+      << "atol          = " << prob_opt.atol << std::endl;
+  amrex::Print()
+    << "tfinal        = " << prob_opt.tfinal      << std::endl
+    << "dtout         = " << prob_opt.dtout       << std::endl
+    << "advCoeffx     = " << prob_data.advCoeffx  << std::endl
+    << "advCoeffy     = " << prob_data.advCoeffy  << std::endl
+    << "diffCoeffx    = " << prob_data.diffCoeffx << std::endl
+    << "diffCoeffy    = " << prob_data.diffCoeffy << std::endl;
+  amrex::Print()
+    << "Newton nonlinear solver:" << std::endl
+    << "  max_iter    = " << prob_opt.nls_max_iter << std::endl
+    << "  ls_max_iter = " << prob_opt.ls_max_iter  << std::endl;
+  if (prob_opt.use_preconditioner)
+    amrex::Print()
+      << "Preconditioning enabled:" << std::endl
+      << "  mlmg.agglomeration        = " << prob_data.mg_agglomeration        << std::endl
+      << "  mlmg.consolidation        = " << prob_data.mg_consolidation        << std::endl
+      << "  mlmg.max_coarsening_level = " << prob_data.mg_max_coarsening_level << std::endl
+      << "  mlmg.linop_maxorder       = " << prob_data.mg_linop_maxorder       << std::endl
+      << "  mlmg.max_iter             = " << prob_data.mg_max_iter             << std::endl
+      << "  mlmg.max_fmg_iter         = " << prob_data.mg_max_fmg_iter         << std::endl
+      << "  mlmg.fixed_iter           = " << prob_data.mg_fixed_iter           << std::endl
+      << "  mlmg.verbose              = " << prob_data.mg_verbose              << std::endl
+      << "  mlmg.bottom_verbose       = " << prob_data.mg_bottom_verbose       << std::endl
+      << "  mlmg.use_hypre            = " << prob_data.mg_use_hypre            << std::endl
+      << "  mlmg.hypre_interface      = " << prob_data.mg_hypre_interface      << std::endl
+      << "  mlmg.use_petsc            = " << prob_data.mg_use_petsc            << std::endl
+      << "  mlmg.tol_rel              = " << prob_data.mg_tol_rel              << std::endl
+      << "  mlmg.tol_abs              = " << prob_data.mg_tol_abs              << std::endl;
+  return;
+}
+
+
+// -----------------------------------------------------------------------------
+// Set initial state
+// -----------------------------------------------------------------------------
 
 
 void FillInitConds2D(MultiFab& sol, const Geometry& geom)
 {
-  const auto dx = geom.CellSize();
-  const auto prob_lo = geom.ProbLo();
-  const auto prob_hi = geom.ProbHi();
+  const auto dx = geom.CellSizeArray();
+  const auto prob_lo = geom.ProbLoArray();
+  const auto prob_hi = geom.ProbHiArray();
 
   Real sigma = 0.1;
   Real a = 1.0/(sigma*sqrt(2*M_PI));
@@ -472,6 +464,12 @@ void FillInitConds2D(MultiFab& sol, const Geometry& geom)
        });
   }
 }
+
+
+// -----------------------------------------------------------------------------
+// Setup domain
+// -----------------------------------------------------------------------------
+
 
 void SetUpGeometry(BoxArray& ba, Geometry& geom, ProblemData& prob_data)
 {
@@ -503,9 +501,10 @@ void SetUpGeometry(BoxArray& ba, Geometry& geom, ProblemData& prob_data)
 }
 
 
-/* ---------------------------------------------------------------------------
- * SUNDIALS RHS functions
- * ---------------------------------------------------------------------------*/
+// -----------------------------------------------------------------------------
+// User-supplied ODE RHS functions for SUNDIALS
+// -----------------------------------------------------------------------------
+
 
 int ComputeRhsAdv(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 {
@@ -530,6 +529,7 @@ int ComputeRhsAdv(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 
   return 0;
 }
+
 
 int ComputeRhsDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 {
@@ -556,6 +556,7 @@ int ComputeRhsDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 
   return 0;
 }
+
 
 int ComputeRhsAdvDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
 {
@@ -588,12 +589,13 @@ int ComputeRhsAdvDiff(Real t, N_Vector nv_sol, N_Vector nv_rhs, void* data)
   return 0;
 }
 
-/* ---------------------------------------------------------------------------
- * Advection RHS functions
- * ---------------------------------------------------------------------------*/
 
-// Assumes ghost cells already filled
-// Adds result to adv_mf MultiFab
+// -----------------------------------------------------------------------------
+// Utility functions to compute ODE RHS functions
+// -----------------------------------------------------------------------------
+
+
+// Assumes ghost cells already filled, adds result to adv_mf MultiFab
 void ComputeAdvectionUpwind(MultiFab& sol_mf, MultiFab& adv_mf, Geometry& geom,
                             Real advCoeffx, Real advCoeffy)
 {
@@ -603,7 +605,7 @@ void ComputeAdvectionUpwind(MultiFab& sol_mf, MultiFab& adv_mf, Geometry& geom,
   Real sideCoeffx = advCoeffx * dxInv;
   Real sideCoeffy = advCoeffy * dyInv;
 
-  for (MFIter mfi(sol_mf,TilingIfNotGPU); mfi.isValid(); ++mfi)
+  for (MFIter mfi(sol_mf,TilingIfNotGPU()); mfi.isValid(); ++mfi)
   {
     const Box& bx = mfi.tilebox();
     Array4<Real> const& sol_fab = sol_mf[mfi].array();
@@ -651,12 +653,8 @@ void ComputeAdvectionUpwind(MultiFab& sol_mf, MultiFab& adv_mf, Geometry& geom,
   }
 }
 
-/* ---------------------------------------------------------------------------
- * Diffusion RHS functions
- * ---------------------------------------------------------------------------*/
 
-// Assumes ghots cells are already filled
-// Adds result to diff_mf
+// Assumes ghots cells are already filled, adds result to diff_mf
 void ComputeDiffusion(MultiFab& sol, MultiFab& diff_mf, MultiFab& fx_mf,
                       MultiFab& fy_mf, Geometry& geom,
                       Real diffCoeffx, Real diffCoeffy)
@@ -665,8 +663,8 @@ void ComputeDiffusion(MultiFab& sol, MultiFab& diff_mf, MultiFab& fx_mf,
   ComputeDivergence(diff_mf, fx_mf, fy_mf, geom);
 }
 
-// Assumes ghost cells already filled
-// Overwrites fx_mf and fy_mf MultiFabs
+
+// Assumes ghost cells already filled, overwrites fx_mf and fy_mf MultiFabs
 void ComputeDiffFlux(MultiFab& sol_mf, MultiFab& fx_mf, MultiFab& fy_mf,
                      Geometry& geom, Real diffCoeffx, Real diffCoeffy)
 {
@@ -701,8 +699,8 @@ void ComputeDiffFlux(MultiFab& sol_mf, MultiFab& fx_mf, MultiFab& fy_mf,
   }
 }
 
-// Assumes ghost cells already filled
-// Adds result to div_mf MultiFab
+
+// Assumes ghost cells already filled, adds result to div_mf MultiFab
 void ComputeDivergence(MultiFab& div_mf, MultiFab& fx_mf,
                        MultiFab& fy_mf, Geometry& geom)
 {
@@ -727,21 +725,15 @@ void ComputeDivergence(MultiFab& div_mf, MultiFab& fx_mf,
   }
 }
 
-/* ---------------------------------------------------------------------------
- * Preconditioning routines
- * ---------------------------------------------------------------------------*/
 
-int precondition_setup(realtype tn, N_Vector u, N_Vector fu,
-                       booleantype jok, booleantype *jcurPtr,
-                       realtype gamma, void *user_data)
-{
-  return 0;
-}
+// -----------------------------------------------------------------------------
+// Preconditioner
+// -----------------------------------------------------------------------------
 
-int precondition_solve(realtype tn, N_Vector u, N_Vector fu,
-                       N_Vector r, N_Vector z,
-                       realtype gamma, realtype delta,
-                       int lr, void *user_data)
+
+int precondition_solve(amrex::Real tn, N_Vector u, N_Vector fu, N_Vector r,
+                       N_Vector z, amrex::Real gamma, amrex::Real delta, int lr,
+                       void *user_data)
 {
   ProblemData *prob_data = (ProblemData*) user_data;
 
@@ -749,7 +741,7 @@ int precondition_solve(realtype tn, N_Vector u, N_Vector fu,
   auto grid = *(prob_data->grid);
   auto dmap = *(prob_data->dmap);
   auto& acoef = *(prob_data->acoef);
-  auto& bcoef = *(prob_data->acoef);
+  auto& bcoef = *(prob_data->bcoef);
 
   MultiFab* solution = amrex::sundials::N_VGetVectorPointer_MultiFab(z);
   MultiFab* rhs = amrex::sundials::N_VGetVectorPointer_MultiFab(r);
@@ -759,7 +751,6 @@ int precondition_solve(realtype tn, N_Vector u, N_Vector fu,
   info.setConsolidation(prob_data->mg_consolidation);
   info.setMaxCoarseningLevel(prob_data->mg_max_coarsening_level);
 
-  const Real tol_abs = 0.0;
   const Real ascalar = 1.0;
   const Real bscalar = gamma;
 
@@ -802,6 +793,7 @@ int precondition_solve(realtype tn, N_Vector u, N_Vector fu,
   MLMG mlmg(mlabec);
   mlmg.setMaxIter(prob_data->mg_max_iter);
   mlmg.setMaxFmgIter(prob_data->mg_max_fmg_iter);
+  mlmg.setFixedIter(prob_data->mg_fixed_iter);
   mlmg.setVerbose(prob_data->mg_verbose);
   mlmg.setBottomVerbose(prob_data->mg_bottom_verbose);
 #ifdef AMREX_USE_HYPRE
@@ -823,7 +815,7 @@ int precondition_solve(realtype tn, N_Vector u, N_Vector fu,
   }
 #endif
 
-  mlmg.solve({solution}, {rhs}, prob_data->mg_tol_rel, tol_abs);
+  mlmg.solve({solution}, {rhs}, prob_data->mg_tol_rel, prob_data->mg_tol_abs);
 
   return 0;
 }
