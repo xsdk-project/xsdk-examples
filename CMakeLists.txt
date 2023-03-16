@@ -74,6 +74,12 @@ set(STRUMPACK_DIR
     CACHE PATH "Path to STRUMPACK installation directory"
 )
 
+option(ENABLE_TASMANIAN "Enable Tasmanian" OFF)
+set(TASMANIAN_DIR
+    "${TASMANIAN_DIR}"
+    CACHE PATH "Path to the Tasmanian installation directory"
+)
+
 option(ENABLE_TRILINOS "Enable TRILINOS" OFF)
 set(TRILINOS_DIR
     "${Trilinos_DIR}"
@@ -210,6 +216,9 @@ if(ENABLE_PLASMA)
 endif()
 if(ENABLE_SUNDIALS)
     add_subdirectory(sundials)
+endif()
+if(ENABLE_TASMANIAN)
+    add_subdirectory(tasmanian)
 endif()
 if(ENABLE_TRILINOS)
     add_subdirectory(trilinos)

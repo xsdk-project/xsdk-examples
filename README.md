@@ -1,15 +1,15 @@
 # xSDK Examples v0.4.0
 
-The example codes provided here demonstrate the use of of various xSDK libraries in tandem to solve problems of 
-interest.  Each of the library folders has one or more examples codes that are built of that library 
+The example codes provided here demonstrate the use of of various xSDK libraries in tandem to solve problems of
+interest.  Each of the library folders has one or more examples codes that are built of that library
 and utilize code integrations with other xSDK libraries.  Running these example codes and
 examining the output is a good way to better understand how these libraries can work together. The
-code samples are a good place to start for new projects.  More details about the examples can be found 
+code samples are a good place to start for new projects.  More details about the examples can be found
 in the README.md files in the library subfolders.  For more information on the xSDK see <https://xsdk.info/>.
 
 ## Example Summary
 
-These examples were tested and verified against xsdk@0.8.0. 
+These examples were tested and verified against xsdk@0.8.0.
 
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
@@ -27,7 +27,8 @@ These examples were tested and verified against xsdk@0.8.0.
 | plasma/ex1solve.c                                     | PLASMA+SLATE+BLASPP      | Linear system direct solution                     | ![cuda]        |
 | sundials/ark_brusselator1D_FEM_sludist.cpp            | SUNDIALS+SuperLU_Dist    | 1D nonlinear time-dependent PDE solution          |                |
 | sundials/cv_petsc_ex7.c                               | SUNDIALS+PETSc           | 2D nonlinear time-dependent PDE solution          |                |
-| sundials/cv_bruss_batched_magma.cpp                   | SUNDIALS+MAGMA           | Batch of 0D chemical kinetics ODEs                | ![cuda] ![hip] | 
+| sundials/cv_bruss_batched_magma.cpp                   | SUNDIALS+MAGMA           | Batch of 0D chemical kinetics ODEs                | ![cuda] ![hip] |
+| tasmanian/example_unstructured_grid.cpp               | Tasmanian+MAGMA          | Constructs a sparse grid model from random data   | ![cuda] ![hip] |
 | trilinos/SimpleSolve_WithParameters.cpp               | Trilinos+SuperLU_Dist    | Small linear system direct solution               |                |
 | strumpack/sparse.cpp                                  | STRUMPACK+ButterflyPACK  | 3D Poisson problem with STRUMPACK preconditioner  |                |
 
@@ -52,7 +53,7 @@ To install with CUDA support,
 spack install xsdk-examples+cuda cuda_arch=<arch>
 ```
 
-Since `xsdk-examples` depends on the `xsdk` Spack package, Spack will also install `xsdk`. In some cases, it may be easier to install the `xsdk` package (separately) following https://xsdk.info/download/ prior to the `xsdk-examples` package. 
+Since `xsdk-examples` depends on the `xsdk` Spack package, Spack will also install `xsdk`. In some cases, it may be easier to install the `xsdk` package (separately) following https://xsdk.info/download/ prior to the `xsdk-examples` package.
 
 Alternatively the examples can be built and installed with CMake directly:
 
