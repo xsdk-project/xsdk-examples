@@ -27,6 +27,7 @@ These examples were tested and verified against xsdk@0.7.0.
 | sundials/ark_brusselator1D_FEM_sludist.cpp            | SUNDIALS+SuperLU_Dist    | Chemical kinetics brusselator problem             |                |
 | sundials/cv_petsc_ex7.c                               | SUNDIALS+PETSc           | 2D nonlinear PDE solution                         |                |
 | sundials/cvRoberts_blockdiag_magma.cpp                | SUNDIALS+MAGMA           | Solves a group of chemical kinetics ODEs          | ![cuda] ![hip] | 
+| tasmanian/example_unstructured_grid.cpp               | Tasmanian+MAGMA          | Constructs a sparse grid model from random data   | ![cuda] ![hip] |
 | trilinos/SimpleSolve_WithParameters.cpp               | Trilinos+SuperLU_Dist    | Small linear system direct solution               |                |
 | strumpack/sparse.cpp                                  | STRUMPACK+ButterflyPACK  | 3D Poisson problem with STRUMPACK preconditioner  |                |
 
