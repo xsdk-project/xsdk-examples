@@ -26,6 +26,12 @@ set(Ginkgo_DIR
     CACHE PATH "Path to Ginkgo installation directory"
 )
 
+option(ENABLE_HEFFTE "Enable heFFTe" OFF)
+set(HEFFTE_DIR
+    "${HEFFTE_DIR}"
+    CACHE PATH "Path to the heFFTe installation directory"
+)
+
 option(ENABLE_HYPRE "Enable hypre" ON)
 set(HYPRE_DIR
     "${HYPRE_DIR}"
@@ -195,6 +201,9 @@ find_package(METIS)
 # example subdirectories
 if(ENABLE_AMREX)
     add_subdirectory(amrex)
+endif()
+if(ENABLE_HEFFTE)
+    add_subdirectory(heffte)
 endif()
 if(ENABLE_HYPRE)
     add_subdirectory(hypre)
