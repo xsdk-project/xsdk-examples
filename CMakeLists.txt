@@ -20,6 +20,12 @@ set(AMREX_DIR
     CACHE PATH "Path to AMReX installation directory"
 )
 
+option(ENABLE_DEAL_II "Enable deal.II" ON)
+set(DEAL_II_DIR
+    "${DEAL_II_DIR}
+    CACHE PATH "Path to deal.II installation directory"
+)
+
 option(ENABLE_GINKGO "Enable Ginkgo" ON)
 set(Ginkgo_DIR
     "${Ginkgo_DIR}"
@@ -195,6 +201,9 @@ find_package(METIS)
 # example subdirectories
 if(ENABLE_AMREX)
     add_subdirectory(amrex)
+endif()
+if(ENABLE_DEAL_II)
+    add_subdirectory(dealii)
 endif()
 if(ENABLE_HYPRE)
     add_subdirectory(hypre)
