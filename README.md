@@ -37,6 +37,8 @@ They can still be built using CMake directly.
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
 | amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
 | mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![hip]         |
+| dealii/petsc_trilinos/petsc_trilinos.cpp              | deal.II+PETSc/Trilinos   | Poisson problem using MPI and AMG preconditioners |                |
+| dealii/sundials/sundials.cpp                          | deal.II+Sundials         | Nonlinear, minimal surface problem                |                |
 
 ## Installing the Examples
 
