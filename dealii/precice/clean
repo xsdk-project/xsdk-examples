@@ -1,0 +1,18 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+echo "Cleaning..."
+
+# Remove vtk result files
+rm -fv solution-*.vtk
+
+# Remove the preCICE-related log files
+echo "Deleting the preCICE log files..."
+rm -fv \
+    precice-*.log \
+    precice-*-events.json
+    
+rm -rfv precice-run
+
+echo "Cleaning complete!"
+#------------------------------------------------------------------------------
