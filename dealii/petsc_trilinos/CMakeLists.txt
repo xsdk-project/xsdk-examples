@@ -59,4 +59,14 @@ endif()
 deal_ii_initialize_cached_variables()
 set(CLEAN_UP_FILES *.log *.gmv *.gnuplot *.gpl *.eps *.pov *.vtk *.ucd *.d2 *.vtu *.pvtu)
 project(${TARGET})
-deal_ii_invoke_autopilot()
+add_executable(${TARGET} ${TARGET_SRC})
+deal_ii_setup_target(${TARGET})
+
+xsdk_add_test(
+    NAME
+    dealii-${TARGET}
+    MPI_NPROCS
+    1
+    COMMAND
+    $<TARGET_FILE:${TARGET}>
+)
