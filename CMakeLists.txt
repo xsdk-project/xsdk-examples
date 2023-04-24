@@ -22,7 +22,7 @@ set(AMREX_DIR
 
 option(ENABLE_DEAL_II "Enable deal.II" ON)
 set(DEAL_II_DIR
-    "${DEAL_II_DIR}
+    "${DEAL_II_DIR}"
     CACHE PATH "Path to deal.II installation directory"
 )
 
