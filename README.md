@@ -16,7 +16,6 @@ These examples were tested and verified against xsdk@0.7.0.
 | hypre/ij_laplacian.c                                  | HYPRE+SuperLU_Dist       | 2D Laplacian problem                              |                |
 | libensemble/test_persistent_aposmm_tao.py             | libEnsemble+PETSc        | 2D constrained optimization problem               |                |
 | mfem/hypre-superlu/convdiff.cpp                       | MFEM+HYPRE+SuperLU_Dist  | 2D steady state convective diffusion              |                |
-| mfem/ginkgo/mfem_ex1_gko.cpp                          | MFEM+Ginkgo              | 2D Poisson problem with Ginko solver              | ![cuda]        |
 | mfem/petsc/obstacle.cpp                               | MFEM+PETSc               | Membrane obstacle problem (min energy functional) |                |
 | mfem/strumpack/diffusion-eigen.cpp                    | MFEM+STRUMPACK+HYPRE     | Diffusion eigenvalue problem                      |                |
 | mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D Transient nonlinear heat conduction            |                |
@@ -37,6 +36,7 @@ They can still be built using CMake directly.
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
 | amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
 | mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![hip]         |
+| mfem/ginkgo/mfem_ex22_gko.cpp                         | MFEM+Ginkgo              | 3D damped harmonic oscillator with Ginko solver   | ![cuda] ![hip] |
 
 ## Installing the Examples
 
