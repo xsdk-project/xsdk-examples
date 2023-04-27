@@ -26,7 +26,7 @@ Modifying MFEM code to use Ginkgo via MFEM's wrappers is simple.  First, we crea
  Ginkgo::GinkgoExecutor exec(device); //device is the MFEM Device configuration
 ```
 
-The Ginkgo wrappers provided in MFEM provide mix-and-match interoperability: 
+The Ginkgo wrappers in MFEM provide mix-and-match interoperability: 
 Ginkgo solvers can use MFEM preconditioners, and MFEM can use Ginkgo preconditioners.
 To allow Ginkgo to use the MFEM block diagonal preconditioner, `BDP`, we create
 a wrapped object:
