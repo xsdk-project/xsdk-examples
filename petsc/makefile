@@ -20,6 +20,14 @@ runex19_cuda:
            echo "C/C++ example src/snes/tutorials/ex19 run successfully with cuda"; \
            else  printf "${PWD}\nPossible problem with ex19 running with cuda, diffs above\n=========================================\n"; fi; \
 	   @RM@ -f ex19_1.tmp
+
+runex19_hip:
+	-@@MPIEXEC_EXECUTABLE@ @MPIEXEC_NUMPROC_FLAG@ 1 ./ex19 -dm_vec_type hip -dm_mat_type aijhipsparse -pc_type none -ksp_type fgmres -snes_monitor_short -snes_rtol 1.e-5 > ex19_1.tmp 2>&1; \
+	   if (${DIFF} output/ex19_hip.out ex19_1.tmp) then \
+           echo "C/C++ example src/snes/tutorials/ex19 run successfully with hip"; \
+           else printf "${PWD}\nPossible problem with ex19 running with hip, diffs above\n=========================================\n";\  fi; \
+	   @RM@ -f ex19_1.tmp
+
 runex19_hypre:
 	-@@MPIEXEC_EXECUTABLE@ @MPIEXEC_NUMPROC_FLAG@ 2 ./ex19 -da_refine 3 -snes_monitor_short -pc_type hypre > ex19_1.tmp 2>&1; \
 	   if (${DIFF} output/ex19_hypre.out ex19_1.tmp) then \
