@@ -1,0 +1,6 @@
+if(ENABLE_PETSC OR ENABLE_TRILINOS)
+    add_subdirectory(petsc_trilinos)
+endif()
+if(ENABLE_SUNDIALS)
+    add_subdirectory(sundials)
+endif()
