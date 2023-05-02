@@ -20,3 +20,20 @@ TARGET_LINK_LIBRARIES(laplace_problem precice::precice)
 # build the boundary condition, which only requires preCICE
 ADD_EXECUTABLE(boundary_condition boundary_condition.cc)
 TARGET_LINK_LIBRARIES(boundary_condition precice::precice)
+
+include(CTest)
+add_test(
+    NAME 
+    ${CMAKE_PROJECT_NAME} 
+    COMMAND
+    runtargets.sh
+)
+
+#xsdk_add_test(
+#    NAME
+#    ${CMAKE_PROJECT_NAME}
+#    MPI_NPROCS
+#    1
+#    COMMAND
+#    runtargets.sh
+#)
