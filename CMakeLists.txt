@@ -20,6 +20,12 @@ set(AMREX_DIR
     CACHE PATH "Path to AMReX installation directory"
 )
 
+option(ENABLE_DEAL_II "Enable deal.II" ON)
+set(DEAL_II_DIR
+    "${DEAL_II_DIR}"
+    CACHE PATH "Path to deal.II installation directory"
+)
+
 option(ENABLE_GINKGO "Enable Ginkgo" ON)
 set(Ginkgo_DIR
     "${Ginkgo_DIR}"
@@ -54,6 +60,12 @@ option(ENABLE_PLASMA "Enable PLASMA" ON)
 set(PLASMA_DIR
     "${PLASMA_DIR}"
     CACHE PATH "Path to PLASMA installation directory"
+)
+
+option(ENABLE_PRECICE "Enable preCICE" ON)
+set(PRECICE_DIR
+    "${PRECICE_DIR}"
+    CACHE PATH "Path to preCICE installation directory"
 )
 
 option(ENABLE_SUNDIALS "Enable SUNDIALS" ON)
@@ -195,6 +207,9 @@ find_package(METIS)
 # example subdirectories
 if(ENABLE_AMREX)
     add_subdirectory(amrex)
+endif()
+if(ENABLE_DEAL_II)
+    add_subdirectory(dealii)
 endif()
 if(ENABLE_HYPRE)
     add_subdirectory(hypre)
