@@ -1,8 +1,6 @@
 add_executable(obstacle obstacle.cpp)
 
-target_link_libraries(
-    obstacle PRIVATE XSDK::MFEM XSDK::HYPRE XSDK::PETSc XSDK::SUNDIALS ZLIB::ZLIB MPI::MPI_CXX
-)
+target_link_libraries(obstacle PRIVATE ${MFEM_ALL_DEPS})
 
 # This is a serial example linked with MPI, so launch it with 'mpirun' or
 # equivalent to avoid warnings on some platforms.

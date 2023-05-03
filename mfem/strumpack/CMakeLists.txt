@@ -1,15 +1,6 @@
 add_executable(diffusion-eigen diffusion-eigen.cpp)
 
-target_link_libraries(
-    diffusion-eigen
-    PRIVATE XSDK::MFEM
-            XSDK::PETSc
-            XSDK::HYPRE
-            XSDK::SUPERLU
-            XSDK::SUNDIALS
-            STRUMPACK::strumpack
-            ZLIB::ZLIB
-)
+target_link_libraries(diffusion-eigen PRIVATE ${MFEM_ALL_DEPS})
 
 xsdk_add_test(
     NAME

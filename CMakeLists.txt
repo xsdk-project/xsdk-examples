@@ -80,6 +80,12 @@ set(TRILINOS_DIR
     CACHE PATH "Path to Trilinos installation directory"
 )
 
+option(ENABLE_HIOP "Enable HiOp" ON)
+set(HIOP_DIR
+    "${HIOP_DIR}"
+    CACHE PATH "Path to HiOp installation directory"
+)
+
 set(METIS_DIR
     "${METIS_DIR}"
     CACHE PATH "Path to Metis installation directory"
@@ -184,6 +190,11 @@ endif()
 # check for STRUMPACK
 if(ENABLE_STRUMPACK)
     find_package(STRUMPACK REQUIRED)
+endif()
+
+# check for HiOp
+if(ENABLE_HIOP)
+    find_package(HIOP REQUIRED)
 endif()
 
 # check for math

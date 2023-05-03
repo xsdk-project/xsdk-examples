@@ -1,6 +1,3 @@
-# MFEM requires metis.
-find_package(METIS REQUIRED)
-
 # Find MFEM
 # Find the MFEM header files
 find_path(MFEM_INCLUDE_DIRS mfem.hpp
@@ -16,11 +13,25 @@ find_library(MFEM_LIBRARY mfem
   NO_DEFAULT_PATH
   DOC "The MFEM library.")
 
-find_library(ZLIB_LIBRARY z
-  HINTS ${ZLIB_LIBRARY_DIR} $ENV{ZLIB_LIBRARY_DIR} ${CMAKE_PREFIX_PATH}
-  PATH_SUFFIXES lib
+# Find config.mk
+find_file(MFEM_CONFIG_MK config.mk
+  HINTS ${MFEM_DIR} $ENV{MFEM_DIR} ${CMAKE_PREFIX_PATH}
+  PATH_SUFFIXES share/mfem config
+  REQUIRED
   NO_DEFAULT_PATH
-  DOC "The zlib library.")
+  DOC "MFEM's config.mk file.")
+
+# From config.mk, read the values of MFEM_TPLFLAGS and MFEM_EXT_LIBS
+file(STRINGS "${MFEM_CONFIG_MK}" MFEM_TPLFLAGS_LINE
+  REGEX "^MFEM_TPLFLAGS * = .*$")
+string(REGEX REPLACE "^MFEM_TPLFLAGS * = *" ""
+  MFEM_TPLFLAGS "${MFEM_TPLFLAGS_LINE}")
+file(STRINGS "${MFEM_CONFIG_MK}" MFEM_EXT_LIBS_LINE
+  REGEX "^MFEM_EXT_LIBS * = .*$")
+string(REGEX REPLACE "^MFEM_EXT_LIBS * = *" ""
+  MFEM_EXT_LIBS "${MFEM_EXT_LIBS_LINE}")
+# message(STATUS "MFEM_TPLFLAGS: ${MFEM_TPLFLAGS}")
+# message(STATUS "MFEM_EXT_LIBS: ${MFEM_EXT_LIBS}")
 
 # set package variables including MFEM_FOUND
 find_package_handle_standard_args(MFEM
@@ -39,7 +50,11 @@ if(MFEM_FOUND)
   set_target_properties(XSDK::MFEM PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${MFEM_INCLUDE_DIRS}"
     INTERFACE_LINK_LIBRARIES "${METIS_LIBRARY}"
-    IMPORTED_LOCATION "${MFEM_LIBRARY}")
+    IMPORTED_LOCATION "${MFEM_LIBRARY}"
+    INTERFACE_COMPILE_OPTIONS ${MFEM_TPLFLAGS}
+    INTERFACE_LINK_LIBRARIES ${MFEM_EXT_LIBS})
+  # Assuming MPI build of MFEM:
+  target_link_libraries(XSDK::MFEM INTERFACE MPI::MPI_C)
 
    if(ENABLE_CUDA)
      target_link_libraries(XSDK::MFEM INTERFACE CUDA::cudart CUDA::cusparse)

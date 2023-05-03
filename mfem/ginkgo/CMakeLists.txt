@@ -1,16 +1,6 @@
 add_executable(mfem_ex1_gko mfem_ex1_gko.cpp)
 target_sources(mfem_ex1_gko PRIVATE mfem_wrapper.cpp)
-
-target_link_libraries(
-    mfem_ex1_gko
-    PRIVATE XSDK::MFEM
-            XSDK::SUNDIALS
-            XSDK::HYPRE
-            XSDK::PETSc
-            Ginkgo::ginkgo
-            ZLIB::ZLIB
-            MPI::MPI_CXX
-)
+target_link_libraries(mfem_ex1_gko PRIVATE ${MFEM_ALL_DEPS})
 
 xsdk_add_test(NAME MFEM-mfem_ex1_gko COMMAND $<TARGET_FILE:mfem_ex1_gko> --no-partial-assembly)
 if(ENABLE_CUDA)
