@@ -18,6 +18,7 @@ if(NOT ENABLE_CUDA)
         0.01
         --ode-solver
         8
+        --no-visualization
     )
 endif()
 install(TARGETS transient-heat RUNTIME DESTINATION bin)
