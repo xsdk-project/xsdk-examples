@@ -1,3 +1,6 @@
+# All MFEM dependencies
+set(MFEM_ALL_DEPS XSDK::MFEM)
+
 # Ginkgo is included at the upper level when MFEM is enabled
 if(ENABLE_GINKGO)
     add_subdirectory(ginkgo)
@@ -16,6 +19,9 @@ if(ENABLE_SUNDIALS AND ENABLE_HYPRE)
 endif()
 if(ENABLE_STRUMPACK AND ENABLE_HYPRE)
     add_subdirectory(strumpack)
+endif()
+if(ENABLE_HIOP)
+    add_subdirectory(hiop)
 endif()
 
 # Copy the data directory from the source tree to the build tree so that the examples can be run

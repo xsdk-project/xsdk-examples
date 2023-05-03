@@ -1,8 +1,5 @@
 add_executable(transient-heat transient-heat.cpp)
-target_link_libraries(
-    transient-heat PRIVATE XSDK::SUNDIALS XSDK::PETSc XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB
-                           MPI::MPI_CXX
-)
+target_link_libraries(transient-heat PRIVATE ${MFEM_ALL_DEPS})
 if(NOT ENABLE_CUDA)
     # This example fails (as of 2022/05/16) when HYPRE is built with CUDA, so
     # it is disabled in that case for now.
@@ -21,14 +18,13 @@ if(NOT ENABLE_CUDA)
         0.01
         --ode-solver
         8
+        --no-visualization
     )
 endif()
 install(TARGETS transient-heat RUNTIME DESTINATION bin)
 
 add_executable(advection advection.cpp)
-target_link_libraries(
-    advection PRIVATE XSDK::PETSc XSDK::SUNDIALS XSDK::HYPRE XSDK::MFEM ZLIB::ZLIB MPI::MPI_CXX
-)
+target_link_libraries(advection PRIVATE ${MFEM_ALL_DEPS})
 if(NOT ENABLE_CUDA)
     # This example fails (as of 2022/05/16) when CUDA is enabled, so we disable
     # it here for now.
