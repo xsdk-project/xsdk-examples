@@ -414,15 +414,22 @@ int main(int argc, char *argv[])
       BDP.owns_blocks = 1;
 
       if (use_ginkgo == true)
-      { 
-        Ginkgo::GinkgoExecutor exec(device);
-        Ginkgo::MFEMPreconditioner gko_precond(exec, BDP);
-        Ginkgo::GMRESSolver gmres(exec, gko_precond, 50);
+      {
+        Ginkgo::GinkgoExecutor *exec;
+        // Match MFEM's device configuration for CUDA or HIP
+        if (device.Allows(Backend::HIP_MASK) || device.Allows(Backend::CUDA_MASK)) 
+          exec = new Ginkgo::GinkgoExecutor(device);
+        // Explicitly create Reference executor for CPU
+        else
+          exec = new Ginkgo::GinkgoExecutor(Ginkgo::GinkgoExecutor::REFERENCE);
+        Ginkgo::MFEMPreconditioner gko_precond(*exec, BDP);
+        Ginkgo::GMRESSolver gmres(*exec, gko_precond, 50);
         gmres.SetOperator(*A.Ptr());
         gmres.SetRelTol(1e-12);
         gmres.SetMaxIter(1000);
         gmres.SetPrintLevel(1);
         gmres.Mult(B, U);
+        delete exec;
       }
       else
       {

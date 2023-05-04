@@ -20,10 +20,18 @@ Useful non-default options:
 ## More about the MFEM-Ginkgo integration
 
 Modifying MFEM code to use Ginkgo via MFEM's wrappers is simple.  First, we create a 
-`GinkgoExecutor` wrapper (for Ginkgo's `Executor` class) to match the device configuration of MFEM:
+`GinkgoExecutor` wrapper (for Ginkgo's `Executor` class). The example shows both ways
+to create a `GinkgoExecutor`: if MFEM is using CUDA or HIP, we
+ match the device configuration of MFEM. Otherwise, we explicitly create a `Reference` 
+executor for the CPU.
 
 ```
- Ginkgo::GinkgoExecutor exec(device); //device is the MFEM Device configuration
+Ginkgo::GinkgoExecutor *exec;
+// device is the MFEM Device configuration
+if (device.Allows(Backend::HIP_MASK) || device.Allows(Backend::CUDA_MASK)) 
+  exec = new Ginkgo::GinkgoExecutor(device);
+else
+  exec = new Ginkgo::GinkgoExecutor(Ginkgo::GinkgoExecutor::REFERENCE);
 ```
 
 The Ginkgo wrappers in MFEM provide mix-and-match interoperability: 
