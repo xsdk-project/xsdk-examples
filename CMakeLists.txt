@@ -194,7 +194,7 @@ endif()
 
 # check for HiOp
 if(ENABLE_HIOP)
-    find_package(HIOP REQUIRED)
+    find_package(HiOp REQUIRED)
 endif()
 
 # check for math
