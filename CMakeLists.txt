@@ -14,7 +14,7 @@ include(XsdkAddTest)
 option(ENABLE_CUDA "Enable CUDA" OFF)
 option(ENABLE_HIP "Enable HIP" OFF)
 
-option(ENABLE_AMREX "Enable AMReX" ON)
+option(ENABLE_AMREX "Enable AMReX" OFF)
 set(AMREX_DIR
     "${AMREX_DIR}"
     CACHE PATH "Path to AMReX installation directory"
