@@ -16,14 +16,15 @@ These examples were tested and verified against xsdk@0.8.0.
 | amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
 | hypre/ij_laplacian.c                                  | HYPRE+SuperLU_Dist       | 2D Laplacian problem                              |                |
 | libensemble/test_persistent_aposmm_tao.py             | libEnsemble+PETSc        | 2D constrained optimization problem               |                |
-| mfem/hypre-superlu/convdiff.cpp                       | MFEM+HYPRE+SuperLU_Dist  | 2D steady state convective diffusion              |                |
 | mfem/ginkgo/mfem_ex1_gko.cpp                          | MFEM+Ginkgo              | 2D Poisson problem with Ginko solver              | ![cuda]        |
+| mfem/hiop/adv.cpp                                     | MFEM+HiOp                | Time-dependent advection                          |                |
+| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda]        |
+| mfem/hypre-superlu/convdiff.cpp                       | MFEM+HYPRE+SuperLU_Dist  | 2D steady state convective diffusion              |                |
 | mfem/petsc/obstacle.cpp                               | MFEM+PETSc               | Membrane obstacle problem (min energy functional) |                |
+| mfem/pumi/adapt.cpp                                   | MFEM+PUMI                | Adaptive mesh refinement for a diffusion problem  |                |
 | mfem/strumpack/diffusion-eigen.cpp                    | MFEM+STRUMPACK+HYPRE     | Diffusion eigenvalue problem                      |                |
 | mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D transient nonlinear heat conduction            |                |
-| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda]        |
 | mfem/sundials/advection.cpp                           | MFEM+SUNDIALS            | 2D time-dependent advection                       | ![cuda]        |
-| mfem/hiop/adv.cpp                                     | MFEM+HiOp                | Time-dependent advection                          |                |
 | petsc/ex19.c                                          | PETSc+HYPRE+SuperLU_Dist | 2D nonlinear driven cavity problem                | ![cuda]        |
 | plasma/ex1solve.c                                     | PLASMA+SLATE+BLASPP      | Linear system direct solution                     | ![cuda]        |
 | sundials/ark_brusselator1D_FEM_sludist.cpp            | SUNDIALS+SuperLU_Dist    | 1D nonlinear time-dependent PDE solution          |                |
