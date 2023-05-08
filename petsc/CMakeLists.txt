@@ -11,6 +11,8 @@ find_program(RM rm)
 if(NOT PETSc_DIR)
     set(PETSc_DIR ${PC_PETSc_PREFIX})
 endif()
+# Handle cases like Flux where MPIEXEC_EXECUTABLE can be "flux;run"
+string(REPLACE ";" " " MPIEXEC_EXECUTABLE "${MPIEXEC_EXECUTABLE}")
 
 # We use the makefile to launch the tests
 configure_file(makefile ${CMAKE_CURRENT_BINARY_DIR}/makefile-run)
