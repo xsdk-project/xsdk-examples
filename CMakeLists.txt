@@ -145,6 +145,13 @@ if(ENABLE_AMREX)
     find_package(AMReX REQUIRED)
 endif()
 
+# check for deal.II
+if(ENABLE_DEAL_II)
+    find_package(deal.II REQUIRED
+        HINTS ${deal.II_DIR} ${DEAL_II_DIR} $ENV{DEAL_II_DIR}
+    )
+endif()
+
 # check for hypre
 if(ENABLE_HYPRE)
     find_package(HYPRE REQUIRED)
