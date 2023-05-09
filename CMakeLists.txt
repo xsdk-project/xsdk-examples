@@ -145,6 +145,10 @@ if(ENABLE_AMREX)
     find_package(AMReX REQUIRED)
 endif()
 
+if(ENABLE_HEFFTE)
+    find_package(Heffte 2.2 PATHS "${HEFFTE_DIR}" REQUIRED)
+endif()
+
 # check for hypre
 if(ENABLE_HYPRE)
     find_package(HYPRE REQUIRED)
