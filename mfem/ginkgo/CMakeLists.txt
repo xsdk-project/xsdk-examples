@@ -1,3 +1,6 @@
+if (ENABLE_HIP)
+    set_source_files_properties(mfem_ex22_gko.cpp PROPERTIES LANGUAGE HIP)
+endif()
 add_executable(mfem_ex22_gko mfem_ex22_gko.cpp)
 
 target_link_libraries(
