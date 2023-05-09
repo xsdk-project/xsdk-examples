@@ -59,7 +59,8 @@ int main(int argc, char *argv[])
    Hypre::Init();
 
    // 2. Parse command-line options.
-   const char *mesh_file = "../data/pumi/parallel/Kova/Kova100k_8.smb";
+   const char *mesh_file =
+      "../data/pumi/parallel/KovaLinear/Kova-linear-10k_2p.smb";
 #ifdef MFEM_USE_SIMMETRIX
    const char *model_file = "../data/pumi/geom/Kova.x_t";
    const char *smd_file = NULL;

@@ -8,7 +8,7 @@ beginning of the source file.
 
 Sample runs:
 ```
-mpirun -np 8 ./adapt
+mpirun -np 2 ./adapt
 ```
 
 For a full list of options, see

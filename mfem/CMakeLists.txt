@@ -37,14 +37,5 @@ add_custom_command(
 )
 add_custom_target(copy_mfem_data ALL DEPENDS data_is_copied)
 
-install(FILES
-    data/amr-quad.mesh
-    data/beam-hex.mesh
-    data/disc-nurbs.mesh
-    data/periodic-cube.mesh
-    data/periodic-hexagon.mesh
-    data/periodic-segment.mesh
-    data/periodic-square.mesh
-    data/star.mesh
-    DESTINATION data)
-# TODO: install PUMI files
+# Install 'data' in the install prefix, next to 'bin':
+install(DIRECTORY data DESTINATION ".")
