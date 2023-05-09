@@ -192,6 +192,10 @@ if(ENABLE_STRUMPACK)
     find_package(STRUMPACK REQUIRED)
 endif()
 
+if(ENABLE_TASMANIAN)
+    find_package(Tasmanian 7.5 PATHS "${TASMANIAN_DIR}" REQUIRED)
+endif()
+
 # check for math
 find_library(MATH_LIBRARY NAMES m)
 
