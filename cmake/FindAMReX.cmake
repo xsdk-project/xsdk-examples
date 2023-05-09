@@ -5,5 +5,9 @@ find_package(AMReX REQUIRED COMPONENTS
 if(NOT TARGET XSDK::AMReX)
   add_library(XSDK_AMREX INTERFACE)
   target_link_libraries(XSDK_AMREX INTERFACE AMReX::amrex)
+   if(ENABLE_HIP)
+     target_link_libraries(XSDK_AMREX INTERFACE hip::amdhip64)
+   endif()
   add_library(XSDK::AMReX ALIAS XSDK_AMREX)
 endif()
+
