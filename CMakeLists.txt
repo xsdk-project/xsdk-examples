@@ -151,6 +151,13 @@ if(ENABLE_AMREX)
     find_package(AMReX REQUIRED)
 endif()
 
+# check for deal.II
+if(ENABLE_DEAL_II)
+    find_package(deal.II REQUIRED
+        HINTS ${deal.II_DIR} ${DEAL_II_DIR} $ENV{DEAL_II_DIR}
+    )
+endif()
+
 # check for hypre
 if(ENABLE_HYPRE)
     find_package(HYPRE REQUIRED)
@@ -181,6 +188,13 @@ if(ENABLE_PLASMA)
     find_package(BLASPP REQUIRED)
     find_package(LAPACKPP REQUIRED)
     find_package(SLATE REQUIRED)
+endif()
+
+# check for preCICE
+if(ENABLE_PRECICE)
+    find_package(precice REQUIRED
+        HINTS ${PRECICE_DIR} $ENV{PRECICE_DIR}
+    )
 endif()
 
 # check for SUNDIALS
