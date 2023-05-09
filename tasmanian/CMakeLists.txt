@@ -1,4 +1,4 @@
 add_executable(tasmanian_magma example_unstructured_grid.cpp)
 target_link_libraries(tasmanian_magma Tasmanian::Tasmanian)
 
-add_test(tasmanian tasmanian_magma)
+xsdk_add_test(NAME tasmanian COMMAND tasmanian_magma)
