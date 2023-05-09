@@ -43,7 +43,7 @@ find_library(
     PATHS ${TRILINOS_LIBRARIES}
 )
 
-if(ENABLE_SUPERLU)
+if(ENABLE_SUPERLU AND NOT ENABLE_HIP)
     add_executable(SimpleSolve_WithParameters SimpleSolve_WithParameters.cpp)
     target_link_libraries(SimpleSolve_WithParameters PRIVATE XSDK::SUPERLU METIS)
     if (TARGET OpenMP::OpenMP_CXX)

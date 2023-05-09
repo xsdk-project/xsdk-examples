@@ -144,6 +144,7 @@ if(ENABLE_HIP)
     find_package(rocrand REQUIRED)
     find_package(rocprim REQUIRED)
     find_package(rocsparse REQUIRED)
+    find_package(rocsolver REQUIRED)
 endif()
 
 # check for AMReX

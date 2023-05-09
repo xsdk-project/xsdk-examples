@@ -1,3 +1,6 @@
+if (ENABLE_HIP)
+    set_source_files_properties(convdiff.cpp PROPERTIES LANGUAGE HIP)
+endif()
 add_executable(convdiff convdiff.cpp)
 target_link_libraries(convdiff PRIVATE ${MFEM_ALL_DEPS})
 

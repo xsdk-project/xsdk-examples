@@ -1,3 +1,6 @@
+if (ENABLE_HIP)
+    set_source_files_properties(obstacle.cpp PROPERTIES LANGUAGE HIP)
+endif()
 add_executable(obstacle obstacle.cpp)
 
 target_link_libraries(obstacle PRIVATE ${MFEM_ALL_DEPS})

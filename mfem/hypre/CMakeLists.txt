@@ -1,5 +1,8 @@
 set(example magnetic-diffusion)
 
+if (ENABLE_HIP)
+    set_source_files_properties(${example}.cpp PROPERTIES LANGUAGE HIP)
+endif()
 add_executable(${example} ${example}.cpp)
 target_link_libraries(${example} PRIVATE ${MFEM_ALL_DEPS})
 

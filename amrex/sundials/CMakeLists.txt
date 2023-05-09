@@ -4,6 +4,9 @@ if(ENABLE_CUDA)
         amrex_sundials_advection_diffusion PROPERTIES CUDA_SEPARABLE_COMPILATION ON
     ) # This adds -dc
 endif()
+if (ENABLE_HIP)
+    set_source_files_properties(amrex_sundials_advection_diffusion.cpp PROPERTIES LANGUAGE HIP)
+endif()
 
 add_executable(amrex_sundials_advection_diffusion amrex_sundials_advection_diffusion.cpp)
 

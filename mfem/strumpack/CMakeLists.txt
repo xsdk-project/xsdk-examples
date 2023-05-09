@@ -1,5 +1,7 @@
+if (ENABLE_HIP)
+    set_source_files_properties(diffusion-eigen.cpp PROPERTIES LANGUAGE HIP)
+endif()
 add_executable(diffusion-eigen diffusion-eigen.cpp)
-
 target_link_libraries(diffusion-eigen PRIVATE ${MFEM_ALL_DEPS})
 
 xsdk_add_test(
