@@ -11,13 +11,13 @@ DIFF = @PETSc_DIR@/lib/petsc/bin/petscdiff
 #-------------------------------------------------------------------------
 
 runex19:
-	@@MPIEXEC_EXECUTABLE@ @MPIEXEC_NUMPROC_FLAG@ 1 ./ex19 -da_refine 3 -pc_type mg -ksp_type fgmres  > ex19_1.tmp 2>&1; \
+	@@MPIEXEC_EXECUTABLE@ @MPIEXEC_NUMPROC_FLAG@ 2 ./ex19 -da_refine 3 -pc_type mg -ksp_type fgmres  > ex19_1.tmp 2>&1; \
 	   if $(DIFF) $(OUTPUT_DIR)/ex19_1.testout ex19_1.tmp; then \
            echo "C/C++ example src/snes/tutorials/ex19 run successfully with 2 MPI processes"; \
            else  printf "$(PWD)\nPossible problem with ex19, diffs above\n=========================================\n"; exit 1; fi; \
 		@RM@ -f ex19_1.tmp
 runex19_cuda:
-	@@MPIEXEC_EXECUTABLE@ @MPIEXEC_NUMPROC_FLAG@ 2 ./ex19 -snes_monitor -dm_mat_type seqaijcusparse -dm_vec_type seqcuda -pc_type gamg -ksp_monitor -mg_levels_ksp_max_it 3  > ex19_1.tmp 2>&1; \
+	@@MPIEXEC_EXECUTABLE@ @MPIEXEC_NUMPROC_FLAG@ 1 ./ex19 -snes_monitor -dm_mat_type seqaijcusparse -dm_vec_type seqcuda -pc_type gamg -ksp_monitor -mg_levels_ksp_max_it 3  > ex19_1.tmp 2>&1; \
 	   if $(DIFF) $(OUTPUT_DIR)/ex19_cuda_1.out ex19_1.tmp; then \
            echo "C/C++ example src/snes/tutorials/ex19 run successfully with cuda"; \
            else  printf "$(PWD)\nPossible problem with ex19 running with cuda, diffs above\n=========================================\n"; exit 1; fi; \
