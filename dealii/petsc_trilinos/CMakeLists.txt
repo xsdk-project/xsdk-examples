@@ -19,6 +19,11 @@ set(TARGET_SRC
   ${TARGET}.cc
   )
 
+# At least in some cases, deal.II needs to use the MPI wrapper:
+if (MPI_CXX_COMPILER)
+    set(CMAKE_CXX_COMPILER ${MPI_CXX_COMPILER})
+endif()
+
 # Usually, you will not need to modify anything beyond this point...
 
 cmake_minimum_required(VERSION 3.13.4)
@@ -47,7 +52,6 @@ endif()
 
 deal_ii_initialize_cached_variables()
 set(CLEAN_UP_FILES *.log *.gmv *.gnuplot *.gpl *.eps *.pov *.vtk *.ucd *.d2 *.vtu *.pvtu)
-project(${TARGET})
 add_executable(${TARGET} ${TARGET_SRC})
 deal_ii_setup_target(${TARGET})
 
