@@ -13,6 +13,20 @@ target_link_libraries(laplace_problem precice::precice)
 add_executable(boundary_condition boundary_condition.cc)
 target_link_libraries(boundary_condition precice::precice)
 
+# Copy the shell script 'runtargets.sh' and config file 'precice-config.xml'
+# from the source tree to the build tree so that the example can be run there.
+add_custom_command(
+    OUTPUT runtargets.sh precice-config.xml
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/runtargets.sh
+        ${CMAKE_CURRENT_SOURCE_DIR}/precice-config.xml
+        ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Copying the deal.II + preCICE run script and config ..."
+)
+add_custom_target(copy_precise_data ALL
+    DEPENDS runtargets.sh precice-config.xml
+)
+
 xsdk_add_test(
     NAME 
     "deal.II-preCICE-laplace_problem"
