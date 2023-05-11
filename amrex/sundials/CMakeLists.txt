@@ -1,4 +1,5 @@
 if(ENABLE_CUDA)
+    set(CMAKE_CUDA_HOST_LINK_LAUNCHER ${CMAKE_CXX_COMPILER})
     set_source_files_properties(amrex_sundials_advection_diffusion.cpp PROPERTIES LANGUAGE CUDA)
 endif()
 if (ENABLE_HIP)
