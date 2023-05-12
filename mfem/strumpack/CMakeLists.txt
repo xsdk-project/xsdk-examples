@@ -1,3 +1,6 @@
+if (ENABLE_CUDA)
+    set_source_files_properties(diffusion-eigen.cpp PROPERTIES LANGUAGE CUDA)
+endif()
 if (ENABLE_HIP)
     set_source_files_properties(diffusion-eigen.cpp PROPERTIES LANGUAGE HIP)
 endif()

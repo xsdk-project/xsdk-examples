@@ -1,3 +1,6 @@
+if (ENABLE_CUDA)
+    set_source_files_properties(obstacle.cpp PROPERTIES LANGUAGE CUDA)
+endif()
 if (ENABLE_HIP)
     set_source_files_properties(obstacle.cpp PROPERTIES LANGUAGE HIP)
 endif()

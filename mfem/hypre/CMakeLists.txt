@@ -1,5 +1,8 @@
 set(example magnetic-diffusion)
 
+if (ENABLE_CUDA)
+    set_source_files_properties(${example}.cpp PROPERTIES LANGUAGE CUDA)
+endif()
 if (ENABLE_HIP)
     set_source_files_properties(${example}.cpp PROPERTIES LANGUAGE HIP)
 endif()
