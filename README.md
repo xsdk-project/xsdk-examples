@@ -1,4 +1,4 @@
-# xSDK Examples v0.3.0
+# xSDK Examples v0.4.0
 
 The example codes provided here demonstrate the use of of various xSDK libraries in tandem to solve problems of 
 interest.  Each of the library folders has one or more examples codes that are built of that library 
@@ -9,10 +9,11 @@ in the README.md files in the library subfolders.  For more information on the x
 
 ## Example Summary
 
-These examples were tested and verified against xsdk@0.7.0. 
+These examples were tested and verified against xsdk@0.8.0. 
 
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
+| amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
 | dealii/precise/laplace_problem.cc                     | deal.II+preCICE          | Coupling of Laplace problem with external b.c.    |                |
 | hypre/ij_laplacian.c                                  | HYPRE+SuperLU_Dist       | 2D Laplacian problem                              |                |
 | libensemble/test_persistent_aposmm_tao.py             | libEnsemble+PETSc        | 2D constrained optimization problem               |                |
@@ -20,14 +21,14 @@ These examples were tested and verified against xsdk@0.7.0.
 | mfem/ginkgo/mfem_ex1_gko.cpp                          | MFEM+Ginkgo              | 2D Poisson problem with Ginko solver              | ![cuda]        |
 | mfem/petsc/obstacle.cpp                               | MFEM+PETSc               | Membrane obstacle problem (min energy functional) |                |
 | mfem/strumpack/diffusion-eigen.cpp                    | MFEM+STRUMPACK+HYPRE     | Diffusion eigenvalue problem                      |                |
-| mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D Transient nonlinear heat conduction            |                |
+| mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D transient nonlinear heat conduction            |                |
 | mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda]        |
-| mfem/sundials/advection.cpp                           | MFEM+SUNDIALS            | 2D Time-dependent advection                       | ![cuda]        |
+| mfem/sundials/advection.cpp                           | MFEM+SUNDIALS            | 2D time-dependent advection                       | ![cuda]        |
 | petsc/ex19.c                                          | PETSc+HYPRE+SuperLU_Dist | 2D nonlinear driven cavity problem                | ![cuda]        |
 | plasma/ex1solve.c                                     | PLASMA+SLATE+BLASPP      | Linear system direct solution                     | ![cuda]        |
-| sundials/ark_brusselator1D_FEM_sludist.cpp            | SUNDIALS+SuperLU_Dist    | Chemical kinetics brusselator problem             |                |
-| sundials/cv_petsc_ex7.c                               | SUNDIALS+PETSc           | 2D nonlinear PDE solution                         |                |
-| sundials/cvRoberts_blockdiag_magma.cpp                | SUNDIALS+MAGMA           | Solves a group of chemical kinetics ODEs          | ![cuda] ![hip] | 
+| sundials/ark_brusselator1D_FEM_sludist.cpp            | SUNDIALS+SuperLU_Dist    | 1D nonlinear time-dependent PDE solution          |                |
+| sundials/cv_petsc_ex7.c                               | SUNDIALS+PETSc           | 2D nonlinear time-dependent PDE solution          |                |
+| sundials/cv_bruss_batched_magma.cpp                   | SUNDIALS+MAGMA           | Batch of 0D chemical kinetics ODEs                | ![cuda] ![hip] | 
 | trilinos/SimpleSolve_WithParameters.cpp               | Trilinos+SuperLU_Dist    | Small linear system direct solution               |                |
 | strumpack/sparse.cpp                                  | STRUMPACK+ButterflyPACK  | 3D Poisson problem with STRUMPACK preconditioner  |                |
 
@@ -36,8 +37,7 @@ They can still be built using CMake directly.
 
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
-| amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
-| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![hip]         |
+| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda] ![hip] |
 
 ## Installing the Examples
 

@@ -444,6 +444,10 @@ void FillInitConds2D(MultiFab& sol, const Geometry& geom)
   Real sigma = 0.1;
   Real a = 1.0/(sigma*sqrt(2*M_PI));
   Real b = -0.5/(sigma*sigma);
+  Real dx0 = dx[0];
+  Real dx1 = dx[1];
+  Real pl0 = prob_lo[0];
+  Real pl1 = prob_lo[1];
 
   for (MFIter mfi(sol,TilingIfNotGPU()); mfi.isValid(); ++mfi)
   {
@@ -453,8 +457,8 @@ void FillInitConds2D(MultiFab& sol, const Geometry& geom)
     amrex::ParallelFor
       (bx, 1, [=] AMREX_GPU_DEVICE(int i, int j, int k, int n)
        {
-         Real y = prob_lo[1] + (((Real) j) + 0.5) * dx[1];
-         Real x = prob_lo[0] + (((Real) i) + 0.5) * dx[0];
+         Real y = pl1 + (((Real) j) + 0.5) * dx1;
+         Real x = pl0 + (((Real) i) + 0.5) * dx0;
          Real r = x * x + y * y;
          fab(i,j,k,n) = a * exp(b * r);
        });
