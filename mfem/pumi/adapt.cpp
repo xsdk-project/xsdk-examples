@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
    }
 
    // Perform Uniform refinement
-   if (myid == 1)
+   if (myid == 0)
    {
       std::cout << " ref level : " <<     ref_levels << std::endl;
    }
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
    else if (pmesh->GetNodes())
    {
       fec = pmesh->GetNodes()->OwnFEC();
-      if (myid == 1)
+      if (myid == 0)
       {
          cout << "Using isoparametric FEs: " << fec->Name() << endl;
       }
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
    }
    ParFiniteElementSpace *fespace = new ParFiniteElementSpace(pmesh, fec);
    HYPRE_BigInt size = fespace->GlobalTrueVSize();
-   if (myid == 1)
+   if (myid == 0)
    {
       cout << "Number of finite element unknowns: " << size << endl;
    }
@@ -255,7 +255,7 @@ int main(int argc, char *argv[])
    for (int Itr = 0; Itr < max_iter; Itr++)
    {
       HYPRE_BigInt global_dofs = fespace->GlobalTrueVSize();
-      if (myid == 1)
+      if (myid == 0)
       {
          cout << "\nAMR iteration " << Itr << endl;
          cout << "Number of unknowns: " << global_dofs << endl;
