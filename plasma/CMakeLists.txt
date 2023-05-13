@@ -1,3 +1,9 @@
+# enforce OpenMP requirement; OpenMP search results should be cached at
+# this point
+find_package(OpenMP REQUIRED)
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+
 add_executable(ex1solve ex1solve.cpp)
 if(NOT ENABLE_CUDA)
     target_compile_definitions(ex1solve PRIVATE SLATE_NO_CUDA)
