@@ -1,3 +1,6 @@
+if (ENABLE_CUDA)
+    set_source_files_properties(mfem_ex22_gko.cpp PROPERTIES LANGUAGE CUDA)
+endif()
 if (ENABLE_HIP)
     set_source_files_properties(mfem_ex22_gko.cpp PROPERTIES LANGUAGE HIP)
 endif()
