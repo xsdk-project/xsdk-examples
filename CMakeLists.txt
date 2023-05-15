@@ -153,9 +153,13 @@ endif()
 
 # check for deal.II
 if(ENABLE_DEAL_II)
+    # deal.II resets CMAKE_CUDA_ARCHITECTURES in its CMake config file, so we
+    # need to save it here and restore it below.
+    set(_cuda_archs "${CMAKE_CUDA_ARCHITECTURES}")
     find_package(deal.II REQUIRED
         HINTS ${deal.II_DIR} ${DEAL_II_DIR} $ENV{DEAL_II_DIR}
     )
+    set(CMAKE_CUDA_ARCHITECTURES "${_cuda_archs}")
 endif()
 
 # check for hypre
