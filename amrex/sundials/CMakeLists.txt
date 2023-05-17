@@ -16,8 +16,9 @@ if(ENABLE_CUDA)
 endif()
 
 xsdk_add_test(
-    NAME AMREX-amrex_sundials_advection_diffusion COMMAND
-    $<TARGET_FILE:amrex_sundials_advection_diffusion>
+    NAME AMREX-amrex_sundials_advection_diffusion
+    MPI_NPROCS 1
+    COMMAND $<TARGET_FILE:amrex_sundials_advection_diffusion>
 )
 
 install(TARGETS amrex_sundials_advection_diffusion RUNTIME DESTINATION bin)
