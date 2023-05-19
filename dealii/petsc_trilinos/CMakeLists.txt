@@ -55,11 +55,15 @@ set(CLEAN_UP_FILES *.log *.gmv *.gnuplot *.gpl *.eps *.pov *.vtk *.ucd *.d2 *.vt
 add_executable(${TARGET} ${TARGET_SRC})
 deal_ii_setup_target(${TARGET})
 
-xsdk_add_test(
-    NAME
-    dealii-${TARGET}
-    MPI_NPROCS
-    1
-    COMMAND
-    $<TARGET_FILE:${TARGET}>
-)
+if (NOT ENABLE_CUDA)
+    # This example fails when using Spack-built `xsdk` with CUDA enabled, so it
+    # is disabled for now.
+    xsdk_add_test(
+        NAME
+        dealii-${TARGET}
+        MPI_NPROCS
+        1
+        COMMAND
+        $<TARGET_FILE:${TARGET}>
+    )
+endif()
