@@ -196,7 +196,7 @@ endif()
 
 # check for preCICE
 if(ENABLE_PRECICE)
-    find_package(precice REQUIRED
+    find_package(precice 2 REQUIRED
         HINTS ${PRECICE_DIR} $ENV{PRECICE_DIR}
     )
 endif()
