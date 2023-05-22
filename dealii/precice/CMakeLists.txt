@@ -23,7 +23,7 @@ add_custom_command(
         ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Copying the deal.II + preCICE run script and config ..."
 )
-add_custom_target(copy_precise_data ALL
+add_custom_target(copy_precice_data ALL
     DEPENDS runtargets.sh precice-config.xml
 )
 
