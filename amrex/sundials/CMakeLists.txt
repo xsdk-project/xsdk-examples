@@ -2,9 +2,11 @@ if(ENABLE_CUDA)
     set(CMAKE_CUDA_HOST_LINK_LAUNCHER ${CMAKE_CXX_COMPILER})
     set_source_files_properties(amrex_sundials_advection_diffusion.cpp PROPERTIES LANGUAGE CUDA)
 endif()
-if (ENABLE_HIP)
-    set_source_files_properties(amrex_sundials_advection_diffusion.cpp PROPERTIES LANGUAGE HIP)
-endif()
+# Setting the language to HIP leads to incorrect linker flags with Cray compiler
+# wrappers, instead rely on HIP/ROCM targets from AMReX/SUNDIALS targets
+# if (ENABLE_HIP)
+#     set_source_files_properties(amrex_sundials_advection_diffusion.cpp PROPERTIES LANGUAGE HIP)
+# endif()
 
 add_executable(amrex_sundials_advection_diffusion amrex_sundials_advection_diffusion.cpp)
 
