@@ -39,17 +39,17 @@ using namespace strumpack;
 
 int main(int argc, char* argv[]) {
   int thread_level, myrank;
-  MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &thread_level);
+  MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &thread_level);
   MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
-  if (thread_level != MPI_THREAD_FUNNELED && myrank == 0)
-    std::cout << "MPI implementation does not support MPI_THREAD_FUNNELED"
+  if (thread_level != MPI_THREAD_MULTIPLE && myrank == 0)
+    std::cout << "MPI implementation does not support MPI_THREAD_MULTIPLE"
               << std::endl;
   {
     int n = 30, nrhs = 1;
     if (argc > 1) n = atoi(argv[1]); // get grid size
     else std::cout << "# please provide grid size" << std::endl;
     // get number of right-hand sides
-    if (argc > 2) nrhs = std::max(1, atoi(argv[2]));
+    // if (argc > 2) nrhs = std::max(1, atoi(argv[2]));
     if (!myrank)
       std::cout << "solving 3D " << n << "^3 Poisson problem"
                 << " with " << nrhs << " right hand sides" << std::endl;
