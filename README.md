@@ -27,7 +27,9 @@ These examples were tested and verified against xsdk@0.8.0.
 | mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D transient nonlinear heat conduction            |                |
 | mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda]        |
 | mfem/sundials/advection.cpp                           | MFEM+SUNDIALS            | 2D time-dependent advection                       | ![cuda]        |
-| petsc/ex19.c                                          | PETSc+HYPRE+SuperLU_Dist | 2D nonlinear driven cavity problem                | ![cuda]        |
+| petsc/ex19.c                                          | PETSc                    | 2D nonlinear driven cavity problem                | ![cuda] ![hip] |
+| petsc/ex19.c                                          | PETSc+HYPRE              | 2D nonlinear driven cavity problem                | ![cuda]        |
+| petsc/ex19.c                                          | PETSc+SuperLU_Dist       | 2D nonlinear driven cavity problem                |                |
 | plasma/ex1solve.c                                     | PLASMA+SLATE+BLASPP      | Linear system direct solution                     | ![cuda]        |
 | sundials/ark_brusselator1D_FEM_sludist.cpp            | SUNDIALS+SuperLU_Dist    | 1D nonlinear time-dependent PDE solution          |                |
 | sundials/cv_petsc_ex7.c                               | SUNDIALS+PETSc           | 2D nonlinear time-dependent PDE solution          |                |
