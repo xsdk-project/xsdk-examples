@@ -32,6 +32,12 @@ set(Ginkgo_DIR
     CACHE PATH "Path to Ginkgo installation directory"
 )
 
+option(ENABLE_HEFFTE "Enable heFFTe" OFF)
+set(HEFFTE_DIR
+    "${HEFFTE_DIR}"
+    CACHE PATH "Path to the heFFTe installation directory"
+)
+
 option(ENABLE_HYPRE "Enable hypre" ON)
 set(HYPRE_DIR
     "${HYPRE_DIR}"
@@ -78,6 +84,12 @@ option(ENABLE_STRUMPACK "Enable STRUMPACK" OFF)
 set(STRUMPACK_DIR
     "${STRUMPACK_DIR}"
     CACHE PATH "Path to STRUMPACK installation directory"
+)
+
+option(ENABLE_TASMANIAN "Enable Tasmanian" OFF)
+set(TASMANIAN_DIR
+    "${TASMANIAN_DIR}"
+    CACHE PATH "Path to the Tasmanian installation directory"
 )
 
 option(ENABLE_TRILINOS "Enable TRILINOS" OFF)
@@ -152,6 +164,10 @@ if(ENABLE_DEAL_II)
     )
 endif()
 
+if(ENABLE_HEFFTE)
+    find_package(Heffte 2.2 PATHS "${HEFFTE_DIR}" REQUIRED)
+endif()
+
 # check for hypre
 if(ENABLE_HYPRE)
     find_package(HYPRE REQUIRED)
@@ -199,6 +215,10 @@ if(ENABLE_STRUMPACK)
     find_package(STRUMPACK REQUIRED)
 endif()
 
+if(ENABLE_TASMANIAN)
+    find_package(Tasmanian 7.5 PATHS "${TASMANIAN_DIR}" REQUIRED)
+endif()
+
 # check for math
 find_library(MATH_LIBRARY NAMES m)
 
@@ -211,6 +231,9 @@ if(ENABLE_AMREX)
 endif()
 if(ENABLE_DEAL_II)
     add_subdirectory(dealii)
+endif()
+if(ENABLE_HEFFTE)
+    add_subdirectory(heffte)
 endif()
 if(ENABLE_HYPRE)
     add_subdirectory(hypre)
@@ -226,6 +249,9 @@ if(ENABLE_PLASMA)
 endif()
 if(ENABLE_SUNDIALS)
     add_subdirectory(sundials)
+endif()
+if(ENABLE_TASMANIAN)
+    add_subdirectory(tasmanian)
 endif()
 if(ENABLE_TRILINOS)
     add_subdirectory(trilinos)
