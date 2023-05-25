@@ -21,7 +21,7 @@ These examples were tested and verified against xsdk@0.8.0.
 | hypre/ij_laplacian.c                                  | HYPRE+SuperLU_Dist       | 2D Laplacian problem                              |                |
 | libensemble/test_persistent_aposmm_tao.py             | libEnsemble+PETSc        | 2D constrained optimization problem               |                |
 | mfem/hypre-superlu/convdiff.cpp                       | MFEM+HYPRE+SuperLU_Dist  | 2D steady state convective diffusion              |                |
-| mfem/ginkgo/mfem_ex1_gko.cpp                          | MFEM+Ginkgo              | 2D Poisson problem with Ginko solver              | ![cuda]        |
+| mfem/ginkgo/mfem_ex22_gko.cpp                         | MFEM+Ginkgo              | 3D damped harmonic oscillator with Ginkgo solver  | ![cuda] ![hip] |
 | mfem/petsc/obstacle.cpp                               | MFEM+PETSc               | Membrane obstacle problem (min energy functional) |                |
 | mfem/strumpack/diffusion-eigen.cpp                    | MFEM+STRUMPACK+HYPRE     | Diffusion eigenvalue problem                      |                |
 | mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D transient nonlinear heat conduction            |                |
