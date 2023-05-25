@@ -68,6 +68,12 @@ set(PLASMA_DIR
     CACHE PATH "Path to PLASMA installation directory"
 )
 
+option(ENABLE_PRECICE "Enable preCICE" ON)
+set(PRECICE_DIR
+    "${PRECICE_DIR}"
+    CACHE PATH "Path to preCICE installation directory"
+)
+
 option(ENABLE_SUNDIALS "Enable SUNDIALS" ON)
 set(SUNDIALS_DIR
     "${SUNDIALS_DIR}"
@@ -159,9 +165,13 @@ endif()
 
 # check for deal.II
 if(ENABLE_DEAL_II)
+    # deal.II resets CMAKE_CUDA_ARCHITECTURES in its CMake config file, so we
+    # need to save it here and restore it below.
+    set(_cuda_archs "${CMAKE_CUDA_ARCHITECTURES}")
     find_package(deal.II REQUIRED
         HINTS ${deal.II_DIR} ${DEAL_II_DIR} $ENV{DEAL_II_DIR}
     )
+    set(CMAKE_CUDA_ARCHITECTURES "${_cuda_archs}")
 endif()
 
 if(ENABLE_HEFFTE)
@@ -198,6 +208,13 @@ if(ENABLE_PLASMA)
     find_package(BLASPP REQUIRED)
     find_package(LAPACKPP REQUIRED)
     find_package(SLATE REQUIRED)
+endif()
+
+# check for preCICE
+if(ENABLE_PRECICE)
+    find_package(precice 2 REQUIRED
+        HINTS ${PRECICE_DIR} $ENV{PRECICE_DIR}
+    )
 endif()
 
 # check for SUNDIALS
