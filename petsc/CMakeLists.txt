@@ -46,6 +46,19 @@ if(ENABLE_CUDA)
         PETSC_DIR=${PETSc_DIR}
     )
 endif()
+if(ENABLE_HIP)
+    xsdk_add_test(
+        NAME
+        PETSc-ex19_hip
+        COMMAND
+        make
+        -f
+        makefile-run
+        runex19_hip
+        ENVIRONMENT
+        PETSC_DIR=${PETSc_DIR}
+    )
+endif()
 if(ENABLE_HYPRE)
     if(ENABLE_CUDA)
         xsdk_add_test(
@@ -86,23 +99,8 @@ if(ENABLE_SUPERLU)
         PETSC_DIR=${PETSc_DIR}
     )
 endif()
-if(ENABLE_TRILINOS)
-    xsdk_add_test(
-        NAME
-        PETSc-ex19_ml
-        MPI_NPROC
-        2
-        COMMAND
-        make
-        -f
-        makefile-run
-        runex19_ml
-        ENVIRONMENT
-        PETSC_DIR=${PETSc_DIR}
-    )
-endif()
 
 install(FILES output/ex19_1.testout output/ex19_cuda_1.out output/ex19_hypre.out
-              output/ex19_ml.out output/ex19_superlu.out DESTINATION output
+              output/ex19_hip.out output/ex19_superlu.out DESTINATION output
 )
 install(TARGETS ex19 RUNTIME DESTINATION bin)
