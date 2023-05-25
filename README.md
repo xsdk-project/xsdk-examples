@@ -29,6 +29,7 @@ These examples were tested and verified against xsdk@0.8.0.
 | sundials/ark_brusselator1D_FEM_sludist.cpp            | SUNDIALS+SuperLU_Dist    | 1D nonlinear time-dependent PDE solution          |                |
 | sundials/cv_petsc_ex7.c                               | SUNDIALS+PETSc           | 2D nonlinear time-dependent PDE solution          |                |
 | sundials/cv_bruss_batched_magma.cpp                   | SUNDIALS+MAGMA           | Batch of 0D chemical kinetics ODEs                | ![cuda] ![hip] |
+| tasmanian/example_unstructured_grid.cpp               | Tasmanian+MAGMA          | Constructs a sparse grid model from random data   | ![cuda] ![hip] |
 | trilinos/SimpleSolve_WithParameters.cpp               | Trilinos+SuperLU_Dist    | Small linear system direct solution               |                |
 | strumpack/sparse.cpp                                  | STRUMPACK+ButterflyPACK  | 3D Poisson problem with STRUMPACK preconditioner  |                |
 
