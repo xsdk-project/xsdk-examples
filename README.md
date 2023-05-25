@@ -14,6 +14,7 @@ These examples were tested and verified against xsdk@0.8.0.
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
 | amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
+| heffte/heffte_example_gpu.cpp                         | heFFTe+MAGMA             | 3D FFT transform using the GPU                    | ![cuda] ![hip] |
 | hypre/ij_laplacian.c                                  | HYPRE+SuperLU_Dist       | 2D Laplacian problem                              |                |
 | libensemble/test_persistent_aposmm_tao.py             | libEnsemble+PETSc        | 2D constrained optimization problem               |                |
 | mfem/hypre-superlu/convdiff.cpp                       | MFEM+HYPRE+SuperLU_Dist  | 2D steady state convective diffusion              |                |
