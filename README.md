@@ -13,7 +13,7 @@ These examples were tested and verified against xsdk@0.8.0.
 
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
-| amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda] ![hip] |
+| amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda]        |
 | dealii/petsc_trilinos/petsc_trilinos.cpp              | deal.II+PETSc/Trilinos   | Poisson problem using MPI and AMG preconditioners |                |
 | dealii/precice/laplace_problem.cc                     | deal.II+preCICE          | Coupling of Laplace problem with external b.c.    |                |
 | dealii/sundials/sundials.cpp                          | deal.II+Sundials         | Nonlinear, minimal surface problem                |                |
@@ -39,13 +39,7 @@ These examples were tested and verified against xsdk@0.8.0.
 | tasmanian/example_unstructured_grid.cpp               | Tasmanian+MAGMA          | Constructs a sparse grid model from random data   | ![cuda] ![hip] |
 | trilinos/SimpleSolve_WithParameters.cpp               | Trilinos+SuperLU_Dist    | Small linear system direct solution               |                |
 | strumpack/sparse.cpp                                  | STRUMPACK+ButterflyPACK  | 3D Poisson problem with STRUMPACK preconditioner  |                |
-
-These examples are currently in the repo but will not be enabled in the xsdk-examples spack package until we release a new version of the xSDK.
-They can still be built using CMake directly.
-
-| Example                                               | Libraries                | Description                                       | GPUs           |
-|:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
-| (empty)                                               |                          |                                                   |                |
+                                       
 
 ## Installing the Examples
 
