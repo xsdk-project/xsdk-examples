@@ -20,10 +20,28 @@ set(AMREX_DIR
     CACHE PATH "Path to AMReX installation directory"
 )
 
+option(ENABLE_DEAL_II "Enable deal.II" ON)
+set(DEAL_II_DIR
+    "${DEAL_II_DIR}"
+    CACHE PATH "Path to deal.II installation directory"
+)
+
 option(ENABLE_GINKGO "Enable Ginkgo" ON)
 set(Ginkgo_DIR
     "${Ginkgo_DIR}"
     CACHE PATH "Path to Ginkgo installation directory"
+)
+
+option(ENABLE_HEFFTE "Enable heFFTe" OFF)
+set(HEFFTE_DIR
+    "${HEFFTE_DIR}"
+    CACHE PATH "Path to the heFFTe installation directory"
+)
+
+option(ENABLE_HIOP "Enable HiOp" ON)
+set(HIOP_DIR
+    "${HIOP_DIR}"
+    CACHE PATH "Path to HiOp installation directory"
 )
 
 option(ENABLE_HYPRE "Enable hypre" ON)
@@ -32,16 +50,16 @@ set(HYPRE_DIR
     CACHE PATH "Path to hypre installation directory"
 )
 
-option(ENABLE_MFEM "Enable MFEM" ON)
-set(MFEM_DIR
-    "${MFEM_DIR}"
-    CACHE PATH "Path to MFEM installation directory"
-)
-
 option(ENABLE_MAGMA "Enable MAGMA" OFF)
 set(MAGMA_DIR
     "${MAGMA_DIR}"
     CACHE PATH "Path to MAGMA installation directory"
+)
+
+option(ENABLE_MFEM "Enable MFEM" ON)
+set(MFEM_DIR
+    "${MFEM_DIR}"
+    CACHE PATH "Path to MFEM installation directory"
 )
 
 option(ENABLE_PETSC "Enable PETSc" ON)
@@ -54,6 +72,18 @@ option(ENABLE_PLASMA "Enable PLASMA" ON)
 set(PLASMA_DIR
     "${PLASMA_DIR}"
     CACHE PATH "Path to PLASMA installation directory"
+)
+
+option(ENABLE_PRECICE "Enable preCICE" ON)
+set(PRECICE_DIR
+    "${PRECICE_DIR}"
+    CACHE PATH "Path to preCICE installation directory"
+)
+
+option(ENABLE_PUMI "Enable PUMI" ON)
+set(PUMI_DIR
+    "${PUMI_DIR}"
+    CACHE PATH "Path to PUMI installation directory"
 )
 
 option(ENABLE_SUNDIALS "Enable SUNDIALS" ON)
@@ -72,6 +102,12 @@ option(ENABLE_STRUMPACK "Enable STRUMPACK" OFF)
 set(STRUMPACK_DIR
     "${STRUMPACK_DIR}"
     CACHE PATH "Path to STRUMPACK installation directory"
+)
+
+option(ENABLE_TASMANIAN "Enable Tasmanian" OFF)
+set(TASMANIAN_DIR
+    "${TASMANIAN_DIR}"
+    CACHE PATH "Path to the Tasmanian installation directory"
 )
 
 option(ENABLE_TRILINOS "Enable TRILINOS" OFF)
@@ -132,6 +168,7 @@ if(ENABLE_HIP)
     find_package(rocrand REQUIRED)
     find_package(rocprim REQUIRED)
     find_package(rocsparse REQUIRED)
+    find_package(rocsolver REQUIRED)
 endif()
 
 # check for AMReX
@@ -139,9 +176,34 @@ if(ENABLE_AMREX)
     find_package(AMReX REQUIRED)
 endif()
 
+# check for deal.II
+if(ENABLE_DEAL_II)
+    # deal.II resets CMAKE_CUDA_ARCHITECTURES in its CMake config file, so we
+    # need to save it here and restore it below.
+    set(_cuda_archs "${CMAKE_CUDA_ARCHITECTURES}")
+    find_package(deal.II REQUIRED
+        HINTS ${deal.II_DIR} ${DEAL_II_DIR} $ENV{DEAL_II_DIR}
+    )
+    set(CMAKE_CUDA_ARCHITECTURES "${_cuda_archs}")
+endif()
+
+if(ENABLE_HEFFTE)
+    find_package(Heffte 2.2 PATHS "${HEFFTE_DIR}" REQUIRED)
+endif()
+
+# check for HiOp
+if(ENABLE_HIOP)
+    find_package(HiOp REQUIRED)
+endif()
+
 # check for hypre
 if(ENABLE_HYPRE)
     find_package(HYPRE REQUIRED)
+endif()
+
+# check for MAGMA
+if(ENABLE_MAGMA)
+    find_package(MAGMA REQUIRED)
 endif()
 
 # check for MFEM
@@ -151,11 +213,6 @@ if(ENABLE_MFEM)
     if(ENABLE_GINKGO)
         find_package(Ginkgo REQUIRED)
     endif()
-endif()
-
-# check for MAGMA
-if(ENABLE_MAGMA)
-    find_package(MAGMA REQUIRED)
 endif()
 
 # check for PETSC
@@ -169,6 +226,19 @@ if(ENABLE_PLASMA)
     find_package(BLASPP REQUIRED)
     find_package(LAPACKPP REQUIRED)
     find_package(SLATE REQUIRED)
+endif()
+
+# check for preCICE
+if(ENABLE_PRECICE)
+    find_package(precice 2 REQUIRED
+        HINTS ${PRECICE_DIR} $ENV{PRECICE_DIR}
+    )
+endif()
+
+# check for PUMI
+if(ENABLE_PUMI)
+    # not really needed: MFEM links with PUMI if it is built with it
+    # find_package(SCOREC REQUIRED)
 endif()
 
 # check for SUNDIALS
@@ -186,6 +256,10 @@ if(ENABLE_STRUMPACK)
     find_package(STRUMPACK REQUIRED)
 endif()
 
+if(ENABLE_TASMANIAN)
+    find_package(Tasmanian 7.5 PATHS "${TASMANIAN_DIR}" REQUIRED)
+endif()
+
 # check for math
 find_library(MATH_LIBRARY NAMES m)
 
@@ -195,6 +269,12 @@ find_package(METIS)
 # example subdirectories
 if(ENABLE_AMREX)
     add_subdirectory(amrex)
+endif()
+if(ENABLE_DEAL_II)
+    add_subdirectory(dealii)
+endif()
+if(ENABLE_HEFFTE)
+    add_subdirectory(heffte)
 endif()
 if(ENABLE_HYPRE)
     add_subdirectory(hypre)
@@ -208,12 +288,15 @@ endif()
 if(ENABLE_PLASMA)
     add_subdirectory(plasma)
 endif()
+if(ENABLE_STRUMPACK)
+    add_subdirectory(strumpack)
+endif()
 if(ENABLE_SUNDIALS)
     add_subdirectory(sundials)
 endif()
+if(ENABLE_TASMANIAN)
+    add_subdirectory(tasmanian)
+endif()
 if(ENABLE_TRILINOS)
     add_subdirectory(trilinos)
-endif()
-if(ENABLE_STRUMPACK)
-    add_subdirectory(strumpack)
 endif()

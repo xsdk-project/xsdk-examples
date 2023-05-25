@@ -7,6 +7,13 @@ endif()
 # The makefile to run examples requires rm command
 find_program(RM rm)
 
+# If PETSc was found without setting PETSc_DIR, e.g. using CMAKE_PREFIX_PATH
+if(NOT PETSc_DIR)
+    set(PETSc_DIR ${PC_PETSc_PREFIX})
+endif()
+# Handle cases like Flux where MPIEXEC_EXECUTABLE can be "flux;run"
+string(REPLACE ";" " " MPIEXEC_EXECUTABLE "${MPIEXEC_EXECUTABLE}")
+
 # We use the makefile to launch the tests
 configure_file(makefile ${CMAKE_CURRENT_BINARY_DIR}/makefile-run)
 file(COPY output DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/output)
@@ -35,6 +42,19 @@ if(ENABLE_CUDA)
         -f
         makefile-run
         runex19_cuda
+        ENVIRONMENT
+        PETSC_DIR=${PETSc_DIR}
+    )
+endif()
+if(ENABLE_HIP)
+    xsdk_add_test(
+        NAME
+        PETSc-ex19_hip
+        COMMAND
+        make
+        -f
+        makefile-run
+        runex19_hip
         ENVIRONMENT
         PETSC_DIR=${PETSc_DIR}
     )
@@ -79,23 +99,8 @@ if(ENABLE_SUPERLU)
         PETSC_DIR=${PETSc_DIR}
     )
 endif()
-if(ENABLE_TRILINOS)
-    xsdk_add_test(
-        NAME
-        PETSc-ex19_ml
-        MPI_NPROC
-        2
-        COMMAND
-        make
-        -f
-        makefile-run
-        runex19_ml
-        ENVIRONMENT
-        PETSC_DIR=${PETSc_DIR}
-    )
-endif()
 
 install(FILES output/ex19_1.testout output/ex19_cuda_1.out output/ex19_hypre.out
-              output/ex19_ml.out output/ex19_superlu.out DESTINATION output
+              output/ex19_hip.out output/ex19_superlu.out DESTINATION output
 )
 install(TARGETS ex19 RUNTIME DESTINATION bin)

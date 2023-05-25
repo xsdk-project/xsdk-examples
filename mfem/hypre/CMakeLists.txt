@@ -1,14 +1,13 @@
 set(example magnetic-diffusion)
 
+if (ENABLE_CUDA)
+    set_source_files_properties(${example}.cpp PROPERTIES LANGUAGE CUDA)
+endif()
+if (ENABLE_HIP)
+    set_source_files_properties(${example}.cpp PROPERTIES LANGUAGE HIP)
+endif()
 add_executable(${example} ${example}.cpp)
-target_link_libraries(
-    ${example}
-    PRIVATE XSDK::MFEM
-            XSDK::HYPRE
-            XSDK::SUNDIALS
-            ZLIB::ZLIB
-            MPI::MPI_CXX
-)
+target_link_libraries(${example} PRIVATE ${MFEM_ALL_DEPS})
 
 xsdk_add_test(
     NAME
@@ -19,6 +18,7 @@ xsdk_add_test(
     $<TARGET_FILE:magnetic-diffusion>
     -m
     ../data/star.mesh
+    -no-vis
 )
 # TODO: add the other CPU sample runs from README.md
 if(ENABLE_CUDA)
@@ -34,6 +34,7 @@ if(ENABLE_CUDA)
         -pa
         -d
         cuda
+        -no-vis
     )
     # TODO: add the other GPU sample runs from README.md
 endif()
@@ -50,6 +51,7 @@ if(ENABLE_HIP)
         -pa
         -d
         hip
+        -no-vis
     )
     # TODO: add the other GPU sample runs from README.md
 endif()

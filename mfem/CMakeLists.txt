@@ -1,21 +1,30 @@
+# All MFEM dependencies
+set(MFEM_ALL_DEPS XSDK::MFEM)
+
 # Ginkgo is included at the upper level when MFEM is enabled
 if(ENABLE_GINKGO)
     add_subdirectory(ginkgo)
 endif()
+if(ENABLE_HIOP)
+    add_subdirectory(hiop)
+endif()
 if(ENABLE_HYPRE)
     add_subdirectory(hypre)
 endif()
-if(ENABLE_SUPERLU AND ENABLE_HYPRE)
+if(ENABLE_HYPRE AND ENABLE_STRUMPACK)
+    add_subdirectory(strumpack)
+endif()
+if(ENABLE_HYPRE AND ENABLE_SUNDIALS)
+    add_subdirectory(sundials)
+endif()
+if(ENABLE_HYPRE AND ENABLE_SUPERLU)
     add_subdirectory(hypre-superlu)
 endif()
 if(ENABLE_PETSC)
     add_subdirectory(petsc)
 endif()
-if(ENABLE_SUNDIALS AND ENABLE_HYPRE)
-    add_subdirectory(sundials)
-endif()
-if(ENABLE_STRUMPACK AND ENABLE_HYPRE)
-    add_subdirectory(strumpack)
+if(ENABLE_PUMI)
+    add_subdirectory(pumi)
 endif()
 
 # Copy the data directory from the source tree to the build tree so that the examples can be run
@@ -28,4 +37,5 @@ add_custom_command(
 )
 add_custom_target(copy_mfem_data ALL DEPENDS data_is_copied)
 
-install(FILES data/star.mesh data/beam-hex.mesh data/periodic-hexagon.mesh DESTINATION data)
+# Install 'data' in the install prefix, next to 'bin':
+install(DIRECTORY data DESTINATION ".")

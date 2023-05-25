@@ -1,4 +1,4 @@
-if(ENABLE_SUPERLU AND (NOT ENABLE_CUDA))
+if(ENABLE_SUPERLU AND (NOT ENABLE_CUDA AND NOT ENABLE_HIP))
     add_executable(ij_laplacian ij_laplacian.c)
 
     target_link_libraries(ij_laplacian PRIVATE XSDK::HYPRE XSDK::SUPERLU MPI::MPI_C)
@@ -39,6 +39,6 @@ if(ENABLE_SUPERLU AND (NOT ENABLE_CUDA))
 else()
     message(
         STATUS
-            "SKIPPED HYPRE-ij_laplacian example. Requires ENABLE_SUPERLU=ON and ENABLE_CUDA=OFF but got ${ENABLE_SUPERLU} and ${ENABLE_CUDA}"
+            "SKIPPED HYPRE-ij_laplacian example. Requires ENABLE_SUPERLU=ON, ENABLE_CUDA=OFF, and ENABLE_HIP=OFF but got ${ENABLE_SUPERLU}, ${ENABLE_CUDA}, and ${ENABLE_HIP}"
     )
 endif()

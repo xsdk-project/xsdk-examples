@@ -1,15 +1,11 @@
+if (ENABLE_CUDA)
+    set_source_files_properties(diffusion-eigen.cpp PROPERTIES LANGUAGE CUDA)
+endif()
+if (ENABLE_HIP)
+    set_source_files_properties(diffusion-eigen.cpp PROPERTIES LANGUAGE HIP)
+endif()
 add_executable(diffusion-eigen diffusion-eigen.cpp)
-
-target_link_libraries(
-    diffusion-eigen
-    PRIVATE XSDK::MFEM
-            XSDK::PETSc
-            XSDK::HYPRE
-            XSDK::SUPERLU
-            XSDK::SUNDIALS
-            STRUMPACK::strumpack
-            ZLIB::ZLIB
-)
+target_link_libraries(diffusion-eigen PRIVATE ${MFEM_ALL_DEPS})
 
 xsdk_add_test(
     NAME

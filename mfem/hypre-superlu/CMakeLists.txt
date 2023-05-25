@@ -1,14 +1,11 @@
+if (ENABLE_CUDA)
+    set_source_files_properties(convdiff.cpp PROPERTIES LANGUAGE CUDA)
+endif()
+if (ENABLE_HIP)
+    set_source_files_properties(convdiff.cpp PROPERTIES LANGUAGE HIP)
+endif()
 add_executable(convdiff convdiff.cpp)
-target_link_libraries(
-    convdiff
-    PRIVATE XSDK::MFEM
-            XSDK::PETSc
-            XSDK::HYPRE
-            XSDK::SUPERLU
-            XSDK::SUNDIALS
-            ZLIB::ZLIB
-            MPI::MPI_CXX
-)
+target_link_libraries(convdiff PRIVATE ${MFEM_ALL_DEPS})
 
 xsdk_add_test(
     NAME
