@@ -33,13 +33,14 @@ find_package_handle_standard_args(MFEM
 if(MFEM_FOUND)
 
   if(NOT TARGET XSDK::MFEM)
-    add_library(XSDK::MFEM UNKNOWN IMPORTED)
+    add_library(XSDK::MFEM INTERFACE IMPORTED)
   endif()
 
   set_target_properties(XSDK::MFEM PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${MFEM_INCLUDE_DIRS}"
-    INTERFACE_LINK_LIBRARIES "${METIS_LIBRARY}"
-    IMPORTED_LOCATION "${MFEM_LIBRARY}")
+    INTERFACE_LINK_LIBRARIES "${MFEM_LIBRARY}")
+
+  target_link_libraries(XSDK::MFEM INTERFACE ${METIS_LIBRARY})
 
    if(ENABLE_CUDA)
      target_link_libraries(XSDK::MFEM INTERFACE CUDA::cudart CUDA::cusparse)
