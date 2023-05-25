@@ -7,6 +7,13 @@ endif()
 # The makefile to run examples requires rm command
 find_program(RM rm)
 
+# If PETSc was found without setting PETSc_DIR, e.g. using CMAKE_PREFIX_PATH
+if(NOT PETSc_DIR)
+    set(PETSc_DIR ${PC_PETSc_PREFIX})
+endif()
+# Handle cases like Flux where MPIEXEC_EXECUTABLE can be "flux;run"
+string(REPLACE ";" " " MPIEXEC_EXECUTABLE "${MPIEXEC_EXECUTABLE}")
+
 # We use the makefile to launch the tests
 configure_file(makefile ${CMAKE_CURRENT_BINARY_DIR}/makefile-run)
 file(COPY output DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/output)

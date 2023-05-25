@@ -38,22 +38,28 @@ set(HEFFTE_DIR
     CACHE PATH "Path to the heFFTe installation directory"
 )
 
+option(ENABLE_HIOP "Enable HiOp" ON)
+set(HIOP_DIR
+    "${HIOP_DIR}"
+    CACHE PATH "Path to HiOp installation directory"
+)
+
 option(ENABLE_HYPRE "Enable hypre" ON)
 set(HYPRE_DIR
     "${HYPRE_DIR}"
     CACHE PATH "Path to hypre installation directory"
 )
 
-option(ENABLE_MFEM "Enable MFEM" ON)
-set(MFEM_DIR
-    "${MFEM_DIR}"
-    CACHE PATH "Path to MFEM installation directory"
-)
-
 option(ENABLE_MAGMA "Enable MAGMA" OFF)
 set(MAGMA_DIR
     "${MAGMA_DIR}"
     CACHE PATH "Path to MAGMA installation directory"
+)
+
+option(ENABLE_MFEM "Enable MFEM" ON)
+set(MFEM_DIR
+    "${MFEM_DIR}"
+    CACHE PATH "Path to MFEM installation directory"
 )
 
 option(ENABLE_PETSC "Enable PETSc" ON)
@@ -72,6 +78,12 @@ option(ENABLE_PRECICE "Enable preCICE" ON)
 set(PRECICE_DIR
     "${PRECICE_DIR}"
     CACHE PATH "Path to preCICE installation directory"
+)
+
+option(ENABLE_PUMI "Enable PUMI" ON)
+set(PUMI_DIR
+    "${PUMI_DIR}"
+    CACHE PATH "Path to PUMI installation directory"
 )
 
 option(ENABLE_SUNDIALS "Enable SUNDIALS" ON)
@@ -156,6 +168,7 @@ if(ENABLE_HIP)
     find_package(rocrand REQUIRED)
     find_package(rocprim REQUIRED)
     find_package(rocsparse REQUIRED)
+    find_package(rocsolver REQUIRED)
 endif()
 
 # check for AMReX
@@ -178,9 +191,19 @@ if(ENABLE_HEFFTE)
     find_package(Heffte 2.2 PATHS "${HEFFTE_DIR}" REQUIRED)
 endif()
 
+# check for HiOp
+if(ENABLE_HIOP)
+    find_package(HiOp REQUIRED)
+endif()
+
 # check for hypre
 if(ENABLE_HYPRE)
     find_package(HYPRE REQUIRED)
+endif()
+
+# check for MAGMA
+if(ENABLE_MAGMA)
+    find_package(MAGMA REQUIRED)
 endif()
 
 # check for MFEM
@@ -190,11 +213,6 @@ if(ENABLE_MFEM)
     if(ENABLE_GINKGO)
         find_package(Ginkgo REQUIRED)
     endif()
-endif()
-
-# check for MAGMA
-if(ENABLE_MAGMA)
-    find_package(MAGMA REQUIRED)
 endif()
 
 # check for PETSC
@@ -215,6 +233,12 @@ if(ENABLE_PRECICE)
     find_package(precice 2 REQUIRED
         HINTS ${PRECICE_DIR} $ENV{PRECICE_DIR}
     )
+endif()
+
+# check for PUMI
+if(ENABLE_PUMI)
+    # not really needed: MFEM links with PUMI if it is built with it
+    # find_package(SCOREC REQUIRED)
 endif()
 
 # check for SUNDIALS
@@ -264,6 +288,9 @@ endif()
 if(ENABLE_PLASMA)
     add_subdirectory(plasma)
 endif()
+if(ENABLE_STRUMPACK)
+    add_subdirectory(strumpack)
+endif()
 if(ENABLE_SUNDIALS)
     add_subdirectory(sundials)
 endif()
@@ -272,7 +299,4 @@ if(ENABLE_TASMANIAN)
 endif()
 if(ENABLE_TRILINOS)
     add_subdirectory(trilinos)
-endif()
-if(ENABLE_STRUMPACK)
-    add_subdirectory(strumpack)
 endif()

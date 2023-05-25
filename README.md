@@ -20,12 +20,14 @@ These examples were tested and verified against xsdk@0.8.0.
 | heffte/heffte_example_gpu.cpp                         | heFFTe+MAGMA             | 3D FFT transform using the GPU                    | ![cuda] ![hip] |
 | hypre/ij_laplacian.c                                  | HYPRE+SuperLU_Dist       | 2D Laplacian problem                              |                |
 | libensemble/test_persistent_aposmm_tao.py             | libEnsemble+PETSc        | 2D constrained optimization problem               |                |
-| mfem/hypre-superlu/convdiff.cpp                       | MFEM+HYPRE+SuperLU_Dist  | 2D steady state convective diffusion              |                |
 | mfem/ginkgo/mfem_ex22_gko.cpp                         | MFEM+Ginkgo              | 3D damped harmonic oscillator with Ginkgo solver  | ![cuda] ![hip] |
+| mfem/hiop/adv.cpp                                     | MFEM+HiOp                | Time-dependent advection                          |                |
+| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda] ![hip] |
+| mfem/hypre-superlu/convdiff.cpp                       | MFEM+HYPRE+SuperLU_Dist  | 2D steady state convective diffusion              |                |
 | mfem/petsc/obstacle.cpp                               | MFEM+PETSc               | Membrane obstacle problem (min energy functional) |                |
+| mfem/pumi/adapt.cpp                                   | MFEM+PUMI                | Adaptive mesh refinement for a diffusion problem  |                |
 | mfem/strumpack/diffusion-eigen.cpp                    | MFEM+STRUMPACK+HYPRE     | Diffusion eigenvalue problem                      |                |
 | mfem/sundials/transient-heat.cpp                      | MFEM+SUNDIALS            | 2D transient nonlinear heat conduction            |                |
-| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda]        |
 | mfem/sundials/advection.cpp                           | MFEM+SUNDIALS            | 2D time-dependent advection                       | ![cuda]        |
 | petsc/ex19.c                                          | PETSc                    | 2D nonlinear driven cavity problem                | ![cuda] ![hip] |
 | petsc/ex19.c                                          | PETSc+HYPRE              | 2D nonlinear driven cavity problem                | ![cuda]        |
@@ -43,7 +45,7 @@ They can still be built using CMake directly.
 
 | Example                                               | Libraries                | Description                                       | GPUs           |
 |:------------------------------------------------------|:-------------------------|:--------------------------------------------------|:---------------|
-| mfem/hypre/magnetic-diffusion.cpp                     | MFEM+HYPRE               | Steady state magnetic diffusion problem           | ![cuda] ![hip] |
+| (empty)                                               |                          |                                                   |                |
 
 ## Installing the Examples
 
