@@ -23,7 +23,8 @@ endif()
 xsdk_add_test(
     NAME AMREX-amrex_sundials_advection_diffusion
     MPI_NPROCS 1
-    COMMAND $<TARGET_FILE:amrex_sundials_advection_diffusion>
+    COMMAND
+    $<TARGET_FILE:amrex_sundials_advection_diffusion> n_cell=64 tfinal=10
 )
 
 install(TARGETS amrex_sundials_advection_diffusion RUNTIME DESTINATION bin)
