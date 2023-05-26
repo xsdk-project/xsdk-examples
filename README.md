@@ -16,7 +16,7 @@ These examples were tested and verified against xsdk@0.8.0.
 | amrex/sundials/amrex_sundials_advection_diffusion.cpp | AMReX+SUNDIALS           | 2D Advection-diffusion problem                    | ![cuda]        |
 | dealii/petsc_trilinos/petsc_trilinos.cpp              | deal.II+PETSc/Trilinos   | Poisson problem using MPI and AMG preconditioners |                |
 | dealii/precice/laplace_problem.cc                     | deal.II+preCICE          | Coupling of Laplace problem with external b.c.    |                |
-| dealii/sundials/sundials.cpp                          | deal.II+Sundials         | Nonlinear, minimal surface problem                |                |
+| dealii/sundials/sundials.cpp                          | deal.II+SUNDIALS         | Nonlinear, minimal surface problem                |                |
 | heffte/heffte_example_gpu.cpp                         | heFFTe+MAGMA             | 3D FFT transform using the GPU                    | ![cuda] ![hip] |
 | hypre/ij_laplacian.c                                  | HYPRE+SuperLU_Dist       | 2D Laplacian problem                              |                |
 | libensemble/test_persistent_aposmm_tao.py             | libEnsemble+PETSc        | 2D constrained optimization problem               |                |
