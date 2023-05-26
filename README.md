@@ -39,7 +39,7 @@ These examples were tested and verified against xsdk@0.8.0.
 | tasmanian/example_unstructured_grid.cpp               | Tasmanian+MAGMA          | Constructs a sparse grid model from random data   | ![cuda] ![hip] |
 | trilinos/SimpleSolve_WithParameters.cpp               | Trilinos+SuperLU_Dist    | Small linear system direct solution               |                |
 | strumpack/sparse.cpp                                  | STRUMPACK+ButterflyPACK  | 3D Poisson problem with STRUMPACK preconditioner  |                |
-                                       
+
 
 ## Installing the Examples
 
